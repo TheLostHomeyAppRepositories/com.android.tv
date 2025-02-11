@@ -2,6 +2,7 @@ import {Remote} from "../../remote";
 import {DeviceSettings, DeviceStore, SettingsInput} from "./types";
 import AndroidTVRemoteClient, {Digit, Input, Volume} from "./client";
 import RemoteMessage from "../../androidtv-remote/remote/RemoteMessage";
+import Homey from "homey";
 
 class RemoteDevice extends Remote {
   private client?: AndroidTVRemoteClient;
@@ -60,7 +61,11 @@ class RemoteDevice extends Remote {
 
       this.client = new AndroidTVRemoteClient(
           settings.ip,
-          store.cert
+          store.cert,
+          'androidtv-remote',
+          6467,
+          6466,
+          Homey.env.DEBUG === '1',
       );
 
       this.client.on('error', async (error) => {

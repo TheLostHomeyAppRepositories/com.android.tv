@@ -55,6 +55,7 @@ export default class AndroidTVRemoteClient {
   private readonly remote_port: number;
   private readonly client_name: string;
   private readonly cert: AndroidRemoteCertificate;
+  private readonly debug: boolean;
 
   constructor(
       host: string,
@@ -69,6 +70,7 @@ export default class AndroidTVRemoteClient {
     this.pairing_port = pairing_port;
     this.remote_port = remote_port;
     this.cert = cert;
+    this.debug = debug;
 
     this.client = new AndroidRemote(this.host, this.getOptions());
     this.client.on('error', (error: any) => {
@@ -106,7 +108,7 @@ export default class AndroidTVRemoteClient {
       service_name: this.client_name,
       cert: this.cert,
       timeout: 1000 * 60,
-      debug: Homey.env.DEBUG === '1'
+      debug: this.debug
     };
   }
 
