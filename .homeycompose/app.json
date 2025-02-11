@@ -1,5 +1,5 @@
 {
-  "id": "codes.lucasvdh.android-tv",
+  "id": "com.android.tv",
   "version": "0.8.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
@@ -41,8 +41,8 @@
     "small": "./assets/images/small.png"
   },
   "author": {
-    "name": "Lucas van der Have",
-    "email": "lucasvdhave@gmail.com"
+    "name": "Athom BV",
+    "email": "info@athom.com"
   },
   "contributors": {
     "developers": [
@@ -52,17 +52,5 @@
       }
     ]
   },
-  "contributing": {
-    "donate": {
-      "paypal": {
-        "username": "lucasvdh"
-      }
-    }
-  },
-  "bugs": {
-    "url": "https://github.com/lucasvdh/codes.lucasvdh.android-tv/issues"
-  },
-  "source": "https://github.com/lucasvdh/codes.lucasvdh.android-tv",
-  "homepage": "https://homey-android-tv.gitbook.io/en/",
-  "support": "https://homey-android-tv.gitbook.io/en/overview/faq"
+  "support": "https://support.athom.com/hc/en-us/requests/new"
 }
