@@ -48,10 +48,10 @@ class AndroidTV extends Homey.App {
         this.log('Initialized flow')
     }
 
-    async onFlowActionOpenApplication({device, app_link, app_name}: { device: RemoteDevice, app_link: string, app_name: string }) {
+    async onFlowActionOpenApplication({device, app_link}: { device: RemoteDevice, app_link: string}) {
         console.log('Open application link', app_link);
         try {
-            return device.openApplication(app_link)
+            return device.openApplicationOrLink(app_link)
         } catch (e) {
             console.log(e);
         }
@@ -63,7 +63,7 @@ class AndroidTV extends Homey.App {
 
     async onFlowActionLongPressKey({device, option, seconds}: { device: RemoteDevice, option: { key: string }, seconds: number }) {
         await device.pressKey(option.key, RemoteDirection.START_LONG);
-        await new Promise(((resolve, reject) => {
+        await new Promise(((resolve) => {
             setTimeout(resolve, seconds * 1000)
         }));
         await device.pressKey(option.key, RemoteDirection.END_LONG);
@@ -80,19 +80,6 @@ class AndroidTV extends Homey.App {
             }).filter(result => {
                 return result.name.toLowerCase().indexOf(query.toLowerCase()) > -1
             })
-    }
-
-    async onFlowApplicationAutocomplete(query: string, {device}: { device: RemoteDevice }): Promise<FlowCard.ArgumentAutocompleteResults> {
-        return [
-            {
-                name: 'Test'
-            }
-        ];
-        // return device.getApplications().then(applications => {
-        //   return applications.filter(result => {
-        //     return result.name.toLowerCase().indexOf(query.toLowerCase()) > -1
-        //   })
-        // })
     }
 
     async onFlowActionSelectSource({device, source}: { device: RemoteDevice, source: string }) {

@@ -4,24 +4,13 @@ import {
   DiscoveryResultMDNSSD,
   DiscoveryResultSSDP,
   DiscoveryStrategy,
-  Driver,
-  FlowCardTriggerDevice
+  Driver
 } from "homey";
 import AndroidTVRemoteClient from "./client";
 import {Device as DeviceType, DeviceData, DeviceSettings} from "./types";
-import RemoteDevice from "./device";
 import PairSession from "homey/lib/PairSession";
 
 class RemoteDriver extends Driver {
-  private applicationOpenedTrigger: FlowCardTriggerDevice | undefined;
-
-  async onInit(): Promise<void> {
-    this.log("Driver has been initialised");
-
-    await this.registerFlowCards()
-    this.log('Flow cards have been initialized')
-  }
-
   async onPair(session: any): Promise<void> {
     let devices: Array<DeviceType> = []
     let existingDevices: Array<Device> = this.getDevices()
@@ -221,14 +210,6 @@ class RemoteDriver extends Driver {
         })
         .filter(device => device !== null)
         .map(discoveryResult => discoveryResult as DeviceType);
-  }
-
-  private async registerFlowCards() {
-    this.applicationOpenedTrigger = this.homey.flow.getDeviceTriggerCard('application_opened')
-  }
-
-  private triggerApplicationOpenedTrigger(device: RemoteDevice, args: { app: string }) {
-    return this.applicationOpenedTrigger?.trigger(device, args)
   }
 }
 

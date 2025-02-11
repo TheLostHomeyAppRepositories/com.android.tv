@@ -1,6 +1,7 @@
 import {AndroidRemoteCertificate, AndroidRemoteOptions} from "./types";
 
 import {AndroidRemote, RemoteDirection, RemoteKeyCode} from "../../androidtv-remote";
+import Homey from "homey";
 
 export enum Input {
   HDMI1,
@@ -104,7 +105,8 @@ export default class AndroidTVRemoteClient {
       remote_port: this.remote_port,
       service_name: this.client_name,
       cert: this.cert,
-      timeout: 1000 * 60
+      timeout: 1000 * 60,
+      debug: Homey.env.DEBUG === '1'
     };
   }
 

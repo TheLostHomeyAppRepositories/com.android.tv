@@ -169,6 +169,7 @@
     "key_digit_6",
     "key_digit_7",
     "key_digit_8",
-    "key_digit_9"
+    "key_digit_9",
+    "current_application"
   ]
 }

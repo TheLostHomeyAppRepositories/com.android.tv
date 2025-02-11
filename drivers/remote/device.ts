@@ -3,9 +3,6 @@ import {DeviceSettings, DeviceStore, SettingsInput} from "./types";
 import AndroidTVRemoteClient, {Digit, Input, Volume} from "./client";
 import RemoteMessage from "../../androidtv-remote/remote/RemoteMessage";
 
-/**
- * @property {RemoteDriver} driver
- */
 class RemoteDevice extends Remote {
   private client?: AndroidTVRemoteClient;
   private keyCapabilities: Array<string> = [
@@ -77,7 +74,11 @@ class RemoteDevice extends Remote {
         this.setAvailable();
       })
       this.client.on('close', ({hasError, error}) => {
-        this.log("Client has been closed")
+        if (hasError) {
+          this.log("Client has been closed with error", error);
+        } else {
+          this.log("Client has been closed")
+        }
         this.setUnavailable();
       })
 
@@ -110,20 +111,19 @@ class RemoteDevice extends Remote {
       this.log('volume', volume);
       this.log("Volume : " + volume.level + '/' + volume.maximum + " | Muted : " + volume.muted);
 
-      // await this.setCapabilityValue('volume_mute', volume.muted);
-      // await this.setCapabilityValue('volume', volume.level);
       await this.setCapabilityValue('volume_mute', volume.muted);
       await this.setCapabilityValue('measure_volume', Math.round(volume.level / (volume.maximum / 100)));
     });
 
     this.client.on('current_app', (current_app) => {
-      // @ts-ignore
-      return this.driver.triggerApplicationOpenedTrigger(this, {
-        app: current_app
-      }).catch(this.error)
+      this.setCapabilityValue('current_application', current_app);
+      return this.homey.flow.getDeviceTriggerCard('application_opened').trigger(this, {
+        app: current_app,
+      }).catch(this.error);
     });
 
     this.client.on('unpaired', async (error: RemoteMessage | undefined): Promise<void> => {
+      this.error('unpaired', error);
       await this.setUnavailable(this.homey.__('error.unpaired'));
     });
 
@@ -149,15 +149,15 @@ class RemoteDevice extends Remote {
       return this.onCapabilityOnOffSet(value)
     })
 
-    this.registerCapabilityListener('volume_up', value => {
+    this.registerCapabilityListener('volume_up', () => {
       return this.client?.volumeUp();
     })
 
-    this.registerCapabilityListener('volume_down', value => {
+    this.registerCapabilityListener('volume_down', () => {
       return this.client?.volumeDown();
     })
 
-    this.registerCapabilityListener('volume_mute', value => {
+    this.registerCapabilityListener('volume_mute', () => {
       return this.client?.mute();
     })
 
@@ -409,7 +409,12 @@ class RemoteDevice extends Remote {
     }
   }
 
-  public async openApplication(appLink: string): Promise<void> {
+  public async openApplicationOrLink(appLink: string): Promise<void> {
+    try {
+      new URL(appLink);
+    } catch (e) {
+      appLink = 'market://launch?id=' + appLink;
+    }
     this.client?.openApplication(appLink);
   }
 

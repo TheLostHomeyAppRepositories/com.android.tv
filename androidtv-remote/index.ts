@@ -13,6 +13,7 @@ export class AndroidRemote extends EventEmitter {
     private timeout: number;
     private manufacturer: string;
     private model: string;
+    private debug: boolean;
 
     private pairingManager: PairingManager | undefined;
     private remoteManager: RemoteManager | undefined;
@@ -25,6 +26,7 @@ export class AndroidRemote extends EventEmitter {
         timeout?: number,
         manufacturer?: string,
         model?: string,
+        debug?: boolean,
     }) {
         super();
         this.host = host;
@@ -32,12 +34,13 @@ export class AndroidRemote extends EventEmitter {
             key: options.cert?.key,
             cert: options.cert?.cert,
         };
-        this.pairing_port = options.pairing_port ? options.pairing_port : 6467;
-        this.remote_port = options.remote_port ? options.remote_port : 6466;
-        this.service_name = options.service_name ? options.service_name : 'Service Name';
-        this.timeout = options.timeout ? options.timeout : 1000;
-        this.manufacturer = options.manufacturer ? options.manufacturer : 'unknown';
-        this.model = options.model ? options.model : 'unknown';
+        this.pairing_port = options.pairing_port ?? 6467;
+        this.remote_port = options.remote_port ?? 6466;
+        this.service_name = options.service_name ?? 'Service Name';
+        this.timeout = options.timeout ?? 1000;
+        this.manufacturer = options.manufacturer ?? 'unknown';
+        this.model = options.model ?? 'unknown';
+        this.debug = options.debug ?? false;
     }
 
     async start(): Promise<void> {
@@ -69,7 +72,7 @@ export class AndroidRemote extends EventEmitter {
             }
         }
 
-        this.remoteManager = new RemoteManager(this.host, this.remote_port, this.cert, this.timeout, this.manufacturer, this.model);
+        this.remoteManager = new RemoteManager(this.host, this.remote_port, this.cert, this.timeout, this.manufacturer, this.model, this.debug);
 
         this.remoteManager.on('powered', (powered) => this.emit('powered', powered));
 

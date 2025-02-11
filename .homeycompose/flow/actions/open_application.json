@@ -2,28 +2,28 @@
   "highlight": true,
   "id": "open_application",
   "title": {
-    "en": "Open an application",
-    "nl": "Open een app",
-    "de": "Öffne eine Anwendung",
-    "fr": "Ouvrir une application",
-    "it": "Aprire un'applicazione",
-    "sv": "Öppna en applikation",
-    "no": "Åpne en applikasjon",
-    "es": "Abrir una aplicación",
-    "da": "Åben en applikation",
-    "pl": "Otwórz aplikację"
+    "en": "Open an application or link",
+    "nl": "Open een app of link",
+    "de": "Öffne eine Anwendung oder Link",
+    "fr": "Ouvrir une application ou lien",
+    "it": "Aprire un'applicazione o link",
+    "sv": "Öppna en applikation eller länk",
+    "no": "Åpne en applikasjon eller link",
+    "es": "Abrir una aplicación o enlace",
+    "da": "Åben en applikation eller link",
+    "pl": "Otwórz aplikację lub link"
   },
   "titleFormatted": {
-    "en": "Open app [[app_name]][[app_link]]",
-    "nl": "Open app [[app_name]][[app_link]]",
-    "de": "Öffne App [[app_name]][[app_link]]",
-    "fr": "Ouvrir l'application [[app_name]][[app_link]]",
-    "it": "Apri app [[app_name]][[app_link]]",
-    "sv": "Öppna app [[app_name]][[app_link]]",
-    "no": "Åpne app [[app_name]][[app_link]]",
-    "es": "Abrir aplicación [[app_name]][[app_link]]",
-    "da": "Åben app [[app_name]][[app_link]]",
-    "pl": "Otwórz aplikację [[app_name]][[app_link]]"
+    "en": "Open app or link [[app_link]]",
+    "nl": "Open app of link [[app_link]]",
+    "de": "Öffne App oder Link [[app_link]]",
+    "fr": "Ouvrir l'application ou lien [[app_link]]",
+    "it": "Apri app o link [[app_link]]",
+    "sv": "Öppna app eller länk [[app_link]]",
+    "no": "Åpne app eller link [[app_link]]",
+    "es": "Abrir aplicación o enlace [[app_link]]",
+    "da": "Åben app eller link [[app_link]]",
+    "pl": "Otwórz aplikację lub link [[app_link]]"
   },
   "args": [
     {
@@ -32,38 +32,32 @@
       "filter": "driver_id=remote"
     },
     {
-      "name": "app_name",
-      "title": {
-        "en": "app name",
-        "nl": "app naam",
-        "de": "App-Name",
-        "fr": "Nom de l'application",
-        "it": "Nome dell'applicazione",
-        "sv": "App-namn",
-        "no": "Appnavn",
-        "es": "Nombre de la aplicación",
-        "da": "App-navn",
-        "pl": "Nazwa aplikacji"
-      },
-      "type": "text",
-      "required": false
-    },
-    {
       "name": "app_link",
       "title": {
-        "en": "app link",
-        "nl": "app link",
-        "de": "App-Link",
-        "fr": "Lien de l'application",
-        "it": "Link dell'applicazione",
-        "sv": "App-länk",
-        "no": "Applink",
-        "es": "Enlace de la aplicación",
-        "da": "App-link",
-        "pl": "Link do aplikacji"
+        "en": "App link or name",
+        "nl": "App link of naam",
+        "de": "App-Link oder Name",
+        "fr": "Lien ou nom de l'application",
+        "it": "Link o nome dell'applicazione",
+        "sv": "App-länk eller namn",
+        "no": "Applink eller navn",
+        "es": "Enlace o nombre de la aplicación",
+        "da": "App-link eller navn",
+        "pl": "Link lub imię do aplikacji"
       },
       "type": "text",
-      "required": false
+      "placeholder": {
+        "en": "com.netflix.ninja or https://www.youtube.com/watch?v=<id>",
+        "nl": "com.netflix.ninja of https://www.youtube.com/watch?v=<id>",
+        "de": "com.netflix.ninja oder https://www.youtube.com/watch?v=<id>",
+        "fr": "com.netflix.ninja ou https://www.youtube.com/watch?v=<id>",
+        "it": "com.netflix.ninja o https://www.youtube.com/watch?v=<id>",
+        "sv": "com.netflix.ninja eller https://www.youtube.com/watch?v=<id>",
+        "no": "com.netflix.ninja eller https://www.youtube.com/watch?v=<id>",
+        "es": "com.netflix.ninja o https://www.youtube.com/watch?v=<id>",
+        "da": "com.netflix.ninja eller https://www.youtube.com/watch?v=<id>",
+        "pl": "com.netflix.ninja lub https://www.youtube.com/watch?v=<id>"
+      }
     }
   ]
 }

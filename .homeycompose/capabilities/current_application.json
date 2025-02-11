@@ -13,8 +13,7 @@
     "pl": "Bieżąca aplikacja"
   },
   "getable": true,
-  "setable": true,
-  "uiComponent": "picker",
-  "uiQuickAction": true,
+  "setable": false,
+  "uiComponent": "sensor",
   "icon": "assets/capabilities/application.svg"
 }

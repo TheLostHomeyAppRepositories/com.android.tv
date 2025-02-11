@@ -15,7 +15,7 @@ class RemoteManager extends EventEmitter {
     constructor(host: string, port: number, certs: {
         key: string | undefined;
         cert: string | undefined
-    }, timeout: number = 1000, manufacturer: string = 'unknown', model: string = 'unknown') {
+    }, timeout: number = 1000, manufacturer: string = 'unknown', model: string = 'unknown', debug: boolean = false) {
         super();
         this.host = host;
         this.port = port;
@@ -23,7 +23,7 @@ class RemoteManager extends EventEmitter {
         this.chunks = Buffer.from([]);
         this.error = null;
         this.timeout = timeout;
-        this.remoteMessageManager = new RemoteMessageManager(manufacturer, model);
+        this.remoteMessageManager = new RemoteMessageManager(manufacturer, model, debug);
     }
 
     async start(): Promise<void> {
