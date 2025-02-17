@@ -1,5 +1,3 @@
-Con la aplicación Android TV, puedes controlar cualquier dispositivo Android TV en el que esté instalado el "Servicio de control remoto de Android TV" o en el que puedas instalarlo.
+Con la aplicación Android TV para Homey, puedes conectar y controlar sin problemas cualquier decodificador o televisor que ejecute Android TV o Google TV. Enciende o apaga tu dispositivo, inicia aplicaciones específicas instaladas y ajusta el volumen, todo desde Homey.
 
-Ten en cuenta que esta no es una aplicación oficial y no está afiliada a Android o Google. Su uso es bajo tu propio riesgo.
-
-Busca "Servicio de control remoto de Android TV" de Google en la tienda Google Play e instálalo en el dispositivo Android que deseas controlar, si aún no está instalado en el dispositivo.
+Para utilizar esta aplicación, asegúrese de que el servicio remoto de Android TV esté instalado en su televisor o decodificador. Si aún no está instalado, puedes encontrarlo en Google Play Store en tu dispositivo.

@@ -1,5 +1,3 @@
-Con l'app Android TV, puoi controllare qualsiasi dispositivo Android TV su cui è installato il "Servizio di telecomando Android TV" o su cui puoi installarlo.
+Con l'app Android TV per Homey puoi connetterti e controllare senza problemi qualsiasi streaming box o TV con Android TV o Google TV. Accendi o spegni il tuo dispositivo, avvia app specifiche installate e regola il volume, tutto da Homey.
 
-Tieni presente che questa non è un'app ufficiale e non è affiliata ad Android o a Google. L'uso è a tuo rischio.
-
-Cerca "Servizio di telecomando Android TV" di Google nel Google Play Store e installalo sul dispositivo Android che desideri controllare, se non è già installato sul dispositivo.
+Per utilizzare questa app, assicurati che Android TV Remote Service sia installato sul tuo televisore o sul tuo streaming box. Se non è già installata, puoi trovarla sul tuo dispositivo nel Google Play Store.

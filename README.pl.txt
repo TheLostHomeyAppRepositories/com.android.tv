@@ -1,5 +1,3 @@
-Dzięki aplikacji Android TV możesz sterować dowolnym urządzeniem Android TV, na którym jest zainstalowana "Usługa pilota Android TV" lub na którym możesz ją zainstalować.
+Dzięki aplikacji Android TV dla Homey możesz bezproblemowo podłączyć i sterować dowolnym dekoderem strumieniowym lub telewizorem z systemem Android TV lub Google TV. Włączaj i wyłączaj urządzenie, uruchamiaj określone zainstalowane aplikacje i reguluj głośność – wszystko z poziomu Homey.
 
-Należy pamiętać, że nie jest to oficjalna aplikacja i nie jest powiązana z Androidem ani Google. Użytkowanie odbywa się na własne ryzyko.
-
-Wyszukaj "Usługa pilota Android TV" od Google w sklepie Google Play i zainstaluj ją na urządzeniu Android, które chcesz sterować, jeśli nie jest jeszcze zainstalowana na tym urządzeniu.
+Aby skorzystać z tej aplikacji, upewnij się, że na Twoim telewizorze lub dekoderze streamingowym jest zainstalowana aplikacja Android TV Remote Service. Jeśli aplikacja nie jest jeszcze zainstalowana, znajdziesz ją w sklepie Google Play na swoim urządzeniu.

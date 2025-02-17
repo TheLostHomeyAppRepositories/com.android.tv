@@ -1,5 +1,3 @@
-Med Android TV-appen kan du styre hvilken som helst Android TV-enhet der "Android TV Remote Service" er installert eller der du kan installere den.
+Med Android TV-appen for Homey kan du sømløst koble til og kontrollere enhver strømmeboks eller TV som kjører Android TV eller Google TV. Slå enheten på eller av, start spesifikke installerte apper og juster volumet – alt fra Homey.
 
-Vær oppmerksom på at dette ikke er en offisiell app og den er ikke tilknyttet Android eller Google. Bruk skjer på eget ansvar.
-
-Søk etter "Android TV Remote Service" fra Google i Google Play Store og installer den på den Android-enheten du ønsker å styre, hvis den ikke allerede er installert på enheten.
+For å bruke denne appen, sørg for at Android TV Remote Service er installert på TV-en eller strømmeboksen. Hvis den ikke allerede er installert, kan du finne den i Google Play Store på enheten din.

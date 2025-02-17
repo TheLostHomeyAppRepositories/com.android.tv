@@ -1,5 +1,3 @@
-With the Android TV app, you can control any Android TV device where the "Android TV Remote Service" is installed or where you can install it.
+With the Android TV App for Homey, you can seamlessly connect and control any streaming box or TV running Android TV or Google TV. Power your device on or off, launch specific installed apps, and adjust the volume – all from Homey.
 
-Please note that this is not an official app and is not affiliated with Android or Google. Its use is at your own risk.
-
-Search for "Android TV Remote Service" by Google in the Google Play Store and install it on the Android device you want to control, if it's not already installed on the device.
+To use this app, ensure that Android TV Remote Service is installed on your TV or streaming box. If it's not already installed, you can find it on the Google Play Store on your device.
