@@ -1,0 +1,35 @@
+stages:
+  - prepare
+  - audit
+  - lint
+  - build
+  - publish
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+
+include:
+  - project: 'intern/runner-templates'
+    ref: "15.3"
+    file: '/npm/install-js-dependencies.yml'
+  - project: 'intern/runner-templates'
+    ref: "15.3"
+    file: '/npm/audit.yml'
+  - project: 'intern/runner-templates'
+    ref: "15.3"
+    file: '/homey/validate.yml'
+  - project: 'intern/runner-templates'
+    ref: "15.3"
+    file: '/homey/build.yml'
+  - project: 'intern/runner-templates'
+    ref: "15.3"
+    file: '/homey/publish.yml'
+
+validate:
+  script:
+    - npm run validate
+
+build:
+  script:
+    - homey app build
