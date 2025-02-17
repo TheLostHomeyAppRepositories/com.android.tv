@@ -14,6 +14,9 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': ['warn', {
       'ts-ignore': 'allow-with-description',
     }],
+    '@typescript-eslint/no-empty-object-type': ['error', {
+      'allowInterfaces': 'always'
+    }],
     "semi": [2, "always"]
   },
 };

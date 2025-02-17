@@ -12,46 +12,46 @@ import PairSession from "homey/lib/PairSession";
 
 class RemoteDriver extends Driver {
   async onPair(session: any): Promise<void> {
-    let devices: Array<DeviceType> = []
-    let existingDevices: Array<Device> = this.getDevices()
-    let pairingDevice: DeviceType | null = null
-    let pairingClient: AndroidTVRemoteClient | null = null
+    let devices: Array<DeviceType> = [];
+    const existingDevices: Array<Device> = this.getDevices();
+    let pairingDevice: DeviceType | null = null;
+    let pairingClient: AndroidTVRemoteClient | null = null;
     const discoveryStrategy: DiscoveryStrategy = this.getDiscoveryStrategy();
 
     session.setHandler('showView', async (view: string) => {
-      this.log('Show view', view)
+      this.log('Show view', view);
 
       if (view === 'discover') {
-        let discoveredDevices = this.getDiscoveredDevices(discoveryStrategy)
-        let hasDiscoveredDevices = false
+        const discoveredDevices = this.getDiscoveredDevices(discoveryStrategy);
+        let hasDiscoveredDevices = false;
         devices = discoveredDevices.filter(item => {
           if (item === null) {
-            return false
+            return false;
           }
 
-          hasDiscoveredDevices = true
+          hasDiscoveredDevices = true;
 
           return existingDevices.filter(existingDevice => {
-            return item.data.id === existingDevice.getData().id
-          }).length === 0
-        })
+            return item.data.id === existingDevice.getData().id;
+          }).length === 0;
+        });
 
         if (devices.length > 0) {
-          await session.showView('list_devices')
+          await session.showView('list_devices');
         } else {
-          await session.showView('add_by_ip')
+          await session.showView('add_by_ip');
 
           if (hasDiscoveredDevices) {
-            await session.emit('add_by_ip_hint', this.homey.__('pair.add_by_ip.no_new_devices_hint'))
+            await session.emit('add_by_ip_hint', this.homey.__('pair.add_by_ip.no_new_devices_hint'));
           }
         }
       }
 
       if (view === "authenticate") {
         if (pairingDevice === null) {
-          await session.showView('list_devices')
+          await session.showView('list_devices');
           this.error('Pairing device not set');
-          return
+          return;
         }
 
         pairingClient = this.getPairingClientByDevice(pairingDevice);
@@ -62,15 +62,15 @@ class RemoteDriver extends Driver {
 
     session.setHandler('list_devices', async (): Promise<DeviceType[]> => {
       return devices;
-    })
+    });
 
     session.setHandler('list_devices_selection', async (devices: DeviceType[]) => {
-      let device = devices.pop();
+      const device = devices.pop();
 
       if (device !== undefined) {
         pairingDevice = device;
       }
-    })
+    });
 
     session.setHandler('pincode', async (code: Buffer) => {
       if (pairingClient === null) {
@@ -82,34 +82,34 @@ class RemoteDriver extends Driver {
         return;
       }
 
-      this.log('Pincode submitted', code.join(''))
+      this.log('Pincode submitted', code.join(''));
 
       const pairingResult = await pairingClient.sendCode(code.join(''));
 
       if (pairingResult) {
         pairingDevice.store.cert = await pairingClient.getCertificate();
-        session.showView('add_device')
+        session.showView('add_device');
       } else {
-        session.showView('discover')
+        session.showView('discover');
       }
 
       return pairingResult;
-    })
+    });
 
     session.setHandler('getDevice', async (): Promise<DeviceType> => {
       if (pairingDevice === null) {
         throw new Error('Pairing device not set');
       }
 
-      return pairingDevice
-    })
+      return pairingDevice;
+    });
   }
 
   async onRepair(session: PairSession, repairingDevice: Device): Promise<void> {
     // Argument session is a PairSocket, similar to Driver.onPair
     // Argument device is a Homey.Device that's being repaired
 
-    this.log('Repairing device', repairingDevice.getName())
+    this.log('Repairing device', repairingDevice.getName());
 
     const pairingClient = this.getPairingClientByDevice({
       name: repairingDevice.getName(),
@@ -119,15 +119,15 @@ class RemoteDriver extends Driver {
     } as DeviceType);
 
     session.setHandler('showView', async (view: string) => {
-      this.log('Show view', view)
+      this.log('Show view', view);
 
       if (view === 'start_repair') {
-        console.log('START PAIRING')
+        console.log('START PAIRING');
 
         pairingClient.on('secret', () => {
-          this.log('Pairing client started, show authenticate view')
-          session.showView('authenticate')
-        })
+          this.log('Pairing client started, show authenticate view');
+          session.showView('authenticate');
+        });
 
         await pairingClient.start();
       }
@@ -143,19 +143,19 @@ class RemoteDriver extends Driver {
         return;
       }
 
-      this.log('Pincode submitted', code.join(''))
+      this.log('Pincode submitted', code.join(''));
 
       const pairingResult = await pairingClient.sendCode(code.join(''));
 
       if (pairingResult) {
         await repairingDevice.setStoreValue('cert', await pairingClient.getCertificate());
-        session.done()
+        session.done();
       } else {
-        session.showView('authenticate')
+        session.showView('authenticate');
       }
 
       return pairingResult;
-    })
+    });
 
     session.setHandler("disconnect", async () => {
       // Cleanup
@@ -181,13 +181,13 @@ class RemoteDriver extends Driver {
       settings: {
         ip: discoveryResult.address
       },
-    }
+    };
   }
 
   private getNameByMDNSDiscoveryResult(discoveryResult: DiscoveryResultMDNSSD): string {
     let name: string = '';
-    let txtKeys = Object.keys(discoveryResult.txt);
-    let txtValues = Object.values(discoveryResult.txt);
+    const txtKeys = Object.keys(discoveryResult.txt);
+    const txtValues = Object.values(discoveryResult.txt);
 
     if (txtKeys.indexOf('fn')) {
       name = txtValues[txtKeys.indexOf('fn')];
@@ -206,7 +206,7 @@ class RemoteDriver extends Driver {
             return null;
           }
 
-          return this.getDeviceByDiscoveryResult(discoveryResult)
+          return this.getDeviceByDiscoveryResult(discoveryResult);
         })
         .filter(device => device !== null)
         .map(discoveryResult => discoveryResult as DeviceType);

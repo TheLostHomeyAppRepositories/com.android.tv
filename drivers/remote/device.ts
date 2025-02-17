@@ -51,7 +51,7 @@ class RemoteDevice extends Remote {
     // 'key_green',
     // 'key_yellow',
     // 'key_blue'
-  ]
+  ];
   private CAPABILITIES_SET_DEBOUNCE: number = 100;
 
   async initializeClient(): Promise<void> {
@@ -75,22 +75,22 @@ class RemoteDevice extends Remote {
       await this.client.start();
 
       this.client.on('ready', () => {
-        this.log("Client has been initialized")
+        this.log("Client has been initialized");
         this.setAvailable();
-      })
+      });
       this.client.on('close', ({hasError, error}) => {
         if (hasError) {
           this.log("Client has been closed with error", error);
         } else {
-          this.log("Client has been closed")
+          this.log("Client has been closed");
         }
         this.setUnavailable();
-      })
+      });
 
-      await this.registerClientListeners()
-      this.log('Client listeners have been registered')
-      await this.registerCapabilityListeners()
-      this.log('Capability listeners have been registered')
+      await this.registerClientListeners();
+      this.log('Client listeners have been registered');
+      await this.registerCapabilityListeners();
+      this.log('Capability listeners have been registered');
 
       this.fixCapabilities();
     } catch (error) {
@@ -147,24 +147,24 @@ class RemoteDevice extends Remote {
     this.registerMultipleCapabilityListener(this.keyCapabilities, async (capabilityValues: {
       [x: string]: any;
     }, capabilityOptions: { [x: string]: any; }) => {
-      return this.onCapabilitiesKeySet(capabilityValues, capabilityOptions)
-    }, this.CAPABILITIES_SET_DEBOUNCE)
+      return this.onCapabilitiesKeySet(capabilityValues, capabilityOptions);
+    }, this.CAPABILITIES_SET_DEBOUNCE);
 
     this.registerCapabilityListener('onoff', value => {
-      return this.onCapabilityOnOffSet(value)
-    })
+      return this.onCapabilityOnOffSet(value);
+    });
 
     this.registerCapabilityListener('volume_up', () => {
       return this.client?.volumeUp();
-    })
+    });
 
     this.registerCapabilityListener('volume_down', () => {
       return this.client?.volumeDown();
-    })
+    });
 
     this.registerCapabilityListener('volume_mute', () => {
       return this.client?.mute();
-    })
+    });
 
     // this.registerCapabilityListener('key', value => {
     //     return this._onCapabilityAmbilightModeSet(value)
@@ -229,25 +229,25 @@ class RemoteDevice extends Remote {
     } else if (typeof capability.key_cursor_down !== 'undefined') {
       return this.client?.sendKeyDpadDown();
     } else if (typeof capability.key_digit_0 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit0)
+        return this.client?.sendKeyDigit(Digit.Digit0);
     } else if (typeof capability.key_digit_1 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit1)
+        return this.client?.sendKeyDigit(Digit.Digit1);
     } else if (typeof capability.key_digit_2 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit2)
+        return this.client?.sendKeyDigit(Digit.Digit2);
     } else if (typeof capability.key_digit_3 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit3)
+        return this.client?.sendKeyDigit(Digit.Digit3);
     } else if (typeof capability.key_digit_4 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit4)
+        return this.client?.sendKeyDigit(Digit.Digit4);
     } else if (typeof capability.key_digit_5 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit5)
+        return this.client?.sendKeyDigit(Digit.Digit5);
     } else if (typeof capability.key_digit_6 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit6)
+        return this.client?.sendKeyDigit(Digit.Digit6);
     } else if (typeof capability.key_digit_7 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit7)
+        return this.client?.sendKeyDigit(Digit.Digit7);
     } else if (typeof capability.key_digit_8 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit8)
+        return this.client?.sendKeyDigit(Digit.Digit8);
     } else if (typeof capability.key_digit_9 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit9)
+        return this.client?.sendKeyDigit(Digit.Digit9);
     }
         // else if (typeof capability.key_info !== 'undefined') {
         //     return this.sendKey('Info')
@@ -274,11 +274,11 @@ class RemoteDevice extends Remote {
   }
 
   fixCapabilities() {
-    let oldCapabilities = [
+    const oldCapabilities = [
       'volume'
     ];
 
-    let newCapabilities = [
+    const newCapabilities = [
       "onoff",
       "measure_volume",
       "volume_up",
@@ -299,35 +299,35 @@ class RemoteDevice extends Remote {
       "key_previous",
       "key_next",
       "key_watch_tv"
-    ]
+    ];
 
-    for (let i in oldCapabilities) {
-      let oldCapability = oldCapabilities[i]
+    for (const i in oldCapabilities) {
+      const oldCapability = oldCapabilities[i];
 
       if (this.hasCapability(oldCapability)) {
-        this.log('Removing old capability: ' + oldCapability)
+        this.log('Removing old capability: ' + oldCapability);
         this.removeCapability(oldCapability)
             .catch(error => {
               this.log(error);
-            })
+            });
       }
     }
 
-    for (let i in newCapabilities) {
-      let newCapability = newCapabilities[i]
+    for (const i in newCapabilities) {
+      const newCapability = newCapabilities[i];
 
       if (!this.hasCapability(newCapability)) {
-        this.log('Adding new capability: ' + newCapability)
+        this.log('Adding new capability: ' + newCapability);
         this.addCapability(newCapability)
             .catch(error => {
               this.log(error);
-            })
+            });
       }
     }
   }
 
   private async onCapabilityOnOffSet(value: boolean): Promise<void> {
-    this.log(`Powering ${value ? 'on' : 'off'} device`)
+    this.log(`Powering ${value ? 'on' : 'off'} device`);
 
     if (value !== this.getCapabilityValue('onoff')) {
       this.client?.sendPower();
@@ -342,7 +342,7 @@ class RemoteDevice extends Remote {
 
   private async reloadClient(timeoutInSeconds: number | null = null) {
     try {
-      this.client?.stop()
+      this.client?.stop();
     } finally {
       if (timeoutInSeconds !== null) {
         await this.homey.setTimeout(this.initializeClient.bind(this), timeoutInSeconds * 1000);
@@ -443,7 +443,7 @@ class RemoteDevice extends Remote {
     } else if (source === 'COMPOSITE2') {
       this.client?.setInput(Input.COMPOSITE2);
     } else {
-      throw new Error(`Unknown source: ${source}`)
+      throw new Error(`Unknown source: ${source}`);
     }
   }
 
