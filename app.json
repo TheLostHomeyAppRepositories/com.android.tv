@@ -519,6 +519,7 @@
         }
       ],
       "images": {
+        "xlarge": "/drivers/remote/assets/images/xlarge.png",
         "large": "/drivers/remote/assets/images/large.png",
         "small": "/drivers/remote/assets/images/small.png"
       },
