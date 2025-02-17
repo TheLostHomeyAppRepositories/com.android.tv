@@ -121,7 +121,7 @@ class RemoteDevice extends Remote {
     });
 
     this.client.on('current_app', (current_app) => {
-      this.setCapabilityValue('current_application', current_app);
+      this.setCapabilityValue('current_application', current_app).catch(this.error);
       return this.homey.flow.getDeviceTriggerCard('application_opened').trigger(this, {
         app: current_app,
       }).catch(this.error);
