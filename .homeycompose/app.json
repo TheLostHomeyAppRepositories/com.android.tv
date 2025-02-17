@@ -41,8 +41,8 @@
     "small": "./assets/images/small.png"
   },
   "author": {
-    "name": "Athom BV",
-    "email": "info@athom.com"
+    "name": "Drenso V.O.F.",
+    "email": "homey-android-tv@drenso.nl"
   },
   "contributors": {
     "developers": [
@@ -52,5 +52,6 @@
       }
     ]
   },
-  "support": "https://support.athom.com/hc/en-us/requests/new"
+  "support": "mailto:homey-android-tv@drenso.nl",
+  "source": "https://github.com/drenso/homey-android-tv"
 }

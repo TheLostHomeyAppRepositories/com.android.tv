@@ -17,11 +17,15 @@ The app provides various commands to your TV, such as:
 ## Requirements
 To use this app, you need to connect your Android device to your Homey. Please note that because this requires a local connection to your TV, it needs a Homey Pro to function properly.
 
+## Support
+
+If you are in need of support please use the support mail link which can be found in the [Homey App Store](https://homey.app/a/com.android.tv).
+
 ## Disclaimer
 This app is not an official app and is not affiliated with Android or Google. Use at your own risk.
 
 ## Installation
-The app can be installed via the [Homey App Store](https://homey.app/en-gb/app/codes.lucasvdh.android-tv/)
+The app can be installed via the [Homey App Store](https://homey.app/a/com.android.tv).
 
 Alternatively you can install this app yourself:
 1. Clone this repository or download the latest release.
