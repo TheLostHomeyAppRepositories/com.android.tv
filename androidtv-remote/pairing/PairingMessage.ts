@@ -62,6 +62,7 @@ interface PairingSecretAck {
     secret: Uint8Array;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface PairingMessage {
     protocolVersion?: number;
     status?: Status;

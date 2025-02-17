@@ -103,7 +103,7 @@ class RemoteDevice extends Remote {
     this.client?.stop();
   }
 
-  private async registerClientListeners() {
+  private async registerClientListeners(): Promise<void> {
     if (!this.client) {
       throw new Error('Client not initialized');
     }
@@ -143,11 +143,9 @@ class RemoteDevice extends Remote {
     });
   }
 
-  private async registerCapabilityListeners() {
-    this.registerMultipleCapabilityListener(this.keyCapabilities, async (capabilityValues: {
-      [x: string]: any;
-    }, capabilityOptions: { [x: string]: any; }) => {
-      return this.onCapabilitiesKeySet(capabilityValues, capabilityOptions);
+  private async registerCapabilityListeners(): Promise<void> {
+    this.registerMultipleCapabilityListener(this.keyCapabilities, async (capabilityValues: Record<string, unknown>) => {
+      return this.onCapabilitiesKeySet(capabilityValues);
     }, this.CAPABILITIES_SET_DEBOUNCE);
 
     this.registerCapabilityListener('onoff', value => {
@@ -171,9 +169,7 @@ class RemoteDevice extends Remote {
     // })
   }
 
-  private async onCapabilitiesKeySet(capability: { [x: string]: any; }, options: {
-    [x: string]: any;
-  }): Promise<void> {
+  private async onCapabilitiesKeySet(capability: Record<string, unknown>): Promise<void> {
     if (typeof capability.key_stop !== 'undefined') {
       return this.client?.sendKeyMediaStop();
     } else if (typeof capability.key_play !== 'undefined') {
@@ -255,8 +251,6 @@ class RemoteDevice extends Remote {
         //     return this.sendKey('Dot')
     else if (typeof capability.key_options !== 'undefined') {
       return this.client?.sendKeyMenu();
-    } else if (typeof capability.key_back !== 'undefined') {
-      return this.client?.sendKeyBack();
     } else if (typeof capability.key_home !== 'undefined') {
       return this.client?.sendKeyHome();
     }
@@ -273,7 +267,7 @@ class RemoteDevice extends Remote {
     // }
   }
 
-  fixCapabilities() {
+  fixCapabilities(): void {
     const oldCapabilities = [
       'volume'
     ];
@@ -334,13 +328,13 @@ class RemoteDevice extends Remote {
     }
   }
 
-  async onSettings({newSettings, changedKeys}: SettingsInput) {
+  async onSettings({changedKeys}: SettingsInput): Promise<void> {
     if (changedKeys.includes("ip")) {
       await this.reloadClient();
     }
   }
 
-  private async reloadClient(timeoutInSeconds: number | null = null) {
+  private async reloadClient(timeoutInSeconds: number | null = null): Promise<void> {
     try {
       this.client?.stop();
     } finally {
@@ -417,7 +411,7 @@ class RemoteDevice extends Remote {
   public async openApplicationOrLink(appLink: string): Promise<void> {
     try {
       new URL(appLink);
-    } catch (e) {
+    } catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
       appLink = 'market://launch?id=' + appLink;
     }
     this.client?.openApplication(appLink);

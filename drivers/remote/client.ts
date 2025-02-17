@@ -1,7 +1,6 @@
 import {AndroidRemoteCertificate, AndroidRemoteOptions} from "./types";
 
 import {AndroidRemote, RemoteDirection, RemoteKeyCode} from "../../androidtv-remote";
-import Homey from "homey";
 
 export enum Input {
   HDMI1,
@@ -73,7 +72,7 @@ export default class AndroidTVRemoteClient {
     this.debug = debug;
 
     this.client = new AndroidRemote(this.host, this.getOptions());
-    this.client.on('error', (error: any) => {
+    this.client.on('error', error => {
       console.log('REMOTE CLIENT ERROR', error);
     });
 
@@ -85,7 +84,8 @@ export default class AndroidTVRemoteClient {
     }
   }
 
-  public on(event: string, callback: (data: any) => void) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public on(event: string, callback: (data: any) => void): void {
     this.client.on(event, callback);
   }
 

@@ -69,15 +69,7 @@ class RemoteManager extends EventEmitter {
                         }
 
                         if (message.remoteConfigure) {
-                            this.client?.write(
-                                this.remoteMessageManager.createRemoteConfigure(
-                                    622,
-                                    'Build.MODEL',
-                                    'Build.MANUFACTURER',
-                                    1,
-                                    'Build.VERSION.RELEASE'
-                                )
-                            );
+                            this.client?.write(this.remoteMessageManager.createRemoteConfigure());
                             this.emit('ready');
                         } else if (message.remoteSetActive) {
                             this.client?.write(this.remoteMessageManager.createRemoteSetActive(622));

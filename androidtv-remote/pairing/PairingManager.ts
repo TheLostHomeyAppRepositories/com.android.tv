@@ -42,7 +42,7 @@ class PairingManager extends EventEmitter {
             return false;
         }
 
-        let sha256 = Crypto.algo.SHA256.create();
+        const sha256 = Crypto.algo.SHA256.create();
 
         if (client_certificate.modulus === undefined
             || client_certificate.exponent === undefined
@@ -58,9 +58,9 @@ class PairingManager extends EventEmitter {
         sha256.update(Crypto.enc.Hex.parse("0" + server_certificate.exponent.slice(2)));
         sha256.update(Crypto.enc.Hex.parse(code.slice(2)));
 
-        let hash = sha256.finalize();
-        let hash_array = this.hexStringToBytes(hash.toString());
-        let check = hash_array[0];
+        const hash = sha256.finalize();
+        const hash_array = this.hexStringToBytes(hash.toString());
+        const check = hash_array[0];
         if (check !== code_bytes[0]) {
             this.client.destroy(new Error("Bad Code"));
             return false;

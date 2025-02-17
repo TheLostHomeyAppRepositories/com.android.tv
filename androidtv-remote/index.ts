@@ -62,7 +62,7 @@ export class AndroidRemote extends EventEmitter {
             this.pairingManager.on('log.info', (...args) => this.emit('log.info', args));
             this.pairingManager.on('log.error', (...args) => this.emit('log.error', args));
 
-            let paired = await this.pairingManager.start()
+            const paired = await this.pairingManager.start()
                 .catch((error) => {
                     console.error(error);
                 });
@@ -126,8 +126,8 @@ export class AndroidRemote extends EventEmitter {
     }
 }
 
-let RemoteKeyCode = (new RemoteMessageManager).RemoteKeyCode;
-let RemoteDirection = (new RemoteMessageManager).RemoteDirection;
+const RemoteKeyCode = (new RemoteMessageManager).RemoteKeyCode;
+const RemoteDirection = (new RemoteMessageManager).RemoteDirection;
 
 export {RemoteKeyCode, RemoteDirection};
 

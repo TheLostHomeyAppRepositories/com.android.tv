@@ -11,7 +11,7 @@ import {Device as DeviceType, DeviceData, DeviceSettings} from "./types";
 import PairSession from "homey/lib/PairSession";
 
 class RemoteDriver extends Driver {
-  async onPair(session: any): Promise<void> {
+  async onPair(session: PairSession): Promise<void> {
     let devices: Array<DeviceType> = [];
     const existingDevices: Array<Device> = this.getDevices();
     let pairingDevice: DeviceType | null = null;

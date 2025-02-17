@@ -23,7 +23,7 @@ class RemoteMessageManager {
         this.model = model;
     }
 
-    create(payload: any): Uint8Array {
+    create(payload: Record<string, unknown>): Uint8Array {
         if (!payload.remotePingResponse) {
             if (this.debug) {
                 console.debug('Create Remote ' + JSON.stringify(payload));
@@ -47,7 +47,7 @@ class RemoteMessageManager {
         return array;
     }
 
-    createRemoteConfigure(code1: number, model: string, vendor: string, unknown1: number, unknown2: string): Uint8Array {
+    createRemoteConfigure(): Uint8Array {
         return this.create({
             remoteConfigure: {
                 code1: 622,

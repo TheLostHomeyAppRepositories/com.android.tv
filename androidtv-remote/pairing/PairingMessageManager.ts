@@ -22,7 +22,7 @@ class PairingMessageManager {
         this.model = model;
     }
 
-    create(payload: any): Uint8Array {
+    create(payload: Record<string, unknown>): Uint8Array {
         const errMsg = this.PairingMessage.verify(payload);
         if (errMsg) {
             throw new Error(errMsg);
@@ -74,7 +74,7 @@ class PairingMessageManager {
         });
     }
 
-    createPairingSecret(secret: Array<String | Number>): Uint8Array {
+    createPairingSecret(secret: Array<string | number>): Uint8Array {
         return this.create({
             pairingSecret: {
                 secret: secret,

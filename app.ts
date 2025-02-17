@@ -13,7 +13,7 @@ class AndroidTV extends Homey.App {
         this.log('Flow card listeners have been registered');
     }
 
-    private async registerFlowCardListeners() {
+    private async registerFlowCardListeners(): Promise<void> {
         this.homey.flow.getActionCard('open_application')
             .registerRunListener(this.onFlowActionOpenApplication);
             // .registerArgumentAutocompleteListener('app', this.onFlowApplicationAutocomplete)
@@ -48,7 +48,7 @@ class AndroidTV extends Homey.App {
         this.log('Initialized flow');
     }
 
-    async onFlowActionOpenApplication({device, app_link}: { device: RemoteDevice, app_link: string}) {
+    async onFlowActionOpenApplication({device, app_link}: { device: RemoteDevice, app_link: string}): Promise<void> {
         console.log('Open application link', app_link);
         try {
             return device.openApplicationOrLink(app_link);
@@ -57,11 +57,11 @@ class AndroidTV extends Homey.App {
         }
     }
 
-    async onFlowActionPressKey({device, option}: { device: RemoteDevice, option: { key: string } }) {
+    async onFlowActionPressKey({device, option}: { device: RemoteDevice, option: { key: string } }): Promise<void> {
         return device.pressKey(option.key);
     }
 
-    async onFlowActionLongPressKey({device, option, seconds}: { device: RemoteDevice, option: { key: string }, seconds: number }) {
+    async onFlowActionLongPressKey({device, option, seconds}: { device: RemoteDevice, option: { key: string }, seconds: number }): Promise<void> {
         await device.pressKey(option.key, RemoteDirection.START_LONG);
         await new Promise(((resolve) => {
             setTimeout(resolve, seconds * 1000);
@@ -82,7 +82,7 @@ class AndroidTV extends Homey.App {
             });
     }
 
-    async onFlowActionSelectSource({device, source}: { device: RemoteDevice, source: string }) {
+    async onFlowActionSelectSource({device, source}: { device: RemoteDevice, source: string }): Promise<void> {
         return device.selectSource(source);
     }
 }
