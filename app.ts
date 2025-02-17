@@ -1,8 +1,11 @@
+import {Log} from '@drenso/homey-log';
 import Homey, {FlowCard} from "homey";
 import RemoteDevice from "./drivers/remote/device";
 import {RemoteDirection} from "./androidtv-remote";
 
 class AndroidTV extends Homey.App {
+    homeyLog = new Log({ homey: this.homey });
+
     /**
      * onInit is called when the app is initialized.
      */
