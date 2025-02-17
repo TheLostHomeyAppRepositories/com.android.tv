@@ -1,6 +1,6 @@
 {
   "id": "com.android.tv",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#3DDC84",
@@ -24,16 +24,56 @@
     "local"
   ],
   "tags": {
-    "en": ["Android", "TV", "remote"],
-    "nl": ["Android", "TV", "afstandsbediening"],
-    "de": ["Android", "TV", "Fernbedienung"],
-    "fr": ["Android", "TV", "télécommande"],
-    "it": ["Android", "TV", "telecomando"],
-    "sv": ["Android", "TV", "fjärrkontroll"],
-    "no": ["Android", "TV", "fjernkontroll"],
-    "es": ["Android", "TV", "control remoto"],
-    "da": ["Android", "TV", "fjernbetjening"],
-    "pl": ["Android", "TV", "pilot"]
+    "en": [
+      "Android",
+      "TV",
+      "remote"
+    ],
+    "nl": [
+      "Android",
+      "TV",
+      "afstandsbediening"
+    ],
+    "de": [
+      "Android",
+      "TV",
+      "Fernbedienung"
+    ],
+    "fr": [
+      "Android",
+      "TV",
+      "télécommande"
+    ],
+    "it": [
+      "Android",
+      "TV",
+      "telecomando"
+    ],
+    "sv": [
+      "Android",
+      "TV",
+      "fjärrkontroll"
+    ],
+    "no": [
+      "Android",
+      "TV",
+      "fjernkontroll"
+    ],
+    "es": [
+      "Android",
+      "TV",
+      "control remoto"
+    ],
+    "da": [
+      "Android",
+      "TV",
+      "fjernbetjening"
+    ],
+    "pl": [
+      "Android",
+      "TV",
+      "pilot"
+    ]
   },
   "images": {
     "xlarge": "./assets/images/xlarge.png",

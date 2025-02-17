@@ -142,5 +142,8 @@
     "es": "Descripción mejorada de la tienda de aplicaciones",
     "da": "Forbedret appbutik beskrivelse",
     "pl": "Ulepszony opis sklepu z aplikacjami"
+  },
+  "1.0.0": {
+    "en": "First official release. Based on community app, but added number inputs and app control"
   }
 }
