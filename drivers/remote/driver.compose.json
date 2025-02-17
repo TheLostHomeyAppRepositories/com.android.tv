@@ -1,15 +1,6 @@
 {
   "name": {
-    "en": "Remote",
-    "nl": "Afstandsbediening",
-    "de": "Fernbedienung",
-    "fr": "Télécommande",
-    "it": "Telecomando",
-    "sv": "Fjärrkontroll",
-    "no": "Fjernkontroll",
-    "es": "Control remoto",
-    "da": "Fjernbetjening",
-    "pl": "Pilot zdalnego sterowania"
+    "en": "Android TV"
   },
   "connectivity": ["lan"],
   "pair": [
