@@ -174,7 +174,19 @@
           },
           {
             "name": "option",
-            "type": "autocomplete"
+            "type": "autocomplete",
+            "title": {
+              "en": "Key",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Touche",
+              "it": "Tasto",
+              "sv": "Knapp",
+              "no": "Tast",
+              "es": "Tecla",
+              "da": "Tast",
+              "pl": "Klawisz"
+            }
           },
           {
             "name": "seconds",
@@ -296,7 +308,19 @@
           },
           {
             "name": "option",
-            "type": "autocomplete"
+            "type": "autocomplete",
+            "title": {
+              "en": "Key",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Touche",
+              "it": "Tasto",
+              "sv": "Knapp",
+              "no": "Tast",
+              "es": "Tecla",
+              "da": "Tast",
+              "pl": "Klawisz"
+            }
           }
         ]
       },
@@ -335,6 +359,18 @@
           {
             "name": "source",
             "type": "dropdown",
+            "title": {
+              "en": "Source",
+              "nl": "Input",
+              "de": "Quelle",
+              "fr": "Source",
+              "it": "Sorgente",
+              "sv": "Källa",
+              "no": "Kilde",
+              "es": "Fuente",
+              "da": "Kilde",
+              "pl": "Źródło"
+            },
             "values": [
               {
                 "id": "HDMI1",
