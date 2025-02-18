@@ -76,7 +76,7 @@ class RemoteDevice extends Remote {
 
       this.client.on('ready', () => {
         this.log("Client has been initialized");
-        this.setAvailable();
+        this.setAvailable().catch(this.error);
       });
       this.client.on('close', ({hasError, error}) => {
         if (hasError) {
@@ -84,7 +84,7 @@ class RemoteDevice extends Remote {
         } else {
           this.log("Client has been closed");
         }
-        this.setUnavailable();
+        this.setUnavailable().catch(this.error);
       });
 
       await this.registerClientListeners();
