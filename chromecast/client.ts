@@ -3,16 +3,18 @@ import util from "node:util";
 import PacketStreamWrapper from "./packet-stream-wrapper";
 import tls, {TLSSocket} from "node:tls";
 import {extensions} from "./protocol";
+import Channel from "./channel";
 import CastMessage = extensions.api.cast_channel.CastMessage;
 import ICastMessage = extensions.api.cast_channel.ICastMessage;
-import Channel from "./channel";
+import PayloadType = extensions.api.cast_channel.CastMessage.PayloadType;
+import ProtocolVersion = extensions.api.cast_channel.CastMessage.ProtocolVersion;
 
 class Client extends EventEmitter {
   private socket: TLSSocket | null;
   private ps: PacketStreamWrapper | null;
   private readonly debug: (...args: unknown[]) => void;
 
-  constructor(debug: (...args: unknown[]) => void) {
+  constructor(debug: (...args: unknown[]) => void = () => {}) {
     super();
     this.debug = debug;
     this.socket = null;
@@ -32,7 +34,7 @@ class Client extends EventEmitter {
       };
     }
 
-    options.port = options.port || 8009;
+    options.port = options.port ?? 8009;
     options.rejectUnauthorized = false;
 
     if(callback) this.once('connect', callback);
@@ -67,16 +69,21 @@ class Client extends EventEmitter {
       const message = CastMessage.decode(buf);
 
       this.debug(
-          'recv message: protocolVersion=%s sourceId=%s destinationId=%s namespace=%s data=%s',
+          'recv message:',
+          'protocolVersion=',
           message.protocolVersion,
+          ', sourceId=',
           message.sourceId,
+          ', destinationId=',
           message.destinationId,
+          ', namespace=',
           message.namespace,
+          ', data=',
           (message.payloadType === 1) // BINARY
               ? util.inspect(message.payloadBinary)
               : message.payloadUtf8
       );
-      if(message.protocolVersion !== 0) { // CASTV2_1_0
+      if(message.protocolVersion !== ProtocolVersion.CASTV2_1_0) {
         this.emit('error', new Error('Unsupported protocol version: ' + message.protocolVersion));
         this.close();
         return;
@@ -86,7 +93,7 @@ class Client extends EventEmitter {
           message.sourceId,
           message.destinationId,
           message.namespace,
-          (message.payloadType === 1) // BINARY
+          (message.payloadType === PayloadType.BINARY)
               ? message.payloadBinary
               : message.payloadUtf8
       );
@@ -105,15 +112,15 @@ class Client extends EventEmitter {
 
   send(sourceId: string, destinationId: string, namespace: string, data: string | Uint8Array) {
     const messagePayload = Buffer.isBuffer(data) ? {
-      payloadType: 1, // BINARY;
+      payloadType: PayloadType.BINARY,
       payloadBinary: data as Uint8Array,
     } : {
-      payloadType: 0, // STRING;
+      payloadType: PayloadType.STRING,
       payloadUtf8: data as string,
     };
 
     const message: ICastMessage = {
-      protocolVersion: 0, // CASTV2_1_0
+      protocolVersion: ProtocolVersion.CASTV2_1_0,
       sourceId: sourceId,
       destinationId: destinationId,
       namespace: namespace,
@@ -121,12 +128,17 @@ class Client extends EventEmitter {
     };
 
     this.debug(
-        'send message: protocolVersion=%s sourceId=%s destinationId=%s namespace=%s data=%s',
+        'send message:',
+        'protocolVersion=',
         message.protocolVersion,
+        ', sourceId=',
         message.sourceId,
+        ', destinationId=',
         message.destinationId,
+        ', namespace=',
         message.namespace,
-        (message.payloadType === 1) // BINARY
+        ', data=',
+        (message.payloadType === PayloadType.BINARY)
             ? util.inspect(message.payloadBinary)
             : message.payloadUtf8
     );
