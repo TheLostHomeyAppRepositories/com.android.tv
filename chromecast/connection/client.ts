@@ -8,6 +8,7 @@ import CastMessage = extensions.api.cast_channel.CastMessage;
 import ICastMessage = extensions.api.cast_channel.ICastMessage;
 import PayloadType = extensions.api.cast_channel.CastMessage.PayloadType;
 import ProtocolVersion = extensions.api.cast_channel.CastMessage.ProtocolVersion;
+import {NAMESPACES} from "../Chromecast";
 
 class Client extends EventEmitter {
   private socket: TLSSocket | null;
@@ -69,7 +70,7 @@ class Client extends EventEmitter {
     const onpacket = (buf: Uint8Array) => {
       const message = CastMessage.decode(buf);
 
-      this.debug(
+      if (message.namespace !== NAMESPACES.HEARTBEAT) this.debug(
           'recv message:',
           'protocolVersion=',
           message.protocolVersion,
@@ -111,7 +112,7 @@ class Client extends EventEmitter {
     this.socket?.destroy();
   };
 
-  send(sourceId: string, destinationId: string, namespace: string, data: string | Uint8Array) {
+  send(namespace: string, data: string | Uint8Array, sourceId: string = 'sender-0', destinationId: string = 'receiver-0') {
     const messagePayload = Buffer.isBuffer(data) ? {
       payloadType: PayloadType.BINARY,
       payloadBinary: data as Uint8Array,
@@ -128,7 +129,7 @@ class Client extends EventEmitter {
       ...messagePayload,
     };
 
-    this.debug(
+    if (namespace !== NAMESPACES.HEARTBEAT) this.debug(
         'send message:',
         'protocolVersion=',
         message.protocolVersion,
@@ -148,7 +149,7 @@ class Client extends EventEmitter {
     this.ps?.send(buf);
   };
 
-  createChannel(sourceId: string, destinationId: string, namespace: string) {
+  createChannel(namespace: string, sourceId: string = 'sender-0', destinationId: string = 'receiver-0') {
     return new Channel(this, sourceId, destinationId, namespace);
   };
 }

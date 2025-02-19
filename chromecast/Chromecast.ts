@@ -2,9 +2,17 @@ import Client from "./connection/client";
 import tls from "node:tls";
 import {Application, ReceiverStatusMessage} from "./channel-message";
 
+export enum NAMESPACES {
+    CONNECTION = 'urn:x-cast:com.google.cast.tp.connection',
+    HEARTBEAT = 'urn:x-cast:com.google.cast.tp.heartbeat',
+    RECEIVER = 'urn:x-cast:com.google.cast.receiver',
+    MEDIA = 'urn:x-cast:com.google.cast.media',
+}
+
 export default class Chromecast {
     private readonly debug: (...args: unknown[]) => void;
     private readonly connectionOptions: string | tls.ConnectionOptions;
+    private client!: Client;
 
     constructor(connectionOptions: string | tls.ConnectionOptions, debug: (...args: unknown[]) => void = () => {}) {
         this.connectionOptions = connectionOptions;
@@ -13,15 +21,14 @@ export default class Chromecast {
 
     async initialize() {
         const debug = this.debug;
-        const client = new Client(debug);
-
-        await client.connectAsync(this.connectionOptions);
+        this.client = new Client(debug);
+        await this.client.connectAsync(this.connectionOptions);
 
         // create various namespace handlers
-        const connection = client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.connection');
-        const heartbeat = client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.heartbeat');
-        const receiver = client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.receiver');
-        const media = client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.media');
+        const connection = this.client.createChannel(NAMESPACES.CONNECTION);
+        const heartbeat = this.client.createChannel(NAMESPACES.HEARTBEAT);
+        const receiver = this.client.createChannel(NAMESPACES.RECEIVER);
+        const media = this.client.createChannel(NAMESPACES.MEDIA);
 
         // display receiver status updates
         receiver.on('message', (data) => {
@@ -46,7 +53,7 @@ export default class Chromecast {
 
         const applicationHasMedia = (application: Application) => {
             for (const namespace of application.namespaces) {
-                if (namespace.name === 'urn:x-cast:com.google.cast.media') {
+                if (namespace.name === NAMESPACES.MEDIA) {
                     return true;
                 }
             }
@@ -66,8 +73,8 @@ export default class Chromecast {
         const subscribeToMediaNamespace = (message: ReceiverStatusMessage, application: Application) => {
             const source = "client-" + message.requestId;
             const destination = application.sessionId;
-            const data = JSON.stringify({ type: "CONNECT", requestId: client.requestId++ });
-            client.send(source, destination, 'urn:x-cast:com.google.cast.tp.connection', data);
+            const data = JSON.stringify({ type: "CONNECT", requestId: this.client.requestId++ });
+            this.client.send(NAMESPACES.CONNECTION, data, source, destination);
         }
     }
 }

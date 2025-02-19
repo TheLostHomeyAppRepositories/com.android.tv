@@ -32,13 +32,13 @@ class Channel extends EventEmitter {
 
   send(data: any) {
     this.bus.send(
-        this.sourceId,
-        this.destinationId,
         this.namespace,
         JSON.stringify({
           ...data,
           requestId: this.bus.requestId++
-        })
+        }),
+        this.sourceId,
+        this.destinationId
     );
   };
 
