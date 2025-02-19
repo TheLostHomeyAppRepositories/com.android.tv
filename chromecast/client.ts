@@ -19,6 +19,12 @@ class Client extends EventEmitter {
     this.ps = null;
   }
 
+  connectAsync(options: string | tls.ConnectionOptions): Promise<void> {
+    return new Promise(resolve => {
+      this.connect(options, resolve)
+    })
+  }
+
   connect(options: string | tls.ConnectionOptions, callback?: () => void) {
     if(typeof options === 'string') {
       options = {
