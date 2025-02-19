@@ -13,6 +13,7 @@ class Client extends EventEmitter {
   private socket: TLSSocket | null;
   private ps: PacketStreamWrapper | null;
   private readonly debug: (...args: unknown[]) => void;
+  requestId = 1;
 
   constructor(debug: (...args: unknown[]) => void = () => {}) {
     super();
