@@ -3,7 +3,7 @@ import {DeviceSettings, DeviceStore, SettingsInput} from "./types";
 import AndroidTVRemoteClient, {Digit, Input, Volume} from "./client";
 import RemoteMessage from "../../androidtv-remote/remote/RemoteMessage";
 import Homey from "homey";
-import Client from "../../chromecast/client";
+import Chromecast from "../../chromecast/Chromecast";
 
 class RemoteDevice extends Remote {
   private client?: AndroidTVRemoteClient;
@@ -54,6 +54,7 @@ class RemoteDevice extends Remote {
     // 'key_blue'
   ];
   private CAPABILITIES_SET_DEBOUNCE: number = 100;
+  private chromecast?: Chromecast;
 
   async initializeClient(): Promise<void> {
     try {
@@ -104,33 +105,9 @@ class RemoteDevice extends Remote {
 
   async initializeChromecastClient() {
     const debug = (...args: unknown[]) => this.log("[Chromecast]", ...args);
-    const client = new Client(debug);
-
     const settings: DeviceSettings = this.getSettings();
-    await client.connectAsync(settings.ip);
-
-    // create various namespace handlers
-    const connection = client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.connection');
-    const heartbeat = client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.heartbeat');
-    const receiver = client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.receiver');
-
-    // establish virtual connection to the receiver
-    connection.send({ type: 'CONNECT' });
-
-    // start heartbeating
-    setInterval(() => {
-      heartbeat.send({ type: 'PING' });
-    }, 5000);
-
-    // launch YouTube app
-    // receiver.send({ type: 'LAUNCH', appId: 'YouTube', requestId: 1 });
-
-    // display receiver status updates
-    receiver.on('message', (data, broadcast) => {
-      if(data.type === 'RECEIVER_STATUS') {
-        this.log("Status:", data.status);
-      }
-    });
+    this.chromecast = new Chromecast(settings.ip, debug);
+    await this.chromecast.initialize();
   }
 
   async onUninit(): Promise<void> {
