@@ -1,1 +1,5 @@
 These files are based on the castv2 library, found at https://github.com/thibauts/node-castv2
+
+Static protobuf files were created using:
+pbjs -t static-module -w commonjs -o chromecast/protocol.js chromecast/cast_channel.proto
+pbts -o chromecast/protocol.d.ts chromecast/protocol.js
