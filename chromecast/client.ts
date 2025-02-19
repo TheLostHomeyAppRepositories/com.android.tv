@@ -129,8 +129,8 @@ class Client extends EventEmitter {
     this.ps?.send(buf);
   };
 
-  createChannel(sourceId: string, destinationId: string, namespace: string, encoding: string) {
-    return new Channel(this, sourceId, destinationId, namespace, encoding);
+  createChannel(sourceId: string, destinationId: string, namespace: string) {
+    return new Channel(this, sourceId, destinationId, namespace);
   };
 }
 
