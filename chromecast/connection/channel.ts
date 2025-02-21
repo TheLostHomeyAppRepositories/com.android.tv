@@ -3,23 +3,17 @@ import Client from "./client";
 
 class Channel extends EventEmitter {
   private readonly bus: Client;
-  private readonly sourceId: string;
-  private readonly destinationId: string;
   private readonly namespace: string;
 
-  constructor(bus: Client, sourceId: string, destinationId: string, namespace: string) {
+  constructor(bus: Client, namespace: string) {
     super();
 
     this.bus = bus;
-    this.sourceId = sourceId;
-    this.destinationId = destinationId;
     this.namespace = namespace;
 
-    const onmessage = (sourceId: string, destinationId: string, namespace: string, data: string | Uint8Array)=> {
-      if(sourceId !== this.destinationId) return;
-      if(destinationId !== this.sourceId && destinationId !== '*') return;
+    const onmessage = (namespace: string, data: string | Uint8Array, sourceId: string, destinationId: string)=> {
       if(namespace !== this.namespace) return;
-      this.emit('message', JSON.parse(data as string), destinationId === '*');
+      this.emit('message', JSON.parse(data as string));
     }
 
     const onclose = () => {
@@ -36,9 +30,7 @@ class Channel extends EventEmitter {
         JSON.stringify({
           ...data,
           requestId: this.bus.requestId++
-        }),
-        this.sourceId,
-        this.destinationId
+        })
     );
   };
 

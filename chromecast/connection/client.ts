@@ -92,12 +92,12 @@ class Client extends EventEmitter {
       }
 
       this.emit('message',
-          message.sourceId,
-          message.destinationId,
           message.namespace,
           (message.payloadType === PayloadType.BINARY)
               ? message.payloadBinary
-              : message.payloadUtf8
+              : message.payloadUtf8,
+          message.sourceId,
+          message.destinationId,
       );
     }
 
@@ -149,8 +149,8 @@ class Client extends EventEmitter {
     this.ps?.send(buf);
   };
 
-  createChannel(namespace: string, sourceId: string = 'sender-0', destinationId: string = 'receiver-0') {
-    return new Channel(this, sourceId, destinationId, namespace);
+  createChannel(namespace: string) {
+    return new Channel(this, namespace);
   };
 }
 
