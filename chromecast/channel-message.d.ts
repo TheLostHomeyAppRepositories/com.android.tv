@@ -31,3 +31,12 @@ export type ReceiverStatusMessage = {
     },
     "type": "RECEIVER_STATUS"
 }
+
+const enum ConnectionMessageType {
+    CLOSE= 'CLOSE',
+    CONNECT= 'CONNECT',
+}
+
+export type ConnectionMessage = {
+    type: ConnectionMessageType,
+}

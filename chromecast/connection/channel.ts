@@ -3,7 +3,7 @@ import Client from "./client";
 
 type ChannelEvents = {
   close: [],
-  message: [data: unknown]
+  message: [data: unknown, sourceId: string, destinationId: string]
 }
 
 class Channel extends EventEmitter<ChannelEvents> {
@@ -18,7 +18,7 @@ class Channel extends EventEmitter<ChannelEvents> {
 
     const onmessage = (namespace: string, data: string | Uint8Array, sourceId: string, destinationId: string)=> {
       if(namespace !== this.namespace) return;
-      this.emit('message', JSON.parse(data as string));
+      this.emit('message', JSON.parse(data as string), sourceId, destinationId);
     }
 
     const onclose = () => {
