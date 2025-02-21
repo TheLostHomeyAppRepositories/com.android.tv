@@ -10,7 +10,14 @@ import PayloadType = extensions.api.cast_channel.CastMessage.PayloadType;
 import ProtocolVersion = extensions.api.cast_channel.CastMessage.ProtocolVersion;
 import {NAMESPACES} from "../Chromecast";
 
-class Client extends EventEmitter {
+type ClientEvents = {
+  connect: [];
+  error: [err: Error];
+  close: [];
+  message: [namespace: string, data: string | Uint8Array, sourceId: string, destinationId: string];
+}
+
+class Client extends EventEmitter<ClientEvents> {
   private socket: TLSSocket | null;
   private ps: PacketStreamWrapper | null;
   private readonly debug: (...args: unknown[]) => void;

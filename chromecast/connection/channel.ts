@@ -1,7 +1,12 @@
 import EventEmitter from "events";
 import Client from "./client";
 
-class Channel extends EventEmitter {
+type ChannelEvents = {
+  close: [],
+  message: [data: unknown]
+}
+
+class Channel extends EventEmitter<ChannelEvents> {
   private readonly bus: Client;
   private readonly namespace: string;
 

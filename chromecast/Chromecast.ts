@@ -2,7 +2,7 @@ import Client from "./connection/client";
 import tls from "node:tls";
 import {Application, ReceiverStatusMessage} from "./channel-message";
 
-export enum NAMESPACES {
+export const enum NAMESPACES {
     CONNECTION = 'urn:x-cast:com.google.cast.tp.connection',
     HEARTBEAT = 'urn:x-cast:com.google.cast.tp.heartbeat',
     RECEIVER = 'urn:x-cast:com.google.cast.receiver',
@@ -47,7 +47,7 @@ export default class Chromecast {
         // display receiver status updates
         receiver.on('message', (data) => {
             // debug("Receiver data:", JSON.stringify(data));
-            handleCastReceiverMessage(data);
+            handleCastReceiverMessage(data as ReceiverStatusMessage);
         });
 
         media.on('message', (data) => {

@@ -1,12 +1,16 @@
 import EventEmitter from "events";
 import {TLSSocket} from "node:tls";
 
-enum StreamState {
+const enum StreamState {
   WAITING_HEADER  = 0,
   WAITING_PACKET = 1,
 }
 
-class PacketStreamWrapper extends EventEmitter {
+type PacketStreamWrapperEvents = {
+  packet: [buffer: Uint8Array]
+}
+
+class PacketStreamWrapper extends EventEmitter<PacketStreamWrapperEvents> {
   private readonly stream: TLSSocket;
 
   constructor(stream: TLSSocket) {
