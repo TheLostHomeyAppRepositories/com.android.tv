@@ -11,17 +11,31 @@ export enum NAMESPACES {
 
 export default class Chromecast {
     private readonly debug: (...args: unknown[]) => void;
+    private readonly error: (...args: unknown[]) => void;
     private readonly connectionOptions: string | tls.ConnectionOptions;
     private client!: Client;
 
-    constructor(connectionOptions: string | tls.ConnectionOptions, debug: (...args: unknown[]) => void = () => {}) {
+    constructor(connectionOptions: string | tls.ConnectionOptions, debug: (...args: unknown[]) => void = () => {}, error: (...args: unknown[]) => void = () => {}) {
         this.connectionOptions = connectionOptions;
         this.debug = debug;
+        this.error = error;
+    }
+
+    handleError(err: any) {
+        if (err?.errno === -113) {
+            this.error("Chromecast unreachable")
+        } else if (err?.errno === -111) {
+            this.error("Chromecast connection refused")
+        } else {
+            this.error(err)
+        }
     }
 
     async initialize() {
         const debug = this.debug;
-        this.client = new Client(debug);
+        this.client = new Client();
+        this.client.on("error", (err) => this.handleError(err));
+
         await this.client.connectAsync(this.connectionOptions);
 
         // create various namespace handlers

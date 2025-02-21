@@ -105,8 +105,9 @@ class RemoteDevice extends Remote {
 
   async initializeChromecastClient() {
     const debug = (...args: unknown[]) => this.log("[Chromecast]", ...args);
+    const error = (...args: unknown[]) => this.error("[Chromecast]", ...args);
     const settings: DeviceSettings = this.getSettings();
-    this.chromecast = new Chromecast(settings.ip, debug);
+    this.chromecast = new Chromecast(settings.ip, debug, error);
     await this.chromecast.initialize();
   }
 
