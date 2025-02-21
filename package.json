@@ -11,6 +11,7 @@
   "dependencies": {
     "@drenso/homey-log": "9.2.0",
     "crypto-js": "4.2.0",
+    "node-fetch": "^2.6.0",
     "node-forge": "1.3.1",
     "protobufjs": "7.4.0",
     "source-map-support": "0.5.21"
@@ -20,6 +21,7 @@
     "@types/crypto-js": "4.2.2",
     "@types/homey": "npm:homey-apps-sdk-v3-types@0.3.6",
     "@types/node": "18.19.75",
+    "@types/node-fetch": "^2.6.0",
     "@types/node-forge": "1.3.11",
     "@types/source-map-support": "0.5.10",
     "@typescript-eslint/eslint-plugin": "8.17.0",

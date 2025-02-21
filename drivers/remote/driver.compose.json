@@ -162,6 +162,12 @@
     "key_digit_7",
     "key_digit_8",
     "key_digit_9",
-    "current_application"
+    "current_application",
+    "speaker_playing",
+    "speaker_next",
+    "speaker_prev",
+    "speaker_artist",
+    "speaker_track",
+    "speaker_album"
   ]
 }

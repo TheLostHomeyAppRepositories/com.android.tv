@@ -2,8 +2,9 @@ import {Remote} from "../../remote";
 import {DeviceSettings, DeviceStore, SettingsInput} from "./types";
 import AndroidTVRemoteClient, {Digit, Input, Volume} from "./client";
 import RemoteMessage from "../../androidtv-remote/remote/RemoteMessage";
-import Homey from "homey";
-import Chromecast from "../../chromecast/Chromecast";
+import Homey, {Image} from "homey";
+import Chromecast, {MediaUpdate} from "../../chromecast/Chromecast";
+import fetch from "node-fetch";
 
 class RemoteDevice extends Remote {
   private client?: AndroidTVRemoteClient;
@@ -55,6 +56,8 @@ class RemoteDevice extends Remote {
   ];
   private CAPABILITIES_SET_DEBOUNCE: number = 100;
   private chromecast?: Chromecast;
+  private albumArt?: Image;
+  private albumArtUrl: string | null = null;
 
   async initializeClient(): Promise<void> {
     try {
@@ -100,15 +103,73 @@ class RemoteDevice extends Remote {
       console.log(error);
     }
 
+    this.albumArt = await this.homey.images.createImage();
+    await this.clearChromecastMedia();
     await this.initializeChromecastClient();
   }
 
   async initializeChromecastClient() {
     const debug = (...args: unknown[]) => this.log("[Chromecast]", ...args);
     const error = (...args: unknown[]) => this.error("[Chromecast]", ...args);
+    const updateMedia = async (update: MediaUpdate) => this.handleChromecastMedia(update);
     const settings: DeviceSettings = this.getSettings();
-    this.chromecast = new Chromecast(settings.ip, debug, error);
+    this.chromecast = new Chromecast(settings.ip, updateMedia, debug, error);
     await this.chromecast.initialize();
+  }
+
+  async handleChromecastMedia(update: MediaUpdate) {
+    if (update.title !== undefined) {
+      await this.setCapabilityValue("speaker_track", update.title).catch(this.error);
+    }
+    if (update.subtitle !== undefined) {
+      await this.setCapabilityValue('speaker_artist', update.subtitle).catch(this.error);
+    }
+    if (update.album !== undefined) {
+      await this.setCapabilityValue("speaker_album", update.album).catch(this.error);
+    }
+    if (update.playing !== undefined) {
+      await this.setCapabilityValue("speaker_playing", update.playing).catch(this.error);
+    }
+    if (update.image !== undefined) {
+      this.log("Image url:", update.image)
+      await this.setAlbumArt(update.image).catch(this.error)
+    }
+  }
+
+  async clearChromecastMedia() {
+    await this.handleChromecastMedia({
+      title: null,
+      subtitle: null,
+      album: null,
+      image: null,
+      playing: null,
+    })
+  }
+
+  async setAlbumArt(url: string | null) {
+    if (!this.albumArt || this.albumArtUrl === url) return;
+
+    if (url === null) {
+      this.log("Clearing album art");
+      await this.albumArt.unregister();
+      this.albumArt = await this.homey.images.createImage();
+    } else if (url.startsWith('https')) {
+      this.albumArt.setUrl(url);
+    } else if (url.startsWith('http')) {
+      this.albumArt.setStream((stream: any) => this.createAlbumArtStream(url, stream))
+    }
+
+    await this.albumArt.update();
+    await this.setAlbumArtImage(this.albumArt);
+    this.albumArtUrl = url;
+  }
+
+  async createAlbumArtStream(url: string, stream: any) {
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`Could not fetch image url: ${url}`)
+    }
+    return res.body.pipe(stream)
   }
 
   async onUninit(): Promise<void> {
@@ -176,9 +237,21 @@ class RemoteDevice extends Remote {
       return this.client?.mute();
     });
 
-    // this.registerCapabilityListener('key', value => {
-    //     return this._onCapabilityAmbilightModeSet(value)
-    // })
+    this.registerCapabilityListener('speaker_playing', (value) => {
+      if (value) {
+        this.client?.sendKeyMediaPlay();
+      } else {
+        this.client?.sendKeyMediaPause();
+      }
+    })
+
+    this.registerCapabilityListener("speaker_next", () => {
+      this.client?.sendKeyMediaNext();
+    })
+
+    this.registerCapabilityListener("speaker_prev", () => {
+      this.client?.sendKeyMediaPrevious();
+    })
   }
 
   private async onCapabilitiesKeySet(capability: Record<string, unknown>): Promise<void> {
@@ -304,7 +377,13 @@ class RemoteDevice extends Remote {
       "key_confirm",
       "key_previous",
       "key_next",
-      "key_watch_tv"
+      "key_watch_tv",
+      "speaker_playing",
+      "speaker_next",
+      "speaker_prev",
+      "speaker_track",
+      "speaker_artist",
+      "speaker_album"
     ];
 
     for (const i in oldCapabilities) {
