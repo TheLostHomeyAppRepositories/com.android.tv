@@ -4,7 +4,7 @@ import Channel from "../connection/channel";
 import Chromecast, {MediaUpdate, NAMESPACES} from "../Chromecast";
 import {MediaImage, MediaMetaData, MediaStatus, MediaStatusMessage, PlayerState} from "../channel-message";
 
-const TEXT_SELECTOR_PRIORITIES = ["title", "episodeTitle", "songName", "chapterTitle", "trackNumber", "chapterNumber", "subtitle", "seriesTitle", "bookTitle", "artist", "artistName", "albumArtist", "composer", "episodeNumber", "episode"] as const;
+const TEXT_SELECTOR_PRIORITIES: (keyof MediaMetaData)[] = ["title", "episodeTitle", "songName", "trackNumber", "subtitle", "seriesTitle", "artist", "artistName", "albumArtist", "composer", "episodeNumber", "episode"] as const;
 
 export default class MediaChannel {
     private readonly channel: Channel;

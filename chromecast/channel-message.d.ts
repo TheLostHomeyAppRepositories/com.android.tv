@@ -73,23 +73,15 @@ const enum StreamType {
     OTHER = "OTHER",
 }
 
-const enum RepeatMode {
-    OFF = "REPEAT_OFF",
-    ALL = "REPEAT_ALL",
-    SINGLE = "REPEAT_SINGLE",
-    ALL_AND_SHUFFLE,
-}
-
 const enum MetaDataType {
-    GENERIC,
-    MOVIE,
-    TV_SHOW,
-    MUSIC_TRACK,
-    PHOTO,
-    AUDIOBOOK_CHAPTER,
+    GENERIC = 0,
+    MOVIE = 1,
+    TV_SHOW = 2,
+    MUSIC_TRACK = 3,
+    PHOTO= 4,
 }
 
-// https://developers.google.com/cast/docs/reference/web_sender/chrome.cast.media.Media
+// https://developers.google.com/cast/docs/media/messages
 type MediaStatus = {
     "currentTime"?: number,
     "mediaSessionId": number,
@@ -99,7 +91,6 @@ type MediaStatus = {
         "level": number,
         "muted": boolean
     },
-    "repeatMode": RepeatMode,
     "media": MediaInfo,
 }
 
@@ -135,9 +126,6 @@ type MediaMetaData = {
     songName?: string,
     // deprecated for artist
     artistName?: string,
-    bookTitle?: string,
-    chapterNumber?: number,
-    chapterTitle?: string,
 };
 
 type MediaImage = {
