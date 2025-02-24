@@ -2,7 +2,7 @@ import Client from "./connection/client";
 import tls from "node:tls";
 import MediaChannel from "./channels/MediaChannel";
 import ConnectionChannel from "./channels/ConnectionChannel";
-import ReceiverChannel from "./channels/ReceiverChannel";
+import ReceiverChannel, {ApplicationStatus} from "./channels/ReceiverChannel";
 import HeartbeatChannel from "./channels/HeartbeatChannel";
 
 export const enum NAMESPACES {
@@ -27,21 +27,54 @@ export default class Chromecast {
     private readonly connectionOptions: string | tls.ConnectionOptions;
     public client!: Client;
     public readonly subscribedMediaSession: Set<string> = new Set();
+    public applicationStatuses: ApplicationStatus[] = []
+
+    private lastMediaUpdate!: MediaUpdate;
 
     private connectionChannel?: ConnectionChannel;
     private heartbeatChannel?: HeartbeatChannel;
     private receiverChannel?: ReceiverChannel;
     private mediaChannel?: MediaChannel;
 
+    readonly updateHomeyCapabilities: (update: MediaUpdate) => void;
+
     constructor(
         connectionOptions: string | tls.ConnectionOptions,
-        readonly updateMedia: (update: MediaUpdate) => void,
-        readonly clearMedia: () => void,
+        updateCapabilities: (update: MediaUpdate) => void,
         readonly debug: (...args: unknown[]) => void,
         readonly error: (...args: unknown[]) => void,
         readonly logMessages = false,
     ) {
+        this.updateHomeyCapabilities = updateCapabilities;
         this.connectionOptions = connectionOptions;
+        this.clearMedia();
+    }
+
+    updateMedia(update: MediaUpdate) {
+        this.lastMediaUpdate = update;
+        this.updateMergedMedia();
+    }
+
+    private updateMergedMedia() {
+        const applicationStatus = this.applicationStatuses[0];
+        const update = {...this.lastMediaUpdate};
+        if (update.title === undefined || update.title === null) {
+            update.title = applicationStatus?.name ?? update.title;
+            update.subtitle = applicationStatus?.status ?? update.subtitle;
+        }
+        // this.debug("Updating capabilities:", this.lastMediaUpdate, applicationStatus, update);
+        this.updateHomeyCapabilities(update);
+    }
+
+    clearMedia() {
+        const update: MediaUpdate = {
+            title: null,
+            subtitle: null,
+            album: null,
+            image: null,
+            playing: null,
+        }
+        this.updateMedia(update);
     }
 
     handleError(err: any) {
@@ -85,5 +118,10 @@ export default class Chromecast {
         if (this.subscribedMediaSession.size === 0) this.clearMedia();
         this.debug("Connected media sessions:", this.subscribedMediaSession)
         return true;
+    }
+
+    public setApplicationStatuses(statuses: ApplicationStatus[]) {
+        this.applicationStatuses = statuses;
+        this.updateMergedMedia();
     }
 }
