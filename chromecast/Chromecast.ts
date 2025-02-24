@@ -1,7 +1,8 @@
 import Client from "./connection/client";
 import tls from "node:tls";
-import {Application, ConnectionMessage, ReceiverStatusMessage} from "./channel-message";
+import {Application, ReceiverStatusMessage} from "./channel-message";
 import MediaChannel from "./channels/MediaChannel";
+import ConnectionChannel from "./channels/ConnectionChannel";
 
 export const enum NAMESPACES {
     CONNECTION = 'urn:x-cast:com.google.cast.tp.connection',
@@ -31,6 +32,7 @@ export default class Chromecast {
     public client!: Client;
     public readonly subscribedMediaSession: Set<string> = new Set();
 
+    private connectionChannel?: ConnectionChannel;
     private mediaChannel?: MediaChannel;
 
     constructor(
@@ -64,39 +66,17 @@ export default class Chromecast {
         await this.client.connectAsync(this.connectionOptions);
 
         // create various namespace handlers
-        const connection = this.client.createChannel(NAMESPACES.CONNECTION);
+        this.connectionChannel = new ConnectionChannel(this);
         const heartbeat = this.client.createChannel(NAMESPACES.HEARTBEAT);
         const receiver = this.client.createChannel(NAMESPACES.RECEIVER);
         this.mediaChannel = new MediaChannel(this)
-
-        connection.on("message", (data, sourceId, destinationId) => {
-            handleConnectionMessage(data as ConnectionMessage, sourceId, destinationId);
-        })
-
-        const handleConnectionMessage = (data: ConnectionMessage, sourceId: string, destinationId: string) => {
-            if (data.type === 'CLOSE') {
-                unsubscribeFromMediaNamespace(sourceId);
-            } else {
-                this.debug("Unknown connection message:", sourceId, destinationId, data);
-            }
-        }
-
-        const unsubscribeFromMediaNamespace = (sessionId: string)=> {
-            const removedSession = this.subscribedMediaSession.delete(sessionId);
-            if (removedSession) {
-                this.debug("Connected media sessions:", this.subscribedMediaSession)
-                if (this.subscribedMediaSession.size === 0) {
-                    this.clearMedia();
-                }
-            }
-        }
 
         receiver.on('message', (data) => {
             handleCastReceiverMessage(data as ReceiverStatusMessage);
         });
 
         // establish virtual connection to the receiver
-        connection.send({ type: 'CONNECT' });
+        this.connectionChannel.connect();
 
         // start heartbeating
         setInterval(() => {
