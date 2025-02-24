@@ -32,8 +32,8 @@ class Client extends EventEmitter<ClientEvents> {
 
   connectAsync(options: string | tls.ConnectionOptions): Promise<void> {
     return new Promise(resolve => {
-      this.connect(options, resolve)
-    })
+      this.connect(options, resolve);
+    });
   }
 
   connect(options: string | tls.ConnectionOptions, callback?: () => void) {
@@ -60,14 +60,14 @@ class Client extends EventEmitter<ClientEvents> {
 
     this.socket.on('error', this.onerror);
     this.socket.once('close', this.onclose);
-  };
+  }
 
   public close() {
     this.debug('closing connection ...');
     // using socket.destroy here because socket.end caused stalled connection
     // in case of dongles going brutally down without a chance to FIN/ACK
     this.socket?.destroy();
-  };
+  }
 
   public send(namespace: string, data: string | Uint8Array, sourceId: string = 'sender-0', destinationId: string = 'receiver-0') {
     const messagePayload = Buffer.isBuffer(data) ? {
@@ -90,11 +90,11 @@ class Client extends EventEmitter<ClientEvents> {
 
     const buf = CastMessage.encode(message).finish();
     this.ps?.send(buf);
-  };
+  }
 
   public createChannel(namespace: string) {
     return new Channel(this, namespace);
-  };
+  }
 
   private onpacket = (buf: Uint8Array) => {
     const message = CastMessage.decode(buf);
@@ -115,7 +115,7 @@ class Client extends EventEmitter<ClientEvents> {
         message.sourceId,
         message.destinationId,
     );
-  }
+  };
 
   private onclose = () => {
     this.debug('connection closed');
@@ -131,7 +131,7 @@ class Client extends EventEmitter<ClientEvents> {
   private onerror = (err: Error) => {
     this.debug('error: %s %j', err.message, err);
     this.emit('error', err);
-  }
+  };
 
   private logMessage(log: string, message: ICastMessage) {
     this.debug(

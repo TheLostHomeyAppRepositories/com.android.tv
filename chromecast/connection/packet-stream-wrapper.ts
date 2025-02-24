@@ -41,10 +41,10 @@ class PacketStreamWrapper extends EventEmitter<PacketStreamWrapperEvents> {
   }
 
   send (buf: Uint8Array) {
-    const header = Buffer.alloc(4)
+    const header = Buffer.alloc(4);
     header.writeUInt32BE(buf.length, 0);
     this.stream.write(Buffer.concat([header, buf]));
-  };
+  }
 }
 
 export default PacketStreamWrapper;

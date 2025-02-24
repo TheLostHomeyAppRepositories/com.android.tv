@@ -13,7 +13,7 @@ export default class ReceiverChannel {
     }
 
     public getStatus() {
-        this.channel.send({ type: 'GET_STATUS' })
+        this.channel.send({ type: 'GET_STATUS' });
     }
 
     private handleMessage = (message: ReceiverStatusMessage) => {
@@ -24,7 +24,7 @@ export default class ReceiverChannel {
                 this.subscribeToMediaNamespace(message, application);
             }
         }
-    }
+    };
 
     private applicationHasMedia = (application: Application) => {
         if (application.namespaces === undefined) return false;
@@ -34,18 +34,18 @@ export default class ReceiverChannel {
             }
         }
         return false;
-    }
+    };
 
     private subscribeToMediaNamespace = (message: ReceiverStatusMessage, application: Application) => {
         const addedSession = this.chromecast.addMediaSession(application.sessionId);
         if (!addedSession) return;
         this.sendMediaNamespaceConnect(message, application);
-    }
+    };
 
     private sendMediaNamespaceConnect = (message: ReceiverStatusMessage, application: Application) => {
         const source = "client-" + message.requestId;
         const destination = application.sessionId;
         const data = JSON.stringify({ type: "CONNECT", requestId: this.chromecast.client.requestId++ });
         this.chromecast.client.send(NAMESPACES.CONNECTION, data, source, destination);
-    }
+    };
 }

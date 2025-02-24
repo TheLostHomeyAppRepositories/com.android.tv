@@ -28,20 +28,20 @@ class Channel extends EventEmitter<ChannelEvents> {
           requestId: this.bus.requestId++
         })
     );
-  };
+  }
 
   public close() {
     this.emit('close');
-  };
+  }
 
   private onmessage = (namespace: string, data: string | Uint8Array, sourceId: string, destinationId: string)=> {
     if(namespace !== this.namespace) return;
     this.emit('message', JSON.parse(data as string), sourceId, destinationId);
-  }
+  };
 
   private onclose = () => {
     this.bus.removeListener('message', this.onmessage);
-  }
+  };
 }
 
 export default Channel;

@@ -11,7 +11,7 @@ export default class ConnectionChannel {
         this.channel = chromecast.client.createChannel(NAMESPACES.CONNECTION);
         this.channel.on("message", (data, sourceId, destinationId) => {
             this.handleMessage(data as ConnectionMessage, sourceId, destinationId);
-        })
+        });
     }
 
     public connect() {
@@ -24,5 +24,5 @@ export default class ConnectionChannel {
         } else {
             this.chromecast.debug("Unknown connection message:", sourceId, destinationId, data);
         }
-    }
+    };
 }

@@ -130,7 +130,7 @@ class RemoteDevice extends Remote {
       await this.setCapabilityValue("speaker_playing", update.playing).catch(this.error);
     }
     if (update.image !== undefined) {
-      await this.setAlbumArt(update.image).catch(this.error)
+      await this.setAlbumArt(update.image).catch(this.error);
     }
   }
 
@@ -143,7 +143,7 @@ class RemoteDevice extends Remote {
     } else if (url.startsWith('https')) {
       this.albumArt.setUrl(url);
     } else if (url.startsWith('http')) {
-      this.albumArt.setStream((stream: any) => this.createAlbumArtStream(url, stream))
+      this.albumArt.setStream((stream: any) => this.createAlbumArtStream(url, stream));
     }
 
     await this.albumArt.update();
@@ -154,9 +154,9 @@ class RemoteDevice extends Remote {
   async createAlbumArtStream(url: string, stream: any) {
     const res = await fetch(url);
     if (!res.ok) {
-      throw new Error(`Could not fetch image url: ${url}`)
+      throw new Error(`Could not fetch image url: ${url}`);
     }
-    return res.body.pipe(stream)
+    return res.body.pipe(stream);
   }
 
   async onUninit(): Promise<void> {
@@ -230,15 +230,15 @@ class RemoteDevice extends Remote {
       } else {
         this.client?.sendKeyMediaPause();
       }
-    })
+    });
 
     this.registerCapabilityListener("speaker_next", () => {
       this.client?.sendKeyMediaNext();
-    })
+    });
 
     this.registerCapabilityListener("speaker_prev", () => {
       this.client?.sendKeyMediaPrevious();
-    })
+    });
   }
 
   private async onCapabilitiesKeySet(capability: Record<string, unknown>): Promise<void> {

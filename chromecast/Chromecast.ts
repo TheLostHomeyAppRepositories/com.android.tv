@@ -46,13 +46,13 @@ export default class Chromecast {
 
     handleError(err: any) {
         if (err?.errno === -113) {
-            this.error("Chromecast unreachable")
-            this.clearMedia()
+            this.error("Chromecast unreachable");
+            this.clearMedia();
         } else if (err?.errno === -111) {
-            this.error("Chromecast connection refused")
-            this.clearMedia()
+            this.error("Chromecast connection refused");
+            this.clearMedia();
         } else {
-            this.error(err)
+            this.error(err);
         }
     }
 
@@ -63,7 +63,7 @@ export default class Chromecast {
             album: null,
             image: null,
             playing: null,
-        })
+        });
     }
 
     async initialize() {
@@ -75,7 +75,7 @@ export default class Chromecast {
         this.connectionChannel = new ConnectionChannel(this);
         this.heartbeatChannel = new HeartbeatChannel(this);
         this.receiverChannel = new ReceiverChannel(this);
-        this.mediaChannel = new MediaChannel(this)
+        this.mediaChannel = new MediaChannel(this);
 
         this.connectionChannel.connect();
         this.heartbeatChannel.start();
@@ -85,7 +85,7 @@ export default class Chromecast {
     public addMediaSession(sessionId: string): boolean {
         if (this.subscribedMediaSession.has(sessionId)) return false;
         this.subscribedMediaSession.add(sessionId);
-        this.debug("Connected sessions:", this.subscribedMediaSession)
+        this.debug("Connected sessions:", this.subscribedMediaSession);
         return true;
     }
 
@@ -93,7 +93,7 @@ export default class Chromecast {
         const removedSession = this.subscribedMediaSession.delete(sessionId);
         if (!removedSession) return false;
         if (this.subscribedMediaSession.size === 0) this.clearMedia();
-        this.debug("Connected media sessions:", this.subscribedMediaSession)
+        this.debug("Connected media sessions:", this.subscribedMediaSession);
         return true;
     }
 }

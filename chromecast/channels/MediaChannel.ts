@@ -13,7 +13,7 @@ export default class MediaChannel {
         private readonly chromecast: Chromecast,
     ) {
         this.channel = this.chromecast.client.createChannel(NAMESPACES.MEDIA);
-        this.channel.on("message", (data) => this.handleMessage(data as MediaStatusMessage))
+        this.channel.on("message", (data) => this.handleMessage(data as MediaStatusMessage));
     }
 
     private handleMessage = (data: MediaStatusMessage) =>{
@@ -26,19 +26,19 @@ export default class MediaChannel {
                 this.handleMediaMessage(status as MediaStatus);
             }
         }
-    }
+    };
 
     private handleIdleMessage = () => {
         this.chromecast.clearMedia();
-    }
+    };
 
     private handleMediaMessage = (status: MediaStatus) => {
         const update: MediaUpdate = {};
         MediaChannel.setUpdateMetadata(status, update);
         MediaChannel.setUpdatePlaying(update, status);
         MediaChannel.setUpdateClear(update);
-        this.chromecast.updateMedia(update)
-    }
+        this.chromecast.updateMedia(update);
+    };
 
     private static setUpdateMetadata(status: MediaStatus, update: MediaUpdate) {
         if (status.media?.metadata) {
@@ -77,7 +77,7 @@ export default class MediaChannel {
     }
 
     private static setUpdateSubTitle(update: MediaUpdate, metadata: MediaMetaData) {
-        for (let selector of TEXT_SELECTOR_PRIORITIES) {
+        for (const selector of TEXT_SELECTOR_PRIORITIES) {
             if (metadata[selector] !== undefined && metadata[selector] !== update.title) {
                 update.subtitle = metadata[selector]?.toString();
                 break;
@@ -88,7 +88,7 @@ export default class MediaChannel {
     private static setUpdateImageUrl(update: MediaUpdate, metadata: MediaMetaData) {
         if (metadata.images !== undefined) {
             if (Array.isArray(metadata.images)) {
-                const image: MediaImage | undefined = metadata.images[0]
+                const image: MediaImage | undefined = metadata.images[0];
                 update.image = image?.url;
             } else if (metadata.images.url) {
                 update.image = metadata.images.url;
