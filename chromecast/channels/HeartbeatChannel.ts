@@ -4,14 +4,11 @@ import Channel from "../connection/channel";
 const HEARTBEAT_INTERVAL = 5000;
 
 export default class HeartbeatChannel {
-    private readonly chromecast: Chromecast;
     private readonly channel: Channel;
 
-
     constructor(
-        chromecast: Chromecast,
+        private readonly chromecast: Chromecast,
     ) {
-        this.chromecast = chromecast;
         this.channel = this.chromecast.client.createChannel(NAMESPACES.HEARTBEAT);
     }
 

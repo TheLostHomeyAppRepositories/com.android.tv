@@ -24,11 +24,6 @@ export type MediaUpdate = {
 }
 
 export default class Chromecast {
-    public readonly updateMedia: (update: MediaUpdate) => void;
-    public readonly clearMedia: () => void;
-    public readonly debug: (...args: unknown[]) => void;
-    public readonly error: (...args: unknown[]) => void;
-
     private readonly connectionOptions: string | tls.ConnectionOptions;
     public client!: Client;
     public readonly subscribedMediaSession: Set<string> = new Set();
@@ -40,16 +35,12 @@ export default class Chromecast {
 
     constructor(
         connectionOptions: string | tls.ConnectionOptions,
-        updateMedia: (update: MediaUpdate) => void,
-        clearMedia: () => void,
-        debug: (...args: unknown[]) => void = () => {},
-        error: (...args: unknown[]) => void = () => {}
+        readonly updateMedia: (update: MediaUpdate) => void,
+        readonly clearMedia: () => void,
+        readonly debug: (...args: unknown[]) => void,
+        readonly error: (...args: unknown[]) => void
     ) {
         this.connectionOptions = connectionOptions;
-        this.updateMedia = updateMedia;
-        this.clearMedia = clearMedia;
-        this.debug = debug;
-        this.error = error;
     }
 
     handleError(err: any) {
@@ -68,19 +59,28 @@ export default class Chromecast {
 
         await this.client.connectAsync(this.connectionOptions);
 
-        // create various namespace handlers
         this.connectionChannel = new ConnectionChannel(this);
         this.heartbeatChannel = new HeartbeatChannel(this);
         this.receiverChannel = new ReceiverChannel(this);
         this.mediaChannel = new MediaChannel(this)
 
-        // establish virtual connection to the receiver
         this.connectionChannel.connect();
-
-        // start heartbeating
         this.heartbeatChannel.start();
-
-        // get initial status
         this.receiverChannel.getStatus();
+    }
+
+    public addMediaSession(sessionId: string): boolean {
+        if (this.subscribedMediaSession.has(sessionId)) return false;
+        this.subscribedMediaSession.add(sessionId);
+        this.debug("Connected sessions:", this.subscribedMediaSession)
+        return true;
+    }
+
+    public removeMediaSession(sessionId: string): boolean {
+        const removedSession = this.subscribedMediaSession.delete(sessionId);
+        if (!removedSession) return false;
+        if (this.subscribedMediaSession.size === 0) this.clearMedia();
+        this.debug("Connected media sessions:", this.subscribedMediaSession)
+        return true;
     }
 }

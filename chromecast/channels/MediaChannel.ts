@@ -7,30 +7,28 @@ import {MediaImage, MediaMetaData, MediaStatus, MediaStatusMessage, PlayerState}
 const TEXT_SELECTOR_PRIORITIES = ["title", "episodeTitle", "songName", "chapterTitle", "trackNumber", "chapterNumber", "subtitle", "seriesTitle", "bookTitle", "artist", "artistName", "albumArtist", "composer", "episodeNumber", "episode"] as const;
 
 export default class MediaChannel {
-    private readonly chromecast: Chromecast;
     private readonly channel: Channel;
 
     constructor(
-        chromecast: Chromecast,
+        private readonly chromecast: Chromecast,
     ) {
-        this.chromecast = chromecast;
         this.channel = this.chromecast.client.createChannel(NAMESPACES.MEDIA);
-        this.channel.on("message", (data) => this.handleMediaStatusMessage(data as MediaStatusMessage))
+        this.channel.on("message", (data) => this.handleMessage(data as MediaStatusMessage))
     }
 
-    private handleMediaStatusMessage = (data: MediaStatusMessage) =>{
+    private handleMessage = (data: MediaStatusMessage) =>{
         if (data.type !== 'MEDIA_STATUS' || data.status.length === 0) return;
 
         for (const status of data.status) {
             if (status.playerState === PlayerState.IDLE) {
-                this.handleIdleMediaMessage();
+                this.handleIdleMessage();
             } else {
                 this.handleMediaMessage(status as MediaStatus);
             }
         }
     }
 
-    private handleIdleMediaMessage = () => {
+    private handleIdleMessage = () => {
         this.chromecast.clearMedia();
     }
 
