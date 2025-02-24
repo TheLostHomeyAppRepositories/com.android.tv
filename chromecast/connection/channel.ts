@@ -16,20 +16,11 @@ class Channel extends EventEmitter<ChannelEvents> {
     this.bus = bus;
     this.namespace = namespace;
 
-    const onmessage = (namespace: string, data: string | Uint8Array, sourceId: string, destinationId: string)=> {
-      if(namespace !== this.namespace) return;
-      this.emit('message', JSON.parse(data as string), sourceId, destinationId);
-    }
-
-    const onclose = () => {
-      this.bus.removeListener('message', onmessage);
-    }
-
-    this.bus.on('message', onmessage);
-    this.once('close', onclose);
+    this.bus.on('message', this.onmessage);
+    this.once('close', this.onclose);
   }
 
-  send(data: any) {
+  public send(data: any) {
     this.bus.send(
         this.namespace,
         JSON.stringify({
@@ -39,9 +30,18 @@ class Channel extends EventEmitter<ChannelEvents> {
     );
   };
 
-  close() {
+  public close() {
     this.emit('close');
   };
+
+  private onmessage = (namespace: string, data: string | Uint8Array, sourceId: string, destinationId: string)=> {
+    if(namespace !== this.namespace) return;
+    this.emit('message', JSON.parse(data as string), sourceId, destinationId);
+  }
+
+  private onclose = () => {
+    this.bus.removeListener('message', this.onmessage);
+  }
 }
 
 export default Channel;

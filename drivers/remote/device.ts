@@ -104,21 +104,19 @@ class RemoteDevice extends Remote {
     }
 
     this.albumArt = await this.homey.images.createImage();
-    await this.clearChromecastMedia();
     await this.initializeChromecastClient();
   }
 
   async initializeChromecastClient() {
     const debug = (...args: unknown[]) => this.log("[Chromecast]", ...args);
     const error = (...args: unknown[]) => this.error("[Chromecast]", ...args);
-    const updateMedia = (update: MediaUpdate) => this.handleChromecastMedia(update);
-    const clearMedia = () => this.clearChromecastMedia();
+    const updateMedia = (update: MediaUpdate) => this.updateChromecastMedia(update);
     const settings: DeviceSettings = this.getSettings();
-    this.chromecast = new Chromecast(settings.ip, updateMedia, clearMedia, debug, error, Homey.env.DEBUG === "1");
+    this.chromecast = new Chromecast(settings.ip, updateMedia, debug, error, Homey.env.DEBUG === "1");
     await this.chromecast.initialize();
   }
 
-  async handleChromecastMedia(update: MediaUpdate) {
+  async updateChromecastMedia(update: MediaUpdate) {
     if (update.title !== undefined) {
       await this.setCapabilityValue("speaker_track", update.title).catch(this.error);
     }
@@ -132,26 +130,14 @@ class RemoteDevice extends Remote {
       await this.setCapabilityValue("speaker_playing", update.playing).catch(this.error);
     }
     if (update.image !== undefined) {
-      this.log("Image url:", update.image)
       await this.setAlbumArt(update.image).catch(this.error)
     }
-  }
-
-  async clearChromecastMedia() {
-    await this.handleChromecastMedia({
-      title: null,
-      subtitle: null,
-      album: null,
-      image: null,
-      playing: null,
-    })
   }
 
   async setAlbumArt(url: string | null) {
     if (!this.albumArt || this.albumArtUrl === url) return;
 
     if (url === null) {
-      this.log("Clearing album art");
       await this.albumArt.unregister();
       this.albumArt = await this.homey.images.createImage();
     } else if (url.startsWith('https')) {

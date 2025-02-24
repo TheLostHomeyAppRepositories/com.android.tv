@@ -36,12 +36,12 @@ export default class Chromecast {
     constructor(
         connectionOptions: string | tls.ConnectionOptions,
         readonly updateMedia: (update: MediaUpdate) => void,
-        readonly clearMedia: () => void,
         readonly debug: (...args: unknown[]) => void,
         readonly error: (...args: unknown[]) => void,
         readonly logMessages = false,
     ) {
         this.connectionOptions = connectionOptions;
+        this.clearMedia();
     }
 
     handleError(err: any) {
@@ -54,6 +54,16 @@ export default class Chromecast {
         } else {
             this.error(err)
         }
+    }
+
+    clearMedia() {
+        this.updateMedia({
+            title: null,
+            subtitle: null,
+            album: null,
+            image: null,
+            playing: null,
+        })
     }
 
     async initialize() {
