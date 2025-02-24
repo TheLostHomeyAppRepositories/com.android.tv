@@ -2,12 +2,6 @@ import Chromecast, {NAMESPACES} from "../Chromecast";
 import Channel from "../connection/channel";
 import {Application, ReceiverStatusMessage} from "../channel-message";
 
-export type ApplicationStatus = {
-    idle: boolean,
-    name: string,
-    status: string,
-}
-
 export default class ReceiverChannel {
     private readonly channel: Channel;
 
@@ -25,21 +19,11 @@ export default class ReceiverChannel {
     private handleMessage = (message: ReceiverStatusMessage) => {
         if (message.type !== 'RECEIVER_STATUS' || message.status.applications === undefined) return;
 
-        const applicationStatuses: ApplicationStatus[] = [];
-
         for (const application of message.status.applications) {
-            applicationStatuses.push({
-                idle: application.isIdleScreen,
-                name: application.displayName,
-                status: application.statusText
-            })
-
             if (this.applicationHasMedia(application)) {
                 this.subscribeToMediaNamespace(message, application);
             }
         }
-
-        this.chromecast.setApplicationStatuses(applicationStatuses);
     }
 
     private applicationHasMedia = (application: Application) => {
