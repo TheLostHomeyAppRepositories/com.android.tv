@@ -38,7 +38,8 @@ export default class Chromecast {
         readonly updateMedia: (update: MediaUpdate) => void,
         readonly clearMedia: () => void,
         readonly debug: (...args: unknown[]) => void,
-        readonly error: (...args: unknown[]) => void
+        readonly error: (...args: unknown[]) => void,
+        readonly logMessages = false,
     ) {
         this.connectionOptions = connectionOptions;
     }
@@ -56,7 +57,7 @@ export default class Chromecast {
     }
 
     async initialize() {
-        this.client = new Client(this.debug);
+        this.client = new Client(this.logMessages ? this.debug : undefined);
         this.client.on("error", (err) => this.handleError(err));
 
         await this.client.connectAsync(this.connectionOptions);

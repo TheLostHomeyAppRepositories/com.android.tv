@@ -114,7 +114,7 @@ class RemoteDevice extends Remote {
     const updateMedia = (update: MediaUpdate) => this.handleChromecastMedia(update);
     const clearMedia = () => this.clearChromecastMedia();
     const settings: DeviceSettings = this.getSettings();
-    this.chromecast = new Chromecast(settings.ip, updateMedia, clearMedia, debug, error);
+    this.chromecast = new Chromecast(settings.ip, updateMedia, clearMedia, debug, error, Homey.env.DEBUG === "1");
     await this.chromecast.initialize();
   }
 
