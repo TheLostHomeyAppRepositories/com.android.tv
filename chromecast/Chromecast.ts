@@ -1,8 +1,8 @@
 import Client from "./connection/client";
 import tls from "node:tls";
-import {Application, ReceiverStatusMessage} from "./channel-message";
 import MediaChannel from "./channels/MediaChannel";
 import ConnectionChannel from "./channels/ConnectionChannel";
+import ReceiverChannel from "./channels/ReceiverChannel";
 
 export const enum NAMESPACES {
     CONNECTION = 'urn:x-cast:com.google.cast.tp.connection',
@@ -33,6 +33,7 @@ export default class Chromecast {
     public readonly subscribedMediaSession: Set<string> = new Set();
 
     private connectionChannel?: ConnectionChannel;
+    private receiverChannel?: ReceiverChannel;
     private mediaChannel?: MediaChannel;
 
     constructor(
@@ -68,12 +69,8 @@ export default class Chromecast {
         // create various namespace handlers
         this.connectionChannel = new ConnectionChannel(this);
         const heartbeat = this.client.createChannel(NAMESPACES.HEARTBEAT);
-        const receiver = this.client.createChannel(NAMESPACES.RECEIVER);
+        this.receiverChannel = new ReceiverChannel(this);
         this.mediaChannel = new MediaChannel(this)
-
-        receiver.on('message', (data) => {
-            handleCastReceiverMessage(data as ReceiverStatusMessage);
-        });
 
         // establish virtual connection to the receiver
         this.connectionChannel.connect();
@@ -84,42 +81,6 @@ export default class Chromecast {
         }, 5000);
 
         // get initial status
-        receiver.send({ type: 'GET_STATUS' })
-
-        const applicationHasMedia = (application: Application) => {
-            if (application.namespaces === undefined) {
-                return false;
-            }
-            for (const namespace of application.namespaces) {
-                if (namespace.name === NAMESPACES.MEDIA) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        const handleCastReceiverMessage = (message: ReceiverStatusMessage) => {
-            if (message.type !== 'RECEIVER_STATUS' || message.status.applications === undefined) return;
-
-            for (const application of message.status.applications) {
-                if (applicationHasMedia(application)) {
-                    subscribeToMediaNamespace(message, application);
-                }
-            }
-        }
-
-        const subscribeToMediaNamespace = (message: ReceiverStatusMessage, application: Application) => {
-            if (this.subscribedMediaSession.has(application.sessionId)) return;
-            this.subscribedMediaSession.add(application.sessionId);
-            this.debug("Connected sessions:", this.subscribedMediaSession)
-            sendMediaNamespaceConnect(message, application);
-        }
-
-        const sendMediaNamespaceConnect = (message: ReceiverStatusMessage, application: Application) => {
-            const source = "client-" + message.requestId;
-            const destination = application.sessionId;
-            const data = JSON.stringify({ type: "CONNECT", requestId: this.client.requestId++ });
-            this.client.send(NAMESPACES.CONNECTION, data, source, destination);
-        }
+        this.receiverChannel.getStatus();
     }
 }
