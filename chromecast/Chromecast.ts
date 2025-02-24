@@ -46,8 +46,10 @@ export default class Chromecast {
     handleError(err: any) {
         if (err?.errno === -113) {
             this.error("Chromecast unreachable")
+            this.clearMedia()
         } else if (err?.errno === -111) {
             this.error("Chromecast connection refused")
+            this.clearMedia()
         } else {
             this.error(err)
         }
