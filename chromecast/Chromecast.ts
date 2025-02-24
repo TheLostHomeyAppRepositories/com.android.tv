@@ -3,6 +3,7 @@ import tls from "node:tls";
 import MediaChannel from "./channels/MediaChannel";
 import ConnectionChannel from "./channels/ConnectionChannel";
 import ReceiverChannel from "./channels/ReceiverChannel";
+import HeartbeatChannel from "./channels/HeartbeatChannel";
 
 export const enum NAMESPACES {
     CONNECTION = 'urn:x-cast:com.google.cast.tp.connection',
@@ -33,6 +34,7 @@ export default class Chromecast {
     public readonly subscribedMediaSession: Set<string> = new Set();
 
     private connectionChannel?: ConnectionChannel;
+    private heartbeatChannel?: HeartbeatChannel;
     private receiverChannel?: ReceiverChannel;
     private mediaChannel?: MediaChannel;
 
@@ -68,7 +70,7 @@ export default class Chromecast {
 
         // create various namespace handlers
         this.connectionChannel = new ConnectionChannel(this);
-        const heartbeat = this.client.createChannel(NAMESPACES.HEARTBEAT);
+        this.heartbeatChannel = new HeartbeatChannel(this);
         this.receiverChannel = new ReceiverChannel(this);
         this.mediaChannel = new MediaChannel(this)
 
@@ -76,9 +78,7 @@ export default class Chromecast {
         this.connectionChannel.connect();
 
         // start heartbeating
-        setInterval(() => {
-            heartbeat.send({ type: 'PING' });
-        }, 5000);
+        this.heartbeatChannel.start();
 
         // get initial status
         this.receiverChannel.getStatus();
