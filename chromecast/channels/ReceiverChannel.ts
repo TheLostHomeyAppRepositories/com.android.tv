@@ -17,7 +17,9 @@ export default class ReceiverChannel {
     }
 
     private handleMessage = (message: ReceiverStatusMessage): void => {
-        if (message.type !== 'RECEIVER_STATUS' || message.status.applications === undefined) return;
+        if (message.type !== 'RECEIVER_STATUS' || message.status.applications === undefined) {
+          return;
+        }
 
         for (const application of message.status.applications) {
             if (this.applicationHasMedia(application)) {
@@ -38,7 +40,9 @@ export default class ReceiverChannel {
 
     private subscribeToMediaNamespace = (message: ReceiverStatusMessage, application: Application): void => {
         const addedSession = this.chromecast.addMediaSession(application.sessionId);
-        if (!addedSession) return;
+        if (!addedSession) {
+          return;
+        }
         this.sendMediaNamespaceConnect(message, application);
     };
 

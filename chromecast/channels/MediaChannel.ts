@@ -17,7 +17,9 @@ export default class MediaChannel {
     }
 
     private handleMessage = (data: MediaStatusMessage): void =>{
-        if (data.type !== 'MEDIA_STATUS' || data.status.length === 0) return;
+        if (data.type !== 'MEDIA_STATUS' || data.status.length === 0) {
+          return;
+        }
 
         for (const status of data.status) {
             if (status.playerState === PlayerState.IDLE) {

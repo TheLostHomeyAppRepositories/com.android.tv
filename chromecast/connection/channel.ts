@@ -35,7 +35,9 @@ class Channel extends EventEmitter<ChannelEvents> {
   }
 
   private onmessage = (namespace: string, data: string | Uint8Array, sourceId: string, destinationId: string): void => {
-    if(namespace !== this.namespace) return;
+    if(namespace !== this.namespace) {
+      return;
+    }
     this.emit('message', JSON.parse(data as string), sourceId, destinationId);
   };
 

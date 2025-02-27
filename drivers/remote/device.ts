@@ -135,7 +135,9 @@ class RemoteDevice extends Remote {
   }
 
   async setAlbumArt(url: string | null): Promise<void> {
-    if (!this.albumArt || this.albumArtUrl === url) return;
+    if (!this.albumArt || this.albumArtUrl === url) {
+      return;
+    }
 
     if (url === null) {
       await this.albumArt.unregister();

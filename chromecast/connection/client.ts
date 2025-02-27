@@ -50,7 +50,9 @@ class Client extends EventEmitter<ClientEvents> {
     options.port = options.port ?? 8009;
     options.rejectUnauthorized = false;
 
-    if(callback) this.once('connect', callback);
+    if(callback) {
+      this.once('connect', callback);
+    }
 
     this.debug('connecting to %s:%d ...', options.host, options.port);
 
@@ -90,7 +92,9 @@ class Client extends EventEmitter<ClientEvents> {
       ...messagePayload,
     };
 
-    if (namespace !== NAMESPACES.HEARTBEAT) this.logMessage('send message:', message);
+    if (namespace !== NAMESPACES.HEARTBEAT) {
+      this.logMessage('send message:', message);
+    }
 
     const buf = CastMessage.encode(message).finish();
     this.ps?.send(buf);
@@ -103,7 +107,9 @@ class Client extends EventEmitter<ClientEvents> {
   private onPacket = (buf: Uint8Array): void => {
     const message = CastMessage.decode(buf);
 
-    if (message.namespace !== NAMESPACES.HEARTBEAT) this.logMessage('recv message:', message);
+    if (message.namespace !== NAMESPACES.HEARTBEAT) {
+      this.logMessage('recv message:', message);
+    }
 
     if(message.protocolVersion !== ProtocolVersion.CASTV2_1_0) {
       this.emit('error', new Error('Unsupported protocol version: ' + message.protocolVersion));

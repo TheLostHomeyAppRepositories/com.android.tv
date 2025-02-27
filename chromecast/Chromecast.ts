@@ -92,7 +92,9 @@ export default class Chromecast {
     }
 
     public addMediaSession(sessionId: string): boolean {
-        if (this.subscribedMediaSession.has(sessionId)) return false;
+        if (this.subscribedMediaSession.has(sessionId)) {
+          return false;
+        }
         this.subscribedMediaSession.add(sessionId);
         this.debug("Connected sessions:", this.subscribedMediaSession);
         return true;
@@ -100,8 +102,12 @@ export default class Chromecast {
 
     public removeMediaSession(sessionId: string): boolean {
         const removedSession = this.subscribedMediaSession.delete(sessionId);
-        if (!removedSession) return false;
-        if (this.subscribedMediaSession.size === 0) this.clearMedia();
+        if (!removedSession) {
+          return false;
+        }
+        if (this.subscribedMediaSession.size === 0) {
+          this.clearMedia();
+        }
         this.debug("Connected media sessions:", this.subscribedMediaSession);
         return true;
     }
