@@ -23,6 +23,11 @@ export type MediaUpdate = {
     playing?: boolean | null,
 }
 
+interface Homey {
+  setInterval(callback: Function, ms: number, ...args: any[]): NodeJS.Timeout
+  clearInterval(intervalId: NodeJS.Timeout | string | number | undefined, ): void
+}
+
 export default class Chromecast {
     private readonly connectionOptions: string | tls.ConnectionOptions;
     public client!: Client;
@@ -33,13 +38,13 @@ export default class Chromecast {
     private receiverChannel?: ReceiverChannel;
     private mediaChannel?: MediaChannel;
 
-    constructor(
-        connectionOptions: string | tls.ConnectionOptions,
-        readonly updateMedia: (update: MediaUpdate) => void,
-        readonly debug: (...args: unknown[]) => void,
-        readonly error: (...args: unknown[]) => void,
-        readonly logMessages = false,
-    ) {
+  constructor(
+    connectionOptions: string | tls.ConnectionOptions,
+    readonly updateMedia: (update: MediaUpdate) => void,
+    readonly debug: (...args: unknown[]) => void,
+    readonly error: (...args: unknown[]) => void,
+    readonly logMessages = false,
+    readonly homey: Homey) {
         this.connectionOptions = connectionOptions;
         this.clearMedia();
     }

@@ -5,6 +5,7 @@ const HEARTBEAT_INTERVAL = 5000;
 
 export default class HeartbeatChannel {
     private readonly channel: Channel;
+    private interval?: NodeJS.Timeout;
 
     constructor(
         private readonly chromecast: Chromecast,
@@ -13,8 +14,12 @@ export default class HeartbeatChannel {
     }
 
     public start() {
-        setInterval(() => {
+        this.interval = this.chromecast.homey.setInterval(() => {
             this.channel.send({ type: 'PING' });
         }, HEARTBEAT_INTERVAL);
+    }
+
+    public stop() {
+        this.chromecast.homey.clearInterval(this.interval);
     }
 }
