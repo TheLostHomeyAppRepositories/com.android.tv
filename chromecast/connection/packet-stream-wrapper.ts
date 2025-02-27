@@ -21,15 +21,18 @@ class PacketStreamWrapper extends EventEmitter<PacketStreamWrapperEvents> {
     let packetLength = 0;
 
     this.stream.on('readable', () => {
+      // eslint-disable-next-line no-constant-condition
       while(true) {
         switch(state) {
           case StreamState.WAITING_HEADER:
+            // eslint-disable-next-line no-case-declarations
             const header = stream.read(4);
             if(header === null) return;
             packetLength = header.readUInt32BE(0);
             state = StreamState.WAITING_PACKET;
             break;
           case StreamState.WAITING_PACKET:
+            // eslint-disable-next-line no-case-declarations
             const packet = stream.read(packetLength);
             if(packet === null) return;
             this.emit('packet', packet);
@@ -40,7 +43,7 @@ class PacketStreamWrapper extends EventEmitter<PacketStreamWrapperEvents> {
     });
   }
 
-  send (buf: Uint8Array) {
+  send(buf: Uint8Array): void {
     const header = Buffer.alloc(4);
     header.writeUInt32BE(buf.length, 0);
     this.stream.write(Buffer.concat([header, buf]));

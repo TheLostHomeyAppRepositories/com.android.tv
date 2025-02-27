@@ -10,9 +10,13 @@ import PayloadType = extensions.api.cast_channel.CastMessage.PayloadType;
 import ProtocolVersion = extensions.api.cast_channel.CastMessage.ProtocolVersion;
 import {NAMESPACES} from "../Chromecast";
 
+export interface ChromecastError {
+  errno: number,
+}
+
 type ClientEvents = {
   connect: [];
-  error: [err: Error];
+  error: [err: ChromecastError | Error];
   close: [];
   message: [namespace: string, data: string | Uint8Array, sourceId: string, destinationId: string];
 }
@@ -36,7 +40,7 @@ class Client extends EventEmitter<ClientEvents> {
     });
   }
 
-  connect(options: string | tls.ConnectionOptions, callback?: () => void) {
+  connect(options: string | tls.ConnectionOptions, callback?: () => void): void {
     if(typeof options === 'string') {
       options = {
         host: options
@@ -52,24 +56,24 @@ class Client extends EventEmitter<ClientEvents> {
 
     this.socket = tls.connect(options, () => {
       this.ps = new PacketStreamWrapper(this.socket!);
-      this.ps.on('packet', this.onpacket);
+      this.ps.on('packet', this.onPacket);
 
       this.debug('connected');
       this.emit('connect');
     });
 
-    this.socket.on('error', this.onerror);
-    this.socket.once('close', this.onclose);
+    this.socket.on('error', this.onError);
+    this.socket.once('close', this.onClose);
   }
 
-  public close() {
+  public close(): void {
     this.debug('closing connection ...');
     // using socket.destroy here because socket.end caused stalled connection
     // in case of dongles going brutally down without a chance to FIN/ACK
     this.socket?.destroy();
   }
 
-  public send(namespace: string, data: string | Uint8Array, sourceId: string = 'sender-0', destinationId: string = 'receiver-0') {
+  public send(namespace: string, data: string | Uint8Array, sourceId: string = 'sender-0', destinationId: string = 'receiver-0'): void {
     const messagePayload = Buffer.isBuffer(data) ? {
       payloadType: PayloadType.BINARY,
       payloadBinary: data as Uint8Array,
@@ -92,11 +96,11 @@ class Client extends EventEmitter<ClientEvents> {
     this.ps?.send(buf);
   }
 
-  public createChannel(namespace: string) {
+  public createChannel(namespace: string): Channel {
     return new Channel(this, namespace);
   }
 
-  private onpacket = (buf: Uint8Array) => {
+  private onPacket = (buf: Uint8Array): void => {
     const message = CastMessage.decode(buf);
 
     if (message.namespace !== NAMESPACES.HEARTBEAT) this.logMessage('recv message:', message);
@@ -117,23 +121,23 @@ class Client extends EventEmitter<ClientEvents> {
     );
   };
 
-  private onclose = () => {
+  private onClose = (): void => {
     this.debug('connection closed');
-    this.socket?.removeListener('error', this.onerror);
+    this.socket?.removeListener('error', this.onError);
     this.socket = null;
     if (this.ps) {
-      this.ps.removeListener('packet', this.onpacket);
+      this.ps.removeListener('packet', this.onPacket);
       this.ps = null;
     }
     this.emit('close');
   };
 
-  private onerror = (err: Error) => {
+  private onError = (err: Error): void => {
     this.debug('error: %s %j', err.message, err);
     this.emit('error', err);
   };
 
-  private logMessage(log: string, message: ICastMessage) {
+  private logMessage(log: string, message: ICastMessage): void {
     this.debug(
         log,
         'protocolVersion=',

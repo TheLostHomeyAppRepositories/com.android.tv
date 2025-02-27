@@ -12,11 +12,11 @@ export default class ReceiverChannel {
         this.channel.on('message', (data) => this.handleMessage(data as ReceiverStatusMessage));
     }
 
-    public getStatus() {
+    public getStatus(): void {
         this.channel.send({ type: 'GET_STATUS' });
     }
 
-    private handleMessage = (message: ReceiverStatusMessage) => {
+    private handleMessage = (message: ReceiverStatusMessage): void => {
         if (message.type !== 'RECEIVER_STATUS' || message.status.applications === undefined) return;
 
         for (const application of message.status.applications) {
@@ -26,7 +26,7 @@ export default class ReceiverChannel {
         }
     };
 
-    private applicationHasMedia = (application: Application) => {
+    private applicationHasMedia = (application: Application): boolean => {
         if (application.namespaces === undefined) return false;
         for (const namespace of application.namespaces) {
             if (namespace.name === NAMESPACES.MEDIA) {
@@ -36,13 +36,13 @@ export default class ReceiverChannel {
         return false;
     };
 
-    private subscribeToMediaNamespace = (message: ReceiverStatusMessage, application: Application) => {
+    private subscribeToMediaNamespace = (message: ReceiverStatusMessage, application: Application): void => {
         const addedSession = this.chromecast.addMediaSession(application.sessionId);
         if (!addedSession) return;
         this.sendMediaNamespaceConnect(message, application);
     };
 
-    private sendMediaNamespaceConnect = (message: ReceiverStatusMessage, application: Application) => {
+    private sendMediaNamespaceConnect = (message: ReceiverStatusMessage, application: Application): void => {
         const source = "client-" + message.requestId;
         const destination = application.sessionId;
         const data = JSON.stringify({ type: "CONNECT", requestId: this.chromecast.client.requestId++ });

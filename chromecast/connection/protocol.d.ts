@@ -1,3 +1,4 @@
+/* eslint-disable */ // This is a generated file
 import * as $protobuf from "protobufjs";
 import Long = require("long");
 /** Namespace extensions. */

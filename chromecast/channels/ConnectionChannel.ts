@@ -14,11 +14,11 @@ export default class ConnectionChannel {
         });
     }
 
-    public connect() {
+    public connect(): void {
         this.channel.send({ type: 'CONNECT' });
     }
 
-    private handleMessage = (data: ConnectionMessage, sourceId: string, destinationId: string) => {
+    private handleMessage = (data: ConnectionMessage, sourceId: string, destinationId: string): void => {
         if (data.type === 'CLOSE') {
             this.chromecast.removeMediaSession(sourceId);
         } else {

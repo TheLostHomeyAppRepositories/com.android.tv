@@ -107,16 +107,16 @@ class RemoteDevice extends Remote {
     await this.initializeChromecastClient();
   }
 
-  async initializeChromecastClient() {
-    const debug = (...args: unknown[]) => this.log("[Chromecast]", ...args);
-    const error = (...args: unknown[]) => this.error("[Chromecast]", ...args);
-    const updateMedia = (update: MediaUpdate) => this.updateChromecastMedia(update);
+  async initializeChromecastClient(): Promise<void> {
+    const debug = (...args: unknown[]): void => this.log("[Chromecast]", ...args);
+    const error = (...args: unknown[]): void => this.error("[Chromecast]", ...args);
+    const updateMedia = (update: MediaUpdate): Promise<void> => this.updateChromecastMedia(update);
     const settings: DeviceSettings = this.getSettings();
     this.chromecast = new Chromecast(settings.ip, updateMedia, debug, error, Homey.env.DEBUG === "1", this.homey);
     await this.chromecast.initialize();
   }
 
-  async updateChromecastMedia(update: MediaUpdate) {
+  async updateChromecastMedia(update: MediaUpdate): Promise<void> {
     if (update.title !== undefined) {
       await this.setCapabilityValue("speaker_track", update.title).catch(this.error);
     }
@@ -134,7 +134,7 @@ class RemoteDevice extends Remote {
     }
   }
 
-  async setAlbumArt(url: string | null) {
+  async setAlbumArt(url: string | null): Promise<void> {
     if (!this.albumArt || this.albumArtUrl === url) return;
 
     if (url === null) {
@@ -143,7 +143,7 @@ class RemoteDevice extends Remote {
     } else if (url.startsWith('https')) {
       this.albumArt.setUrl(url);
     } else if (url.startsWith('http')) {
-      this.albumArt.setStream((stream: any) => this.createAlbumArtStream(url, stream));
+      this.albumArt.setStream((stream: NodeJS.WritableStream) => this.createAlbumArtStream(url, stream));
     }
 
     await this.albumArt.update();
@@ -151,7 +151,7 @@ class RemoteDevice extends Remote {
     this.albumArtUrl = url;
   }
 
-  async createAlbumArtStream(url: string, stream: any) {
+  async createAlbumArtStream(url: string, stream: NodeJS.WritableStream): Promise<NodeJS.WritableStream> {
     const res = await fetch(url);
     if (!res.ok) {
       throw new Error(`Could not fetch image url: ${url}`);

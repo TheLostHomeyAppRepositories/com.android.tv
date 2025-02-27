@@ -1,4 +1,4 @@
-import Client from "./connection/client";
+import Client, {ChromecastError} from "./connection/client";
 import tls from "node:tls";
 import MediaChannel from "./channels/MediaChannel";
 import ConnectionChannel from "./channels/ConnectionChannel";
@@ -24,7 +24,7 @@ export type MediaUpdate = {
 }
 
 interface Homey {
-  setInterval(callback: Function, ms: number, ...args: any[]): NodeJS.Timeout
+  setInterval(callback: (args: void) => void, ms: number): NodeJS.Timeout
   clearInterval(intervalId: NodeJS.Timeout | string | number | undefined, ): void
 }
 
@@ -49,7 +49,11 @@ export default class Chromecast {
         this.clearMedia();
     }
 
-    handleError(err: any) {
+    handleError(err: ChromecastError | Error): void {
+        if (err instanceof Error) {
+          this.error(err);
+          return;
+        }
         if (err?.errno === -113) {
             this.error("Chromecast unreachable");
             this.clearMedia();
@@ -61,7 +65,7 @@ export default class Chromecast {
         }
     }
 
-    clearMedia() {
+    clearMedia(): void {
         this.updateMedia({
             title: null,
             subtitle: null,
@@ -71,7 +75,7 @@ export default class Chromecast {
         });
     }
 
-    async initialize() {
+    async initialize(): Promise<void> {
         this.client = new Client(this.logMessages ? this.debug : undefined);
         this.client.on("error", (err) => this.handleError(err));
 

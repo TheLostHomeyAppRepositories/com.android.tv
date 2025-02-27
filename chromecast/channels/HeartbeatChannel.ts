@@ -13,13 +13,13 @@ export default class HeartbeatChannel {
         this.channel = this.chromecast.client.createChannel(NAMESPACES.HEARTBEAT);
     }
 
-    public start() {
+    public start(): void {
         this.interval = this.chromecast.homey.setInterval(() => {
             this.channel.send({ type: 'PING' });
         }, HEARTBEAT_INTERVAL);
     }
 
-    public stop() {
+    public stop(): void {
         this.chromecast.homey.clearInterval(this.interval);
     }
 }

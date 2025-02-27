@@ -16,7 +16,7 @@ export default class MediaChannel {
         this.channel.on("message", (data) => this.handleMessage(data as MediaStatusMessage));
     }
 
-    private handleMessage = (data: MediaStatusMessage) =>{
+    private handleMessage = (data: MediaStatusMessage): void =>{
         if (data.type !== 'MEDIA_STATUS' || data.status.length === 0) return;
 
         for (const status of data.status) {
@@ -28,11 +28,11 @@ export default class MediaChannel {
         }
     };
 
-    private handleIdleMessage = () => {
+    private handleIdleMessage = (): void => {
         this.chromecast.clearMedia();
     };
 
-    private handleMediaMessage = (status: MediaStatus) => {
+    private handleMediaMessage = (status: MediaStatus): void => {
         const update: MediaUpdate = {};
         MediaChannel.setUpdateMetadata(status, update);
         MediaChannel.setUpdatePlaying(update, status);
@@ -40,7 +40,7 @@ export default class MediaChannel {
         this.chromecast.updateMedia(update);
     };
 
-    private static setUpdateMetadata(status: MediaStatus, update: MediaUpdate) {
+    private static setUpdateMetadata(status: MediaStatus, update: MediaUpdate): void {
         if (status.media?.metadata) {
             const metadata = status.media.metadata;
             MediaChannel.setUpdateTitle(update, metadata);
@@ -50,7 +50,7 @@ export default class MediaChannel {
         }
     }
 
-    private static setUpdatePlaying(update: MediaUpdate, status: MediaStatus) {
+    private static setUpdatePlaying(update: MediaUpdate, status: MediaStatus): void {
         if (status.playerState === PlayerState.PLAYING) {
             update.playing = true;
         } else if (status.playerState === PlayerState.PAUSED || status.playerState === PlayerState.IDLE) {
@@ -58,7 +58,7 @@ export default class MediaChannel {
         }
     }
 
-    private static setUpdateClear(update: MediaUpdate) {
+    private static setUpdateClear(update: MediaUpdate): void {
         if (update.title !== undefined || update.subtitle !== undefined || update.album !== undefined || update.image !== undefined) {
             update.title ??= null;
             update.subtitle ??= null;
@@ -67,7 +67,7 @@ export default class MediaChannel {
         }
     }
 
-    private static setUpdateTitle(update: MediaUpdate, metadata: MediaMetaData) {
+    private static setUpdateTitle(update: MediaUpdate, metadata: MediaMetaData): void {
         for (const selector of TEXT_SELECTOR_PRIORITIES) {
             if (metadata[selector] !== undefined) {
                 update.title = metadata[selector]?.toString();
@@ -76,7 +76,7 @@ export default class MediaChannel {
         }
     }
 
-    private static setUpdateSubTitle(update: MediaUpdate, metadata: MediaMetaData) {
+    private static setUpdateSubTitle(update: MediaUpdate, metadata: MediaMetaData): void {
         for (const selector of TEXT_SELECTOR_PRIORITIES) {
             if (metadata[selector] !== undefined && metadata[selector] !== update.title) {
                 update.subtitle = metadata[selector]?.toString();
@@ -85,7 +85,7 @@ export default class MediaChannel {
         }
     }
 
-    private static setUpdateImageUrl(update: MediaUpdate, metadata: MediaMetaData) {
+    private static setUpdateImageUrl(update: MediaUpdate, metadata: MediaMetaData): void {
         if (metadata.images !== undefined) {
             if (Array.isArray(metadata.images)) {
                 const image: MediaImage | undefined = metadata.images[0];
