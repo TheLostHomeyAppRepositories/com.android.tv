@@ -145,5 +145,8 @@
   },
   "1.0.0": {
     "en": "First official release. Based on community app, but added number inputs and app control"
+  },
+  "1.1.0": {
+    "en": "Added Play/pause status and current title playing"
   }
 }
