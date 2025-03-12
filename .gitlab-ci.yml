@@ -11,17 +11,17 @@ workflow:
 
 include:
   - project: 'intern/runner-templates'
-    ref: "15.3"
+    ref: "15.4"
     file: '/npm/install-js-dependencies.yml'
   - project: 'intern/runner-templates'
-    ref: "15.3"
+    ref: "15.4"
     file: '/npm/audit.yml'
   - project: 'intern/runner-templates'
-    ref: "15.3"
+    ref: "15.4"
     file: '/homey/validate.yml'
   - project: 'intern/runner-templates'
-    ref: "15.3"
+    ref: "15.4"
     file: '/homey/build.yml'
   - project: 'intern/runner-templates'
-    ref: "15.3"
+    ref: "15.4"
     file: '/homey/publish.yml'
