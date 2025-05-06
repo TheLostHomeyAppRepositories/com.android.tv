@@ -11,6 +11,7 @@ class RemoteManager extends EventEmitter {
     private error: NodeJS.ErrnoException | null;
     private timeout: number;
     private remoteMessageManager: RemoteMessageManager;
+    private apps: Record<string, string> = require('./apps.json');
 
     constructor(host: string, port: number, certs: {
         key: string | undefined;
@@ -76,7 +77,8 @@ class RemoteManager extends EventEmitter {
                         } else if (message.remotePingRequest) {
                             this.client?.write(this.remoteMessageManager.createRemotePingResponse(message.remotePingRequest.val1));
                         } else if (message.remoteImeKeyInject) {
-                            this.emit('current_app', message.remoteImeKeyInject.appInfo.appPackage);
+                          const appId = message.remoteImeKeyInject.appInfo.appPackage;
+                          this.emit('current_app', this.apps[appId] ?? appId);
                         } else if (message.remoteImeBatchEdit) {
                             this.emit('log.debug', 'Receive IME BATCH EDIT' + message.remoteImeBatchEdit);
                         } else if (message.remoteImeShowRequest) {

@@ -1,0 +1,73 @@
+{
+  "title": {
+    "en": "Open an application link",
+    "nl": "Open een app link",
+    "de": "Öffne eine Anwendung Link",
+    "fr": "Ouvrir une application lien",
+    "it": "Aprire un'applicazione link",
+    "sv": "Öppna en applikation länk",
+    "no": "Åpne en applikasjon link",
+    "es": "Abrir una aplicación enlace",
+    "da": "Åben en applikation link",
+    "pl": "Otwórz aplikację link"
+  },
+  "titleFormatted": {
+    "en": "Open app link [[app_link]]",
+    "nl": "Open app link [[app_link]]",
+    "de": "Öffne App Link [[app_link]]",
+    "fr": "Ouvrir l'application lien [[app_link]]",
+    "it": "Apri app link [[app_link]]",
+    "sv": "Öppna app länk [[app_link]]",
+    "no": "Åpne app link [[app_link]]",
+    "es": "Abrir aplicación enlace [[app_link]]",
+    "da": "Åben app link [[app_link]]",
+    "pl": "Otwórz aplikację link [[app_link]]"
+  },
+  "hint": {
+    "en": "What link you need to enter depends on the app you want to use, as the implementation is app-specific. A good starting point on finding this out can be https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+    "nl": "Welke link je moet invoeren, hangt af van de app die je wilt gebruiken, aangezien de implementatie app-specifiek is. Een goed startpunt om dit te achterhalen is https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+    "de": "Welchen Link Sie eingeben müssen, hängt von der gewünschten App ab, da die Implementierung app-spezifisch ist. Ein guter Ausgangspunkt hierfür ist https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+    "fr": "Le lien à saisir dépend de l'application que vous souhaitez utiliser, car son implémentation est spécifique à chaque application. Pour commencer, consultez https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921.",
+    "it": "Il link da inserire dipende dall'app che si desidera utilizzare, poiché l'implementazione è specifica per ogni app. Un buon punto di partenza per scoprirlo può essere https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+    "sv": "Vilken länk du behöver ange beror på vilken app du vill använda, eftersom implementeringen är appspecifik. En bra utgångspunkt för att ta reda på detta kan vara https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+    "no": "Hvilken lenke du må legge inn avhenger av appen du vil bruke, ettersom implementeringen er appspesifikk. Et godt utgangspunkt for å finne ut av dette kan være https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+    "es": "El enlace que debes introducir depende de la aplicación que quieras usar, ya que la implementación es específica para cada aplicación. Un buen punto de partida para averiguarlo es https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+    "da": "Hvilket link du skal indtaste afhænger af den app, du vil bruge, da implementeringen er app-specifik. Et godt udgangspunkt for at finde ud af dette kan være https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+    "pl": "Jaki link musisz wprowadzić, zależy od aplikacji, której chcesz użyć, ponieważ implementacja jest specyficzna dla aplikacji. Dobrym punktem wyjścia do znalezienia tego może być https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=remote"
+    },
+    {
+      "name": "app_link",
+      "title": {
+        "en": "App link",
+        "nl": "App link",
+        "de": "App-Link",
+        "fr": "Lien de l'application",
+        "it": "Link dell'applicazione",
+        "sv": "App-länk",
+        "no": "Applink",
+        "es": "Enlace de la aplicación",
+        "da": "App-link",
+        "pl": "Link do aplikacji"
+      },
+      "type": "text",
+      "placeholder": {
+        "en": "https://www.youtube.com/watch?v=<id>",
+        "nl": "https://www.youtube.com/watch?v=<id>",
+        "de": "https://www.youtube.com/watch?v=<id>",
+        "fr": "https://www.youtube.com/watch?v=<id>",
+        "it": "https://www.youtube.com/watch?v=<id>",
+        "sv": "https://www.youtube.com/watch?v=<id>",
+        "no": "https://www.youtube.com/watch?v=<id>",
+        "es": "https://www.youtube.com/watch?v=<id>",
+        "da": "https://www.youtube.com/watch?v=<id>",
+        "pl": "https://www.youtube.com/watch?v=<id>"
+      }
+    }
+  ]
+}

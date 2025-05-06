@@ -1,5 +1,4 @@
 {
-  "id": "select_source",
   "title": {
     "en": "Select a source",
     "nl": "Selecteer een input",
@@ -23,6 +22,18 @@
     "es": "Seleccione fuente [[source]]",
     "da": "Vælg kilde [[source]]",
     "pl": "Wybierz źródło [[source]]"
+  },
+  "hint": {
+    "en": "Some devices, such as the Google TV streamer, do not support this card.",
+    "nl": "Sommige apparaten, zoals de Google TV-streamer, ondersteunen deze kaart niet.",
+    "de": "Einige Geräte, wie beispielsweise der Google TV-Streamer, unterstützen diese Karte nicht.",
+    "fr": "Certains appareils, tels que le streamer Google TV, ne prennent pas en charge cette carte.",
+    "it": "Alcuni dispositivi, come lo streamer Google TV, non supportano questa scheda.",
+    "sv": "Vissa enheter, som Google TV-streamern, stöder inte det här kortet.",
+    "no": "Enkelte enheter, som for eksempel Google TV-streameren, støtter ikke dette kortet.",
+    "es": "Algunos dispositivos, como el transmisor Google TV, no admiten esta tarjeta.",
+    "da": "Nogle enheder, såsom Google TV-streameren, understøtter ikke dette kort.",
+    "pl": "Niektóre urządzenia, na przykład streamer Google TV, nie obsługują tej karty."
   },
   "args": [
     {

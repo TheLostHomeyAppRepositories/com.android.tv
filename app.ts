@@ -5,10 +5,8 @@ import {RemoteDirection} from "./androidtv-remote";
 
 class AndroidTV extends Homey.App {
     homeyLog = new Log({ homey: this.homey });
+    androidApps: Array<{name: string, id: string}> = [];
 
-    /**
-     * onInit is called when the app is initialized.
-     */
     async onInit(): Promise<void> {
         this.log("App has been initialized");
 
@@ -17,9 +15,20 @@ class AndroidTV extends Homey.App {
     }
 
     private async registerFlowCardListeners(): Promise<void> {
+        this.homey.flow.getActionCard('open_link')
+            .registerRunListener(this.onFlowActionOpenLink);
+        const items = require("./androidtv-remote/remote/apps.json");
+        for (const item of Object.keys(items)) {
+            const name = items[item] as unknown as string;
+            if (name.includes('(system)')) {
+                continue;
+            }
+            this.androidApps.push({name: items[item], id: item});
+        }
+        this.androidApps = this.androidApps.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
         this.homey.flow.getActionCard('open_application')
-            .registerRunListener(this.onFlowActionOpenApplication);
-            // .registerArgumentAutocompleteListener('app', this.onFlowApplicationAutocomplete)
+            .registerRunListener(this.onFlowActionOpenApplication)
+            .registerArgumentAutocompleteListener('app', this.onFlowAppAutocomplete.bind(this));
 
         // this.homey.flow.getActionCard('open_google_assistant')
         //     .registerRunListener(this.onFlowActionOpenGoogleAssistant);
@@ -51,10 +60,19 @@ class AndroidTV extends Homey.App {
         this.log('Initialized flow');
     }
 
-    async onFlowActionOpenApplication({device, app_link}: { device: RemoteDevice, app_link: string}): Promise<void> {
+    async onFlowActionOpenLink({device, app_link}: { device: RemoteDevice, app_link: string }): Promise<void> {
         console.log('Open application link', app_link);
         try {
             return device.openApplicationOrLink(app_link);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async onFlowActionOpenApplication({device, app}: { device: RemoteDevice, app: { name: string, id: string } }): Promise<void> {
+        console.log('Open application', app);
+        try {
+            return device.openApplicationOrLink(app.id);
         } catch (e) {
             console.log(e);
         }
@@ -83,6 +101,12 @@ class AndroidTV extends Homey.App {
             }).filter(result => {
                 return result.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
             });
+    }
+
+    async onFlowAppAutocomplete(query: string, {device}: {device: RemoteDevice }): Promise<FlowCard.ArgumentAutocompleteResults> {
+        return this.androidApps.filter(result => {
+            return result.name.toLowerCase().includes(query.toLowerCase());
+        });
     }
 
     async onFlowActionSelectSource({device, source}: { device: RemoteDevice, source: string }): Promise<void> {
