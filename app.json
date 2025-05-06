@@ -141,7 +141,6 @@
     ],
     "actions": [
       {
-        "id": "long_press_key",
         "title": {
           "en": "Long press a key",
           "nl": "Druk lang op een toets",
@@ -209,34 +208,96 @@
             "min": 0.1,
             "step": 0.1
           }
-        ]
+        ],
+        "id": "long_press_key"
       },
       {
         "highlight": true,
-        "id": "open_application",
         "title": {
-          "en": "Open an application or link",
-          "nl": "Open een app of link",
-          "de": "Öffne eine Anwendung oder Link",
-          "fr": "Ouvrir une application ou lien",
-          "it": "Aprire un'applicazione o link",
-          "sv": "Öppna en applikation eller länk",
-          "no": "Åpne en applikasjon eller link",
-          "es": "Abrir una aplicación o enlace",
-          "da": "Åben en applikation eller link",
-          "pl": "Otwórz aplikację lub link"
+          "en": "Open an application",
+          "nl": "Open een app",
+          "de": "Öffne eine Anwendung",
+          "fr": "Ouvrir une application",
+          "it": "Aprire un'applicazione",
+          "sv": "Öppna en applikation",
+          "no": "Åpne en applikasjon",
+          "es": "Abrir una aplicación",
+          "da": "Åben en applikation",
+          "pl": "Otwórz aplikację"
         },
         "titleFormatted": {
-          "en": "Open app or link [[app_link]]",
-          "nl": "Open app of link [[app_link]]",
-          "de": "Öffne App oder Link [[app_link]]",
-          "fr": "Ouvrir l'application ou lien [[app_link]]",
-          "it": "Apri app o link [[app_link]]",
-          "sv": "Öppna app eller länk [[app_link]]",
-          "no": "Åpne app eller link [[app_link]]",
-          "es": "Abrir aplicación o enlace [[app_link]]",
-          "da": "Åben app eller link [[app_link]]",
-          "pl": "Otwórz aplikację lub link [[app_link]]"
+          "en": "Open app [[app]]",
+          "nl": "Open app [[app]]",
+          "de": "Öffne App [[app]]",
+          "fr": "Ouvrir l'application [[app]]",
+          "it": "Apri app [[app]]",
+          "sv": "Öppna app [[app]]",
+          "no": "Åpne app [[app]]",
+          "es": "Abrir aplicación[[app]]",
+          "da": "Åben app [[app]]",
+          "pl": "Otwórz aplikację [[app]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=remote"
+          },
+          {
+            "name": "app",
+            "type": "autocomplete",
+            "title": {
+              "en": "App name",
+              "nl": "App naam",
+              "de": "App-Name",
+              "fr": "Nom de l'application",
+              "it": "Nome dell'applicazione",
+              "sv": "App-namn",
+              "no": "Appnavn",
+              "es": "Nombre de la aplicación",
+              "da": "App-navn",
+              "pl": "Imię do aplikacji"
+            }
+          }
+        ],
+        "id": "open_application"
+      },
+      {
+        "title": {
+          "en": "Open an application link",
+          "nl": "Open een app link",
+          "de": "Öffne eine Anwendung Link",
+          "fr": "Ouvrir une application lien",
+          "it": "Aprire un'applicazione link",
+          "sv": "Öppna en applikation länk",
+          "no": "Åpne en applikasjon link",
+          "es": "Abrir una aplicación enlace",
+          "da": "Åben en applikation link",
+          "pl": "Otwórz aplikację link"
+        },
+        "titleFormatted": {
+          "en": "Open app link [[app_link]]",
+          "nl": "Open app link [[app_link]]",
+          "de": "Öffne App Link [[app_link]]",
+          "fr": "Ouvrir l'application lien [[app_link]]",
+          "it": "Apri app link [[app_link]]",
+          "sv": "Öppna app länk [[app_link]]",
+          "no": "Åpne app link [[app_link]]",
+          "es": "Abrir aplicación enlace [[app_link]]",
+          "da": "Åben app link [[app_link]]",
+          "pl": "Otwórz aplikację link [[app_link]]"
+        },
+        "hint": {
+          "en": "What link you need to enter depends on the app you want to use, as the implementation is app-specific. A good starting point on finding this out can be https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+          "nl": "Welke link je moet invoeren, hangt af van de app die je wilt gebruiken, aangezien de implementatie app-specifiek is. Een goed startpunt om dit te achterhalen is https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+          "de": "Welchen Link Sie eingeben müssen, hängt von der gewünschten App ab, da die Implementierung app-spezifisch ist. Ein guter Ausgangspunkt hierfür ist https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+          "fr": "Le lien à saisir dépend de l'application que vous souhaitez utiliser, car son implémentation est spécifique à chaque application. Pour commencer, consultez https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921.",
+          "it": "Il link da inserire dipende dall'app che si desidera utilizzare, poiché l'implementazione è specifica per ogni app. Un buon punto di partenza per scoprirlo può essere https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+          "sv": "Vilken länk du behöver ange beror på vilken app du vill använda, eftersom implementeringen är appspecifik. En bra utgångspunkt för att ta reda på detta kan vara https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+          "no": "Hvilken lenke du må legge inn avhenger av appen du vil bruke, ettersom implementeringen er appspesifikk. Et godt utgangspunkt for å finne ut av dette kan være https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+          "es": "El enlace que debes introducir depende de la aplicación que quieras usar, ya que la implementación es específica para cada aplicación. Un buen punto de partida para averiguarlo es https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+          "da": "Hvilket link du skal indtaste afhænger af den app, du vil bruge, da implementeringen er app-specifik. Et godt udgangspunkt for at finde ud af dette kan være https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921",
+          "pl": "Jaki link musisz wprowadzić, zależy od aplikacji, której chcesz użyć, ponieważ implementacja jest specyficzna dla aplikacji. Dobrym punktem wyjścia do znalezienia tego może być https://community.home-assistant.io/t/android-tv-remote-app-links-deep-linking-guide/567921"
         },
         "args": [
           {
@@ -247,35 +308,35 @@
           {
             "name": "app_link",
             "title": {
-              "en": "App link or name",
-              "nl": "App link of naam",
-              "de": "App-Link oder Name",
-              "fr": "Lien ou nom de l'application",
-              "it": "Link o nome dell'applicazione",
-              "sv": "App-länk eller namn",
-              "no": "Applink eller navn",
-              "es": "Enlace o nombre de la aplicación",
-              "da": "App-link eller navn",
-              "pl": "Link lub imię do aplikacji"
+              "en": "App link",
+              "nl": "App link",
+              "de": "App-Link",
+              "fr": "Lien de l'application",
+              "it": "Link dell'applicazione",
+              "sv": "App-länk",
+              "no": "Applink",
+              "es": "Enlace de la aplicación",
+              "da": "App-link",
+              "pl": "Link do aplikacji"
             },
             "type": "text",
             "placeholder": {
-              "en": "com.netflix.ninja or https://www.youtube.com/watch?v=<id>",
-              "nl": "com.netflix.ninja of https://www.youtube.com/watch?v=<id>",
-              "de": "com.netflix.ninja oder https://www.youtube.com/watch?v=<id>",
-              "fr": "com.netflix.ninja ou https://www.youtube.com/watch?v=<id>",
-              "it": "com.netflix.ninja o https://www.youtube.com/watch?v=<id>",
-              "sv": "com.netflix.ninja eller https://www.youtube.com/watch?v=<id>",
-              "no": "com.netflix.ninja eller https://www.youtube.com/watch?v=<id>",
-              "es": "com.netflix.ninja o https://www.youtube.com/watch?v=<id>",
-              "da": "com.netflix.ninja eller https://www.youtube.com/watch?v=<id>",
-              "pl": "com.netflix.ninja lub https://www.youtube.com/watch?v=<id>"
+              "en": "https://www.youtube.com/watch?v=<id>",
+              "nl": "https://www.youtube.com/watch?v=<id>",
+              "de": "https://www.youtube.com/watch?v=<id>",
+              "fr": "https://www.youtube.com/watch?v=<id>",
+              "it": "https://www.youtube.com/watch?v=<id>",
+              "sv": "https://www.youtube.com/watch?v=<id>",
+              "no": "https://www.youtube.com/watch?v=<id>",
+              "es": "https://www.youtube.com/watch?v=<id>",
+              "da": "https://www.youtube.com/watch?v=<id>",
+              "pl": "https://www.youtube.com/watch?v=<id>"
             }
           }
-        ]
+        ],
+        "id": "open_link"
       },
       {
-        "id": "press_key",
         "title": {
           "en": "Press a key",
           "nl": "Druk op een knop",
@@ -322,10 +383,10 @@
               "pl": "Klawisz"
             }
           }
-        ]
+        ],
+        "id": "press_key"
       },
       {
-        "id": "select_source",
         "title": {
           "en": "Select a source",
           "nl": "Selecteer een input",
@@ -349,6 +410,18 @@
           "es": "Seleccione fuente [[source]]",
           "da": "Vælg kilde [[source]]",
           "pl": "Wybierz źródło [[source]]"
+        },
+        "hint": {
+          "en": "Some devices, such as the Google TV streamer, do not support this card.",
+          "nl": "Sommige apparaten, zoals de Google TV-streamer, ondersteunen deze kaart niet.",
+          "de": "Einige Geräte, wie beispielsweise der Google TV-Streamer, unterstützen diese Karte nicht.",
+          "fr": "Certains appareils, tels que le streamer Google TV, ne prennent pas en charge cette carte.",
+          "it": "Alcuni dispositivi, come lo streamer Google TV, non supportano questa scheda.",
+          "sv": "Vissa enheter, som Google TV-streamern, stöder inte det här kortet.",
+          "no": "Enkelte enheter, som for eksempel Google TV-streameren, støtter ikke dette kortet.",
+          "es": "Algunos dispositivos, como el transmisor Google TV, no admiten esta tarjeta.",
+          "da": "Nogle enheder, såsom Google TV-streameren, understøtter ikke dette kort.",
+          "pl": "Niektóre urządzenia, na przykład streamer Google TV, nie obsługują tej karty."
         },
         "args": [
           {
@@ -428,7 +501,8 @@
               }
             ]
           }
-        ]
+        ],
+        "id": "select_source"
       }
     ]
   },
@@ -442,6 +516,12 @@
       ],
       "pair": [
         {
+          "id": "inform",
+          "navigation": {
+            "next": "discover"
+          }
+        },
+        {
           "id": "discover",
           "template": "loading"
         },
@@ -450,7 +530,7 @@
           "template": "list_devices",
           "navigation": {
             "next": "authenticate",
-            "prev": "add_by_ip"
+            "prev": "inform"
           },
           "options": {
             "singular": true,
@@ -472,7 +552,7 @@
           "id": "add_by_ip",
           "navigation": {
             "next": "authenticate",
-            "prev": "discover"
+            "prev": "inform"
           }
         },
         {
@@ -549,9 +629,6 @@
             },
             "type": "text",
             "length": 6
-          },
-          "navigation": {
-            "prev": "discover"
           }
         }
       ],
