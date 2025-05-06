@@ -67,6 +67,7 @@ class RemoteDevice extends Remote {
       this.client = new AndroidTVRemoteClient(
           settings.ip,
           store.cert,
+          this.homey,
           'androidtv-remote',
           6467,
           6466,
@@ -163,6 +164,7 @@ class RemoteDevice extends Remote {
 
   async onUninit(): Promise<void> {
     this.client?.stop();
+    this.chromecast?.close();
   }
 
   private async registerClientListeners(): Promise<void> {
@@ -201,7 +203,7 @@ class RemoteDevice extends Remote {
     this.client.on('error', async (error) => {
       this.log('client.on(error)', error);
       // TODO: is this necessary?
-      await this.reloadClient(60);
+      // await this.reloadClient(60);
     });
   }
 
@@ -410,16 +412,16 @@ class RemoteDevice extends Remote {
 
   async onSettings({changedKeys}: SettingsInput): Promise<void> {
     if (changedKeys.includes("ip")) {
-      await this.reloadClient();
+      await this.reloadClient(1);
     }
   }
 
   private async reloadClient(timeoutInSeconds: number | null = null): Promise<void> {
     try {
-      this.client?.stop();
+      await this.onUninit();
     } finally {
       if (timeoutInSeconds !== null) {
-        await this.homey.setTimeout(this.initializeClient.bind(this), timeoutInSeconds * 1000);
+        this.homey.setTimeout(this.initializeClient.bind(this), timeoutInSeconds * 1000);
       } else {
         await this.initializeClient();
       }

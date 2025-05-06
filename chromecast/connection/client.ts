@@ -54,7 +54,7 @@ class Client extends EventEmitter<ClientEvents> {
       this.once('connect', callback);
     }
 
-    this.debug('connecting to %s:%d ...', options.host, options.port);
+    this.debug('connecting to', options.host, ':', options.port);
 
     this.socket = tls.connect(options, () => {
       this.ps = new PacketStreamWrapper(this.socket!);

@@ -3,6 +3,7 @@ import {PairingManager} from './pairing/PairingManager';
 import {RemoteManager} from './remote/RemoteManager';
 import RemoteMessageManager from './remote/RemoteMessageManager';
 import EventEmitter from 'events';
+import type Homey from "homey/lib/Homey";
 
 export class AndroidRemote extends EventEmitter {
     private host: string;
@@ -14,6 +15,7 @@ export class AndroidRemote extends EventEmitter {
     private manufacturer: string;
     private model: string;
     private debug: boolean;
+    private homey: Homey;
 
     private pairingManager: PairingManager | undefined;
     private remoteManager: RemoteManager | undefined;
@@ -27,7 +29,8 @@ export class AndroidRemote extends EventEmitter {
         manufacturer?: string,
         model?: string,
         debug?: boolean,
-    }) {
+    },
+                homey: Homey) {
         super();
         this.host = host;
         this.cert = {
@@ -41,6 +44,7 @@ export class AndroidRemote extends EventEmitter {
         this.manufacturer = options.manufacturer ?? 'unknown';
         this.model = options.model ?? 'unknown';
         this.debug = options.debug ?? false;
+        this.homey = homey;
     }
 
     async start(): Promise<void> {
@@ -72,7 +76,7 @@ export class AndroidRemote extends EventEmitter {
             }
         }
 
-        this.remoteManager = new RemoteManager(this.host, this.remote_port, this.cert, this.timeout, this.manufacturer, this.model, this.debug);
+        this.remoteManager = new RemoteManager(this.host, this.remote_port, this.cert, this.homey, this.timeout, this.manufacturer, this.model, this.debug);
 
         this.remoteManager.on('powered', (powered) => this.emit('powered', powered));
 

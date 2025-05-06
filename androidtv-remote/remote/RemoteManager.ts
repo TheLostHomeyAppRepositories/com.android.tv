@@ -1,6 +1,7 @@
 import tls from 'tls';
 import RemoteMessageManager from './RemoteMessageManager';
 import EventEmitter from 'events';
+import type Homey from 'homey/lib/Homey';
 
 class RemoteManager extends EventEmitter {
     private host: string;
@@ -12,11 +13,14 @@ class RemoteManager extends EventEmitter {
     private timeout: number;
     private remoteMessageManager: RemoteMessageManager;
     private apps: Record<string, string> = require('./apps.json');
+    private reconnectTimeout: number | NodeJS.Timeout | null = null;
+    private destroyed: boolean = false;
+    private homey: Homey;
 
     constructor(host: string, port: number, certs: {
         key: string | undefined;
         cert: string | undefined
-    }, timeout: number = 1000, manufacturer: string = 'unknown', model: string = 'unknown', debug: boolean = false) {
+    }, homey: Homey, timeout: number = 1000, manufacturer: string = 'unknown', model: string = 'unknown', debug: boolean = false) {
         super();
         this.host = host;
         this.port = port;
@@ -25,6 +29,7 @@ class RemoteManager extends EventEmitter {
         this.error = null;
         this.timeout = timeout;
         this.remoteMessageManager = new RemoteMessageManager(manufacturer, model, debug);
+        this.homey = homey;
     }
 
     async start(): Promise<void> {
@@ -57,6 +62,9 @@ class RemoteManager extends EventEmitter {
             });
 
             this.client.on('data', (data) => {
+                if (this.destroyed) {
+                    return;
+                }
                 try {
                     const buffer = Buffer.from(data);
                     this.chunks = Buffer.concat([this.chunks, buffer]);
@@ -120,8 +128,12 @@ class RemoteManager extends EventEmitter {
             });
 
             this.client.on('close', async (hasError) => {
+                if (this.destroyed) {
+                    return;
+                }
                 this.emit('close', {hasError: hasError, error: this.error});
-                this.emit('log.info', this.host + ' Remote Connection closed ' + (hasError ? 'with error' : ''));
+                this.emit('log.info', this.host + ' Remote Connection closed' + (hasError ? ' with error' : ''));
+                const emitError = (error: any) => this.emit('log.error', error);
 
                 if (hasError) {
                     this.error = this.error ?? new Error('Unknown Error');
@@ -130,29 +142,32 @@ class RemoteManager extends EventEmitter {
                         this.emit('unpaired');
                     } else if (this.error.code === 'ECONNREFUSED') {
                         // The device is not ready yet: we restart
-                        await new Promise<void>((resolve) => setTimeout(resolve, this.timeout));
-                        await this.start().catch((error) => {
-                            this.emit('log.error', error);
-                        });
+                        if (this.reconnectTimeout) {
+                            this.homey.clearTimeout(this.reconnectTimeout);
+                        }
+                        this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError)}, this.timeout);
                     } else if (this.error.code === 'EHOSTDOWN') {
                         // The device is down, we do nothing
                     } else {
                         // In doubt, we restart
-                        await new Promise<void>((resolve) => setTimeout(resolve, this.timeout));
-                        await this.start().catch((error) => {
-                            this.emit('log.error', error);
-                        });
+                        if (this.reconnectTimeout) {
+                            this.homey.clearTimeout(this.reconnectTimeout);
+                        }
+                        this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError)}, this.timeout);
                     }
                 } else {
                     // If no error, we restart. If it has turned off, an error will prevent further restarts.
-                    await new Promise<void>((resolve) => setTimeout(resolve, this.timeout));
-                    await this.start().catch((error) => {
-                        this.emit('log.error', error);
-                    });
+                    if (this.reconnectTimeout) {
+                        this.homey.clearTimeout(this.reconnectTimeout);
+                    }
+                    this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError)}, this.timeout);
                 }
             });
 
             this.client.on('error', (error) => {
+                if (this.destroyed) {
+                  return;
+                }
                 this.emit('log.error', this.host, error);
                 this.error = error;
             });
@@ -177,7 +192,11 @@ class RemoteManager extends EventEmitter {
     }
 
     stop(): void {
+        if (this.reconnectTimeout) {
+            this.homey.clearTimeout(this.reconnectTimeout);
+        }
         this.client?.destroy();
+        this.destroyed = true;
     }
 }
 

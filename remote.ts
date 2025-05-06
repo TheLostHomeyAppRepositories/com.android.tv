@@ -10,7 +10,7 @@ export abstract class Remote extends Device {
     }
 
     // Force immediate production check
-    this.initializeClient();
+    await this.initializeClient();
   }
 
   abstract initializeClient(): Promise<void>;

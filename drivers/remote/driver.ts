@@ -1,9 +1,8 @@
-import {
+import Homey, {
   Device,
   DiscoveryResultMAC,
   DiscoveryResultMDNSSD,
   DiscoveryResultSSDP,
-  DiscoveryStrategy,
   Driver
 } from "homey";
 import AndroidTVRemoteClient from "./client";
@@ -16,13 +15,12 @@ class RemoteDriver extends Driver {
     const existingDevices: Array<Device> = this.getDevices();
     let pairingDevice: DeviceType | null = null;
     let pairingClient: AndroidTVRemoteClient | null = null;
-    const discoveryStrategy: DiscoveryStrategy = this.getDiscoveryStrategy();
 
     session.setHandler('showView', async (view: string) => {
       this.log('Show view', view);
 
       if (view === 'discover') {
-        const discoveredDevices = this.getDiscoveredDevices(discoveryStrategy);
+        const discoveredDevices = this.getDiscoveredDevices();
         let hasDiscoveredDevices = false;
         devices = discoveredDevices.filter(item => {
           if (item === null) {
@@ -111,6 +109,13 @@ class RemoteDriver extends Driver {
 
     this.log('Repairing device', repairingDevice.getName());
 
+    const discoveredDevices = this.getDiscoveredDevices();
+    const existingDevice = discoveredDevices.find(item => item.data.id === repairingDevice.getData().id);
+    if (existingDevice) {
+      // Update IP
+      await repairingDevice.setSettings({ip: existingDevice.settings.ip});
+    }
+
     const pairingClient = this.getPairingClientByDevice({
       name: repairingDevice.getName(),
       data: repairingDevice.getData() as DeviceData,
@@ -148,7 +153,9 @@ class RemoteDriver extends Driver {
       const pairingResult = await pairingClient.sendCode(code.join(''));
 
       if (pairingResult) {
+        await repairingDevice.onUninit();
         await repairingDevice.setStoreValue('cert', await pairingClient.getCertificate());
+        await repairingDevice.onInit();
         session.done();
       } else {
         session.showView('authenticate');
@@ -163,7 +170,15 @@ class RemoteDriver extends Driver {
   }
 
   private getPairingClientByDevice(device: DeviceType): AndroidTVRemoteClient {
-    return new AndroidTVRemoteClient(device.settings.ip, device.store.cert);
+    return new AndroidTVRemoteClient(
+      device.settings.ip,
+      device.store.cert,
+      this.homey,
+      'androidtv-remote',
+      6467,
+      6466,
+      Homey.env.DEBUG === '1',
+    );
   }
 
   private getDeviceByDiscoveryResult(discoveryResult: DiscoveryResultMDNSSD): DeviceType {
@@ -196,8 +211,8 @@ class RemoteDriver extends Driver {
     return name;
   }
 
-  private getDiscoveredDevices(discoveryStrategy: DiscoveryStrategy): Array<DeviceType> {
-    const discoveryResults = discoveryStrategy.getDiscoveryResults();
+  private getDiscoveredDevices(): Array<DeviceType> {
+    const discoveryResults = this.getDiscoveryStrategy().getDiscoveryResults();
 
     return Object.values(discoveryResults)
         .map(discoveryResult => {

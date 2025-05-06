@@ -4,6 +4,7 @@ import MediaChannel from "./channels/MediaChannel";
 import ConnectionChannel from "./channels/ConnectionChannel";
 import ReceiverChannel from "./channels/ReceiverChannel";
 import HeartbeatChannel from "./channels/HeartbeatChannel";
+import type Homey from "homey/lib/Homey";
 
 export const enum NAMESPACES {
     CONNECTION = 'urn:x-cast:com.google.cast.tp.connection',
@@ -23,15 +24,12 @@ export type MediaUpdate = {
     playing?: boolean | null,
 }
 
-interface Homey {
-  setInterval(callback: (args: void) => void, ms: number): NodeJS.Timeout
-  clearInterval(intervalId: NodeJS.Timeout | string | number | undefined, ): void
-}
-
 export default class Chromecast {
     private readonly connectionOptions: string | tls.ConnectionOptions;
     public client!: Client;
     public readonly subscribedMediaSession: Set<string> = new Set();
+    private destroyed: boolean = false;
+    private reconnectTimeout: NodeJS.Timeout|null = null;
 
     private connectionChannel?: ConnectionChannel;
     private heartbeatChannel?: HeartbeatChannel;
@@ -47,6 +45,16 @@ export default class Chromecast {
     readonly homey: Homey) {
         this.connectionOptions = connectionOptions;
         this.clearMedia();
+    }
+
+    handleClose(): void {
+        if (this.destroyed) {
+            return;
+        }
+        if (this.reconnectTimeout) {
+            this.homey.clearTimeout(this.reconnectTimeout);
+        }
+        this.reconnectTimeout = this.homey.setTimeout(() => this.initialize(), 60 * 1000); // Reconnect after 1 minute
     }
 
     handleError(err: ChromecastError | Error): void {
@@ -78,6 +86,7 @@ export default class Chromecast {
     async initialize(): Promise<void> {
         this.client = new Client(this.logMessages ? this.debug : undefined);
         this.client.on("error", (err) => this.handleError(err));
+        this.client.on('close', () => this.handleClose());
 
         await this.client.connectAsync(this.connectionOptions);
 
@@ -110,5 +119,13 @@ export default class Chromecast {
         }
         this.debug("Connected media sessions:", this.subscribedMediaSession);
         return true;
+    }
+
+    public close(): void {
+        if (this.reconnectTimeout) {
+            this.homey.clearTimeout(this.reconnectTimeout);
+        }
+        this.destroyed = true;
+        return this.client.close();
     }
 }
