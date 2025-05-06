@@ -1,4 +1,4 @@
-{
+export default {
   "com.netflix.ninja": "Netflix",
   "com.amazon.amazonvideo.livingroom": "Amazon Prime Video",
   "com.google.android.youtube.tv": "YouTube",
@@ -35,4 +35,4 @@
   "com.google.android.apps.tv.dreamx": "Android TV screensaver (system)",
   "com.google.android.gms": "Google Play Services (system)",
   "com.android.systemui": "Android TV System UI (system)"
-}
+} as Record<string, string>;

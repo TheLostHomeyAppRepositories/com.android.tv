@@ -2,6 +2,7 @@ import {Log} from '@drenso/homey-log';
 import Homey, {FlowCard} from "homey";
 import RemoteDevice from "./drivers/remote/device";
 import {RemoteDirection} from "./androidtv-remote";
+import apps from "./androidtv-remote/remote/apps";
 
 class AndroidTV extends Homey.App {
     homeyLog = new Log({ homey: this.homey });
@@ -17,13 +18,12 @@ class AndroidTV extends Homey.App {
     private async registerFlowCardListeners(): Promise<void> {
         this.homey.flow.getActionCard('open_link')
             .registerRunListener(this.onFlowActionOpenLink);
-        const items = require("./androidtv-remote/remote/apps.json");
-        for (const item of Object.keys(items)) {
-            const name = items[item] as unknown as string;
+        for (const item of Object.keys(apps)) {
+            const name = apps[item] as unknown as string;
             if (name.includes('(system)')) {
                 continue;
             }
-            this.androidApps.push({name: items[item], id: item});
+            this.androidApps.push({name: name, id: item});
         }
         this.androidApps = this.androidApps.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
         this.homey.flow.getActionCard('open_application')
@@ -103,7 +103,7 @@ class AndroidTV extends Homey.App {
             });
     }
 
-    async onFlowAppAutocomplete(query: string, {device}: {device: RemoteDevice }): Promise<FlowCard.ArgumentAutocompleteResults> {
+    async onFlowAppAutocomplete(query: string): Promise<FlowCard.ArgumentAutocompleteResults> {
         return this.androidApps.filter(result => {
             return result.name.toLowerCase().includes(query.toLowerCase());
         });

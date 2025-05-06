@@ -2,6 +2,7 @@ import tls from 'tls';
 import RemoteMessageManager from './RemoteMessageManager';
 import EventEmitter from 'events';
 import type Homey from 'homey/lib/Homey';
+import apps from './apps';
 
 class RemoteManager extends EventEmitter {
     private host: string;
@@ -12,7 +13,6 @@ class RemoteManager extends EventEmitter {
     private error: NodeJS.ErrnoException | null;
     private timeout: number;
     private remoteMessageManager: RemoteMessageManager;
-    private apps: Record<string, string> = require('./apps.json');
     private reconnectTimeout: number | NodeJS.Timeout | null = null;
     private destroyed: boolean = false;
     private homey: Homey;
@@ -86,7 +86,7 @@ class RemoteManager extends EventEmitter {
                             this.client?.write(this.remoteMessageManager.createRemotePingResponse(message.remotePingRequest.val1));
                         } else if (message.remoteImeKeyInject) {
                           const appId = message.remoteImeKeyInject.appInfo.appPackage;
-                          this.emit('current_app', this.apps[appId] ?? appId);
+                          this.emit('current_app', apps[appId] ?? appId);
                         } else if (message.remoteImeBatchEdit) {
                             this.emit('log.debug', 'Receive IME BATCH EDIT' + message.remoteImeBatchEdit);
                         } else if (message.remoteImeShowRequest) {
@@ -133,7 +133,7 @@ class RemoteManager extends EventEmitter {
                 }
                 this.emit('close', {hasError: hasError, error: this.error});
                 this.emit('log.info', this.host + ' Remote Connection closed' + (hasError ? ' with error' : ''));
-                const emitError = (error: any) => this.emit('log.error', error);
+                const emitError = (error: unknown): boolean => this.emit('log.error', error);
 
                 if (hasError) {
                     this.error = this.error ?? new Error('Unknown Error');
@@ -145,7 +145,7 @@ class RemoteManager extends EventEmitter {
                         if (this.reconnectTimeout) {
                             this.homey.clearTimeout(this.reconnectTimeout);
                         }
-                        this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError)}, this.timeout);
+                        this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError);}, this.timeout);
                     } else if (this.error.code === 'EHOSTDOWN') {
                         // The device is down, we do nothing
                     } else {
@@ -153,14 +153,14 @@ class RemoteManager extends EventEmitter {
                         if (this.reconnectTimeout) {
                             this.homey.clearTimeout(this.reconnectTimeout);
                         }
-                        this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError)}, this.timeout);
+                        this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError);}, this.timeout);
                     }
                 } else {
                     // If no error, we restart. If it has turned off, an error will prevent further restarts.
                     if (this.reconnectTimeout) {
                         this.homey.clearTimeout(this.reconnectTimeout);
                     }
-                    this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError)}, this.timeout);
+                    this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError);}, this.timeout);
                 }
             });
 
