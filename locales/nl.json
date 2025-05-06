@@ -3,12 +3,14 @@
     "add_by_ip": {
       "title": "Handmatig toevoegen",
       "ip": "IP-adres",
-      "no_new_devices_hint": "Alle gevonden televisies zijn al toegevoegd. Probeer je tv handmatig toe te voegen.",
-      "need_help_pairing": "Hulp nodig bij koppelen?",
-      "click_here_documentation": "Klik hier om de documentatie te bekijken."
+      "no_new_devices_hint": "Alle gevonden televisies zijn al toegevoegd. Probeer je tv handmatig toe te voegen."
     },
     "add_device": {
       "title": "Apparaat toevoegen"
+    },
+    "inform": {
+      "title": "Belangrijke informatie",
+      "text": "Voor een stabiele werking wijst u een statisch IP-adres toe aan uw Android TV-apparaat. Daarna kunt u op Volgende klikken. De meeste apparaten kunnen automatisch worden gedetecteerd. Als dit niet werkt, kunt u uw apparaat toevoegen door het IP-adres in te voeren. Houd er rekening mee dat Chromecast-apparaten ook in dit overzicht worden weergegeven, maar niet kunnen worden gebruikt met de Android TV-app. Dit is een beperking van het detectieprotocol."
     }
   },
   "error": {

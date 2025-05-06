@@ -3,12 +3,14 @@
     "add_by_ip": {
       "title": "Dodaj ręcznie",
       "ip": "Adres IP",
-      "no_new_devices_hint": "Wszystkie znalezione telewizory zostały już dodane. Spróbuj dodać swój telewizor ręcznie.",
-      "need_help_pairing": "Potrzebna pomoc w parowaniu?",
-      "click_here_documentation": "Kliknij tutaj, aby wyświetlić dokumentację."
+      "no_new_devices_hint": "Wszystkie znalezione telewizory zostały już dodane. Spróbuj dodać swój telewizor ręcznie."
     },
     "add_device": {
       "title": "Dodaj urządzenie"
+    },
+    "inform": {
+      "title": "Ważne informacje",
+      "text": "Aby zapewnić stabilną pracę, przypisz statyczny adres IP do urządzenia Android TV. Po wykonaniu tej czynności możesz nacisnąć przycisk Dalej. Większość urządzeń można wykryć automatycznie, jeśli to nie zadziała, możesz dodać urządzenie, wprowadzając adres IP. Pamiętaj, że urządzenia Chromecast również pojawią się w tym przeglądzie, ale nie można ich używać z aplikacją Android TV. Jest to ograniczenie protokołu wykrywania."
     }
   },
   "error": {

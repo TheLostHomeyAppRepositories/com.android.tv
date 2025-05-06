@@ -5,6 +5,12 @@
   "connectivity": ["lan"],
   "pair": [
     {
+      "id": "inform",
+      "navigation": {
+        "next": "discover"
+      }
+    },
+    {
       "id": "discover",
       "template": "loading"
     },
@@ -13,7 +19,7 @@
       "template": "list_devices",
       "navigation": {
         "next": "authenticate",
-        "prev": "add_by_ip"
+        "prev": "inform"
       },
       "options": {
         "singular": true,
@@ -35,7 +41,7 @@
       "id": "add_by_ip",
       "navigation": {
         "next": "authenticate",
-        "prev": "discover"
+        "prev": "inform"
       }
     },
     {
@@ -112,9 +118,6 @@
         },
         "type": "text",
         "length": 6
-      },
-      "navigation": {
-        "prev": "discover"
       }
     }
   ],

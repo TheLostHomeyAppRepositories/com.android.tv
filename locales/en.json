@@ -3,12 +3,14 @@
     "add_by_ip": {
       "title": "Manually add",
       "ip": "IP address",
-      "no_new_devices_hint": "All found TVs are already added. Try to add your TV manually.",
-      "need_help_pairing": "Need help pairing?",
-      "click_here_documentation": "Click here to view the documentation."
+      "no_new_devices_hint": "All found TVs are already added. Try to add your TV manually."
     },
     "add_device": {
       "title": "Add Device"
+    },
+    "inform": {
+      "title": "Important information",
+      "text": "For stable operation, please assign a static IP address to your Android TV device. After doing this, you can press next. Most devices can be autodetected, if this does not work you can add your device by entering the IP address. Be aware that Chromecast devices will also show up in this overview, but they cannot be used with the Android TV app. This is a limitation in the discovery protocol."
     }
   },
   "error": {

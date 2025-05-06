@@ -3,12 +3,14 @@
     "add_by_ip": {
       "title": "Tilføj manuelt",
       "ip": "IP-adresse",
-      "no_new_devices_hint": "Alle fundne TV'er er allerede tilføjet. Prøv at tilføje dit TV manuelt.",
-      "need_help_pairing": "Har du brug for hjælp til paring?",
-      "click_here_documentation": "Klik her for at se dokumentationen."
+      "no_new_devices_hint": "Alle fundne TV'er er allerede tilføjet. Prøv at tilføje dit TV manuelt."
     },
     "add_device": {
       "title": "Tilføj enhed"
+    },
+    "inform": {
+      "title": "Vigtig information",
+      "text": "For at sikre stabil drift skal du tildele en statisk IP-adresse til din Android TV-enhed. Når du har gjort dette, kan du trykke på næste. De fleste enheder kan registreres automatisk. Hvis dette ikke virker, kan du tilføje din enhed ved at indtaste IP-adressen. Vær opmærksom på, at Chromecast-enheder også vises i denne oversigt, men de kan ikke bruges med Android TV-appen. Dette er en begrænsning i registreringsprotokollen."
     }
   },
   "error": {
