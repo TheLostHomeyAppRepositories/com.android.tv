@@ -148,5 +148,8 @@
   },
   "1.1.0": {
     "en": "Added Play/pause status and current title playing"
+  },
+  "1.2.0": {
+    "en": "Improve pairing experience, improve reconnect logic"
   }
 }
