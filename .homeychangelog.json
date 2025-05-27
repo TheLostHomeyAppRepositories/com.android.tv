@@ -154,5 +154,8 @@
   },
   "1.2.1": {
     "en": "Fix source key button"
+  },
+  "1.2.2": {
+    "en": "Update readme and pairing instructions"
   }
 }
