@@ -254,29 +254,27 @@ class RemoteDevice extends Remote {
       return this.client?.sendKeyBack();
     } else if (typeof capability.key_pause !== 'undefined') {
       return this.client?.sendKeyMediaPause();
-    }
-        // else if (typeof capability.key_online !== 'undefined') {
-        //     return this.sendKey('Online')
-        // } else if (typeof capability.key_record !== 'undefined') {
-        //     return this.sendKey('Record')
-    // }
-    else if (typeof capability.key_rewind !== 'undefined') {
+      // else if (typeof capability.key_online !== 'undefined') {
+      //     return this.sendKey('Online')
+      // } else if (typeof capability.key_record !== 'undefined') {
+      //     return this.sendKey('Record')
+      // }
+    } else if (typeof capability.key_rewind !== 'undefined') {
       return this.client?.sendKeyMediaRewind();
     } else if (typeof capability.key_fast_forward !== 'undefined') {
       return this.client?.sendKeyMediaFastForward();
-    }
         // else if (typeof capability.key_toggle_ambilight !== 'undefined') {
         //     return this.sendKey('AmbilightOnOff')
-        // } else if (typeof capability.key_source !== 'undefined') {
-        //     return this.sendKey('Source')
-        // } else if (typeof capability.key_toggle_subtitles !== 'undefined') {
-        //     return this.sendKey('SubtitlesOnOff')
-        // } else if (typeof capability.key_teletext !== 'undefined') {
-        //     return this.sendKey('Teletext')
-        // } else if (typeof capability.key_viewmode !== 'undefined') {
-        //     return this.sendKey('Viewmode')
-    // }
-    else if (typeof capability.key_watch_tv !== 'undefined') {
+    } else if (typeof capability.key_source !== 'undefined') {
+      return this.client?.sendKeySource();
+      // } else if (typeof capability.key_toggle_subtitles !== 'undefined') {
+      //     return this.sendKey('SubtitlesOnOff')
+      // } else if (typeof capability.key_teletext !== 'undefined') {
+      //     return this.sendKey('Teletext')
+      // } else if (typeof capability.key_viewmode !== 'undefined') {
+      //     return this.sendKey('Viewmode')
+      // }
+    } else if (typeof capability.key_watch_tv !== 'undefined') {
       return this.client?.sendKeyTv();
     } else if (typeof capability.key_confirm !== 'undefined') {
       return this.client?.sendKeyDpadCenter();
@@ -288,11 +286,9 @@ class RemoteDevice extends Remote {
       return this.client?.sendKeyChannelUp();
     } else if (typeof capability.key_channel_down !== 'undefined') {
       return this.client?.sendKeyChannelDown();
-    }
-        // else if (typeof capability.key_adjust !== 'undefined') {
-        //     return this.sendKey('Adjust')
-    // }
-    else if (typeof capability.key_cursor_left !== 'undefined') {
+      // else if (typeof capability.key_adjust !== 'undefined') {
+      //     return this.sendKey('Adjust')
+    } else if (typeof capability.key_cursor_left !== 'undefined') {
       return this.client?.sendKeyDpadLeft();
     } else if (typeof capability.key_cursor_up !== 'undefined') {
       return this.client?.sendKeyDpadUp();
@@ -319,28 +315,27 @@ class RemoteDevice extends Remote {
     } else if (typeof capability.key_digit_8 !== 'undefined') {
         return this.client?.sendKeyDigit(Digit.Digit8);
     } else if (typeof capability.key_digit_9 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit9);
-    }
-        // else if (typeof capability.key_info !== 'undefined') {
-        //     return this.sendKey('Info')
-        // } else if (typeof capability.key_dot !== 'undefined') {
-        //     return this.sendKey('Dot')
-    else if (typeof capability.key_options !== 'undefined') {
+      return this.client?.sendKeyDigit(Digit.Digit9);
+      // else if (typeof capability.key_info !== 'undefined') {
+      //     return this.sendKey('Info')
+      // } else if (typeof capability.key_dot !== 'undefined') {
+      //     return this.sendKey('Dot')
+    } else if (typeof capability.key_options !== 'undefined') {
       return this.client?.sendKeyMenu();
     } else if (typeof capability.key_home !== 'undefined') {
       return this.client?.sendKeyHome();
+      // else if (typeof capability.key_find !== 'undefined') {
+      //     return this.sendKey('Find')
+      // } else if (typeof capability.key_red !== 'undefined') {
+      //     return this.sendKey('RedColour')
+      // } else if (typeof capability.key_yellow !== 'undefined') {
+      //     return this.sendKey('YellowColour')
+      // } else if (typeof capability.key_green !== 'undefined') {
+      //     return this.sendKey('GreenColour')
+      // } else if (typeof capability.key_blue !== 'undefined') {
+      //     return this.sendKey('BlueColour')
+      // }
     }
-    // else if (typeof capability.key_find !== 'undefined') {
-    //     return this.sendKey('Find')
-    // } else if (typeof capability.key_red !== 'undefined') {
-    //     return this.sendKey('RedColour')
-    // } else if (typeof capability.key_yellow !== 'undefined') {
-    //     return this.sendKey('YellowColour')
-    // } else if (typeof capability.key_green !== 'undefined') {
-    //     return this.sendKey('GreenColour')
-    // } else if (typeof capability.key_blue !== 'undefined') {
-    //     return this.sendKey('BlueColour')
-    // }
   }
 
   fixCapabilities(): void {
