@@ -151,5 +151,8 @@
   },
   "1.2.0": {
     "en": "Improve pairing experience, improve reconnect logic"
+  },
+  "1.2.1": {
+    "en": "Fix source key button"
   }
 }
