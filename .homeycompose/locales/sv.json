@@ -10,7 +10,8 @@
     },
     "inform": {
       "title": "Viktig information",
-      "text": "För stabil drift, vänligen tilldela en statisk IP-adress till din Android TV-enhet. När du har gjort detta kan du trycka på nästa. De flesta enheter kan detekteras automatiskt. Om detta inte fungerar kan du lägga till din enhet genom att ange IP-adressen. Tänk på att Chromecast-enheter också visas i den här översikten, men de kan inte användas med Android TV-appen. Detta är en begränsning i identifieringsprotokollet."
+      "text-1": "För stabil drift, vänligen tilldela en statisk IP-adress till din Android TV-enhet. När du har gjort detta kan du trycka på nästa. De flesta enheter kan detekteras automatiskt. Om detta inte fungerar kan du lägga till din enhet genom att ange IP-adressen.",
+      "text-2": "Tänk på att Chromecast-enheter också visas i den här översikten, men de kan inte användas med Android TV-appen. Detta är en begränsning i identifieringsprotokollet."
     }
   },
   "error": {

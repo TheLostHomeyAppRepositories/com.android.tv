@@ -34,5 +34,6 @@ export default {
   "com.android.vending": "Google Play Store",
   "com.google.android.apps.tv.dreamx": "Android TV screensaver (system)",
   "com.google.android.gms": "Google Play Services (system)",
-  "com.android.systemui": "Android TV System UI (system)"
+  "com.android.systemui": "Android TV System UI (system)",
+  "com.formulaone.production": "F1 TV"
 } as Record<string, string>;

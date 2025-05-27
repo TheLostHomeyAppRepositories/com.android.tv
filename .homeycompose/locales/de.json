@@ -10,7 +10,8 @@
     },
     "inform": {
       "title": "Wichtige Informationen",
-      "text": "Für einen stabilen Betrieb weisen Sie Ihrem Android TV-Gerät bitte eine statische IP-Adresse zu. Klicken Sie anschließend auf „Weiter“. Die meisten Geräte werden automatisch erkannt. Sollte dies nicht funktionieren, können Sie Ihr Gerät durch Eingabe der IP-Adresse hinzufügen. Beachten Sie, dass Chromecast-Geräte ebenfalls in dieser Übersicht angezeigt werden, jedoch nicht mit der Android TV App verwendet werden können. Dies ist eine Einschränkung im Erkennungsprotokoll."
+      "text-1": "Für einen stabilen Betrieb weisen Sie Ihrem Android TV-Gerät bitte eine statische IP-Adresse zu. Klicken Sie anschließend auf „Weiter“. Die meisten Geräte werden automatisch erkannt. Sollte dies nicht funktionieren, können Sie Ihr Gerät durch Eingabe der IP-Adresse hinzufügen.",
+      "text-2": "Beachten Sie, dass Chromecast-Geräte ebenfalls in dieser Übersicht angezeigt werden, jedoch nicht mit der Android TV App verwendet werden können. Dies ist eine Einschränkung im Erkennungsprotokoll."
     }
   },
   "error": {

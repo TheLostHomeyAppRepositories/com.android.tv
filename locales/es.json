@@ -10,7 +10,9 @@
     },
     "inform": {
       "title": "Información importante",
-      "text": "Para un funcionamiento estable, asigna una dirección IP estática a tu dispositivo Android TV. Después, pulsa \"Siguiente\". La mayoría de los dispositivos se detectan automáticamente; si esto no funciona, puedes agregar el tuyo introduciendo la dirección IP. Ten en cuenta que los dispositivos Chromecast también aparecerán en esta vista general, pero no se pueden usar con la app Android TV. Esto se debe a una limitación del protocolo de detección."
+      "text": "Para un funcionamiento estable, asigna una dirección IP estática a tu dispositivo Android TV. Después, pulsa \"Siguiente\". La mayoría de los dispositivos se detectan automáticamente; si esto no funciona, puedes agregar el tuyo introduciendo la dirección IP. Ten en cuenta que los dispositivos Chromecast también aparecerán en esta vista general, pero no se pueden usar con la app Android TV. Esto se debe a una limitación del protocolo de detección.",
+      "text-1": "Para un funcionamiento estable, asigna una dirección IP estática a tu dispositivo Android TV. Después, pulsa \"Siguiente\". La mayoría de los dispositivos se detectan automáticamente; si esto no funciona, puedes agregar el tuyo introduciendo la dirección IP.",
+      "text-2": "Ten en cuenta que los dispositivos Chromecast también aparecerán en esta vista general, pero no se pueden usar con la app Android TV. Esto se debe a una limitación del protocolo de detección."
     }
   },
   "error": {

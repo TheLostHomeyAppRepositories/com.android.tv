@@ -10,7 +10,9 @@
     },
     "inform": {
       "title": "Important information",
-      "text": "For stable operation, please assign a static IP address to your Android TV device. After doing this, you can press next. Most devices can be autodetected, if this does not work you can add your device by entering the IP address. Be aware that Chromecast devices will also show up in this overview, but they cannot be used with the Android TV app. This is a limitation in the discovery protocol."
+      "text": "For stable operation, please assign a static IP address to your Android TV device. After doing this, you can press next. Most devices can be autodetected, if this does not work you can add your device by entering the IP address.\n\nBe aware that Chromecast devices will also show up in this overview, but they cannot be used with the Android TV app. This is a limitation in the discovery protocol.",
+      "text-1": "For stable operation, please assign a static IP address to your Android TV device. After doing this, you can press next. Most devices can be autodetected, if this does not work you can add your device by entering the IP address.",
+      "text-2": "Be aware that Chromecast devices will also show up in this overview, but they cannot be used with the Android TV app. This is a limitation in the discovery protocol."
     }
   },
   "error": {

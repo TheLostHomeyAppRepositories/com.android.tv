@@ -10,7 +10,9 @@
     },
     "inform": {
       "title": "Informations importantes",
-      "text": "Pour un fonctionnement stable, attribuez une adresse IP statique à votre appareil Android TV. Ensuite, cliquez sur « Suivant ». La plupart des appareils sont détectés automatiquement. Si cela ne fonctionne pas, vous pouvez ajouter votre appareil en saisissant son adresse IP. Notez que les appareils Chromecast apparaîtront également dans cet aperçu, mais ils ne peuvent pas être utilisés avec l'application Android TV. Il s'agit d'une limitation du protocole de détection."
+      "text": "Pour un fonctionnement stable, attribuez une adresse IP statique à votre appareil Android TV. Ensuite, cliquez sur « Suivant ». La plupart des appareils sont détectés automatiquement. Si cela ne fonctionne pas, vous pouvez ajouter votre appareil en saisissant son adresse IP. Notez que les appareils Chromecast apparaîtront également dans cet aperçu, mais ils ne peuvent pas être utilisés avec l'application Android TV. Il s'agit d'une limitation du protocole de détection.",
+      "text-1": "Pour un fonctionnement stable, attribuez une adresse IP statique à votre appareil Android TV. Ensuite, cliquez sur «Suivant». La plupart des appareils sont détectés automatiquement. Si cela ne fonctionne pas, vous pouvez ajouter votre appareil en saisissant son adresse IP.",
+      "text-2": "Notez que les appareils Chromecast apparaîtront également dans cet aperçu, mais ils ne peuvent pas être utilisés avec l'application Android TV. Il s'agit d'une limitation du protocole de détection."
     }
   },
   "error": {

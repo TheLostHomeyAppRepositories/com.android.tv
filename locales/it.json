@@ -10,7 +10,9 @@
     },
     "inform": {
       "title": "Informazioni importanti",
-      "text": "Per un funzionamento stabile, assegna un indirizzo IP statico al tuo dispositivo Android TV. Dopo averlo fatto, puoi premere \"Avanti\". La maggior parte dei dispositivi può essere rilevata automaticamente; se questo non funziona, puoi aggiungere il tuo dispositivo inserendo l'indirizzo IP. Tieni presente che anche i dispositivi Chromecast saranno visualizzati in questa panoramica, ma non possono essere utilizzati con l'app Android TV. Questa è una limitazione del protocollo di rilevamento."
+      "text": "Per un funzionamento stabile, assegna un indirizzo IP statico al tuo dispositivo Android TV. Dopo averlo fatto, puoi premere \"Avanti\". La maggior parte dei dispositivi può essere rilevata automaticamente; se questo non funziona, puoi aggiungere il tuo dispositivo inserendo l'indirizzo IP. Tieni presente che anche i dispositivi Chromecast saranno visualizzati in questa panoramica, ma non possono essere utilizzati con l'app Android TV. Questa è una limitazione del protocollo di rilevamento.",
+      "text-1": "Per un funzionamento stabile, assegna un indirizzo IP statico al tuo dispositivo Android TV. Dopo averlo fatto, puoi premere \"Avanti\". La maggior parte dei dispositivi può essere rilevata automaticamente; se questo non funziona, puoi aggiungere il tuo dispositivo inserendo l'indirizzo IP.",
+      "text-2": "Tieni presente che anche i dispositivi Chromecast saranno visualizzati in questa panoramica, ma non possono essere utilizzati con l'app Android TV. Questa è una limitazione del protocollo di rilevamento."
     }
   },
   "error": {

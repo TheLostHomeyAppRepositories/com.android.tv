@@ -10,7 +10,8 @@
     },
     "inform": {
       "title": "Ważne informacje",
-      "text": "Aby zapewnić stabilną pracę, przypisz statyczny adres IP do urządzenia Android TV. Po wykonaniu tej czynności możesz nacisnąć przycisk Dalej. Większość urządzeń można wykryć automatycznie, jeśli to nie zadziała, możesz dodać urządzenie, wprowadzając adres IP. Pamiętaj, że urządzenia Chromecast również pojawią się w tym przeglądzie, ale nie można ich używać z aplikacją Android TV. Jest to ograniczenie protokołu wykrywania."
+      "text-1": "Aby zapewnić stabilną pracę, przypisz statyczny adres IP do urządzenia Android TV. Po wykonaniu tej czynności możesz nacisnąć przycisk Dalej. Większość urządzeń można wykryć automatycznie, jeśli to nie zadziała, możesz dodać urządzenie, wprowadzając adres IP.",
+      "text-2": "Pamiętaj, że urządzenia Chromecast również pojawią się w tym przeglądzie, ale nie można ich używać z aplikacją Android TV. Jest to ograniczenie protokołu wykrywania."
     }
   },
   "error": {

@@ -10,7 +10,8 @@
     },
     "inform": {
       "title": "Belangrijke informatie",
-      "text": "Voor een stabiele werking wijst u een statisch IP-adres toe aan uw Android TV-apparaat. Daarna kunt u op Volgende klikken. De meeste apparaten kunnen automatisch worden gedetecteerd. Als dit niet werkt, kunt u uw apparaat toevoegen door het IP-adres in te voeren. Houd er rekening mee dat Chromecast-apparaten ook in dit overzicht worden weergegeven, maar niet kunnen worden gebruikt met de Android TV-app. Dit is een beperking van het detectieprotocol."
+      "text-1": "Voor een stabiele werking wijst u een statisch IP-adres toe aan uw Android TV-apparaat. Daarna kunt u op Volgende klikken. De meeste apparaten kunnen automatisch worden gedetecteerd. Als dit niet werkt, kunt u uw apparaat toevoegen door het IP-adres in te voeren.",
+      "text-2": " Houd er rekening mee dat Chromecast-apparaten ook in dit overzicht worden weergegeven, maar niet kunnen worden gebruikt met de Android TV-app. Dit is een beperking van het detectieprotocol."
     }
   },
   "error": {
