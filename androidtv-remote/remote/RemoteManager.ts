@@ -33,7 +33,7 @@ class RemoteManager extends EventEmitter {
     }
 
     async start(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             const options: tls.ConnectionOptions = {
                 key: this.certs.key,
                 cert: this.certs.cert,
@@ -132,36 +132,14 @@ class RemoteManager extends EventEmitter {
                     return;
                 }
                 this.emit('close', {hasError: hasError, error: this.error});
-                this.emit('log.info', this.host + ' Remote Connection closed' + (hasError ? ' with error' : ''));
+                this.emit(hasError ? 'log.error' : 'log.info', this.host + ' Remote Connection closed' + (hasError ? ' with error' + JSON.stringify(this.error) : ''));
                 const emitError = (error: unknown): boolean => this.emit('log.error', error);
 
-                if (hasError) {
-                    this.error = this.error ?? new Error('Unknown Error');
-                    reject(this.error.code);
-                    if (this.error.code === 'ECONNRESET') {
-                        this.emit('unpaired');
-                    } else if (this.error.code === 'ECONNREFUSED') {
-                        // The device is not ready yet: we restart
-                        if (this.reconnectTimeout) {
-                            this.homey.clearTimeout(this.reconnectTimeout);
-                        }
-                        this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError);}, this.timeout);
-                    } else if (this.error.code === 'EHOSTDOWN') {
-                        // The device is down, we do nothing
-                    } else {
-                        // In doubt, we restart
-                        if (this.reconnectTimeout) {
-                            this.homey.clearTimeout(this.reconnectTimeout);
-                        }
-                        this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError);}, this.timeout);
-                    }
-                } else {
-                    // If no error, we restart. If it has turned off, an error will prevent further restarts.
-                    if (this.reconnectTimeout) {
-                        this.homey.clearTimeout(this.reconnectTimeout);
-                    }
-                    this.reconnectTimeout = this.homey.setTimeout(async () => {await this.start().catch(emitError);}, this.timeout);
+                // We restart. If it has turned off, an error will prevent further restarts.
+                if (this.reconnectTimeout) {
+                    this.homey.clearTimeout(this.reconnectTimeout);
                 }
+                this.reconnectTimeout = this.homey.setTimeout(() => this.start().catch(emitError), this.timeout);
             });
 
             this.client.on('error', (error) => {
