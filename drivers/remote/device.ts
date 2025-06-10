@@ -172,39 +172,34 @@ class RemoteDevice extends Remote {
       throw new Error('Client not initialized');
     }
 
-    this.client.on('powered', async (powered) => {
-      await this.setCapabilityValue('onoff', powered);
-    });
+    this.client.on('powered', powered => this.setCapabilityValue('onoff', powered).catch(this.error));
 
-    this.client.on('volume', async (volume: Volume) => {
+    this.client.on('volume', (volume: Volume) => {
       this.log('volume', volume);
       this.log("Volume : " + volume.level + '/' + volume.maximum + " | Muted : " + volume.muted);
 
-      await this.setCapabilityValue('volume_mute', volume.muted);
-      await this.setCapabilityValue('measure_volume', Math.round(volume.level / (volume.maximum / 100)));
+      this.setCapabilityValue('volume_mute', volume.muted)
+        .then(() => {
+          this.setCapabilityValue('measure_volume', Math.round(volume.level / (volume.maximum / 100))).catch(this.error);
+        })
+        .catch(this.error);
     });
 
-    this.client.on('current_app', (current_app) => {
+    this.client.on('current_app', current_app => {
       this.setCapabilityValue('current_application', current_app).catch(this.error);
-      return this.homey.flow.getDeviceTriggerCard('application_opened').trigger(this, {
+      this.homey.flow.getDeviceTriggerCard('application_opened').trigger(this, {
         app: current_app,
       }).catch(this.error);
     });
 
-    this.client.on('unpaired', async (error: RemoteMessage | undefined): Promise<void> => {
+    this.client.on('unpaired', (error: RemoteMessage | undefined) => {
       this.error('unpaired', error);
-      await this.setUnavailable(this.homey.__('error.unpaired'));
+      this.setUnavailable(this.homey.__('error.unpaired')).catch(this.error);
     });
 
-    this.client.on('secret', async () => {
-      await this.setUnavailable(this.homey.__('error.unpaired'));
-    });
+    this.client.on('secret', () => this.setUnavailable(this.homey.__('error.unpaired')).catch(this.error));
 
-    this.client.on('error', async (error) => {
-      this.log('client.on(error)', error);
-      // TODO: is this necessary?
-      // await this.reloadClient(60);
-    });
+    this.client.on('error', error => this.log('client.on(error)', error));
   }
 
   private async registerCapabilityListeners(): Promise<void> {
