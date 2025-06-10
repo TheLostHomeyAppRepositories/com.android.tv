@@ -157,5 +157,8 @@
   },
   "1.2.2": {
     "en": "Update readme and pairing instructions"
+  },
+  "1.2.3": {
+    "en": "Improve reconnect logic"
   }
 }
