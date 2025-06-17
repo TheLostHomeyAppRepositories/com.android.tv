@@ -160,5 +160,8 @@
   },
   "1.2.3": {
     "en": "Improve reconnect logic"
+  },
+  "1.2.4": {
+    "en": "Fix Open application card for some apps"
   }
 }
