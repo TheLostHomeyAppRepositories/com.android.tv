@@ -90,7 +90,10 @@ class RemoteMessageManager {
 
     createRemoteAdjustVolumeLevel(level: number): Uint8Array {
         return this.create({
-            remoteAdjustVolumeLevel: level,
+            remoteSetVolumeLevel: {
+                unknown1: 2,
+                volumeLevelSet: level,
+            },
         });
     }
 

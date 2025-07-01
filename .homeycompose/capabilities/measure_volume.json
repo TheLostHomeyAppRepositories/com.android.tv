@@ -13,7 +13,7 @@
     "pl": "Głośność"
   },
   "icon": "/assets/capabilities/measure_volume.svg",
-  "uiComponent": "sensor",
+  "uiComponent": null,
   "getable": true,
   "setable": false,
   "units": {

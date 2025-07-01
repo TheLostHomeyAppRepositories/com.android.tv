@@ -174,15 +174,25 @@ class RemoteDevice extends Remote {
 
     this.client.on('powered', powered => this.setCapabilityValue('onoff', powered).catch(this.error));
 
-    this.client.on('volume', (volume: Volume) => {
+    this.client.on('volume', async (volume: Volume) => {
       this.log('volume', volume);
       this.log("Volume : " + volume.level + '/' + volume.maximum + " | Muted : " + volume.muted);
+      await this.setStoreValue('max_volume', volume.maximum).catch(this.error);
+      if (volume.maximum === undefined || volume.maximum === 0) {
+        if (this.hasCapability('volume_set')) {
+          await this.removeCapability('volume_set').catch(this.error);
+        }
+        return;
+      }
 
-      this.setCapabilityValue('volume_mute', volume.muted)
-        .then(() => {
-          this.setCapabilityValue('measure_volume', Math.round(volume.level / (volume.maximum / 100))).catch(this.error);
-        })
-        .catch(this.error);
+      if (!this.hasCapability('volume_set')) {
+        await this.addCapability('volume_set').catch(this.error);
+      }
+      await this.setCapabilityValue('volume_mute', volume.muted).catch(this.error);
+      await this.setCapabilityValue('volume_set', volume.level / volume.maximum).catch(this.error);
+      if (this.hasCapability('measure_volume')) {
+        await this.setCapabilityValue('measure_volume', Math.round(volume.level / (volume.maximum / 100))).catch(this.error);
+      }
     });
 
     this.client.on('current_app', current_app => {
@@ -210,6 +220,16 @@ class RemoteDevice extends Remote {
     this.registerCapabilityListener('onoff', value => {
       return this.onCapabilityOnOffSet(value);
     });
+
+    if (this.hasCapability('volume_set')) {
+      this.registerCapabilityListener('volume_set', value => {
+        let maxVolume = this.getStoreValue('max_volume');
+        if (!maxVolume) {
+          maxVolume = 100;
+        }
+        this.client?.sendVolume(Math.round(value * maxVolume));
+      });
+    }
 
     this.registerCapabilityListener('volume_up', () => {
       return this.client?.volumeUp();
@@ -335,12 +355,11 @@ class RemoteDevice extends Remote {
 
   fixCapabilities(): void {
     const oldCapabilities = [
-      'volume'
+      'volume',
     ];
 
     const newCapabilities = [
       "onoff",
-      "measure_volume",
       "volume_up",
       "volume_down",
       "volume_mute",
@@ -364,7 +383,8 @@ class RemoteDevice extends Remote {
       "speaker_prev",
       "speaker_track",
       "speaker_artist",
-      "speaker_album"
+      "speaker_album",
+      "volume_set"
     ];
 
     for (const i in oldCapabilities) {

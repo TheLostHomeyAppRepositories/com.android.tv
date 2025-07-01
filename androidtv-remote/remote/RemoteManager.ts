@@ -169,6 +169,10 @@ class RemoteManager extends EventEmitter {
         this.client?.write(this.remoteMessageManager.createRemoteRemoteAppLinkLaunchRequest(app_link));
     }
 
+    sendVolume(volume: number): void {
+        this.client?.write(this.remoteMessageManager.createRemoteAdjustVolumeLevel(volume));
+    }
+
     stop(): void {
         if (this.reconnectTimeout) {
             this.homey.clearTimeout(this.reconnectTimeout);

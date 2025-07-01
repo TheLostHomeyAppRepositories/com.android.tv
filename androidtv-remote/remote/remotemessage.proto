@@ -20,7 +20,7 @@ message RemoteAdjustVolumeLevel {
 
 message RemoteSetVolumeLevel {
   uint32 unknown1 = 1;
-  uint32 unknown2 = 2;
+  uint32 volume_level_set = 2;
   string player_model = 3;
   uint32 unknown4 = 4;
   uint32 unknown5 = 5;

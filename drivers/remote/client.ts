@@ -118,6 +118,10 @@ export default class AndroidTVRemoteClient {
     this.client.sendKey(RemoteKeyCode.KEYCODE_MUTE, RemoteDirection.SHORT);
   }
 
+  public sendVolume(volume: number): void {
+    this.client.sendVolume(volume);
+  }
+
   public volumeUp(direction: number | null = null): void {
     this.client.sendKey(RemoteKeyCode.KEYCODE_VOLUME_UP, direction || RemoteDirection.SHORT);
   }

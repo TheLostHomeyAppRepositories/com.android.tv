@@ -644,9 +644,9 @@
       "discovery": "googlecast",
       "capabilities": [
         "onoff",
-        "measure_volume",
         "volume_up",
         "volume_down",
+        "volume_set",
         "volume_mute",
         "key_play",
         "key_pause",
@@ -1331,7 +1331,7 @@
         "pl": "Głośność"
       },
       "icon": "/assets/capabilities/measure_volume.svg",
-      "uiComponent": "sensor",
+      "uiComponent": null,
       "getable": true,
       "setable": false,
       "units": {

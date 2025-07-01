@@ -118,6 +118,10 @@ export class AndroidRemote extends EventEmitter {
         this.remoteManager?.sendKey(key, direction);
     }
 
+    sendVolume(volume: number): void {
+        this.remoteManager?.sendVolume(volume);
+    }
+
     getCertificate(): { key: string | undefined; cert: string | undefined } {
         return {
             key: this.cert.key,
