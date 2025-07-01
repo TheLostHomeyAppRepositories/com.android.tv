@@ -33,9 +33,6 @@ class AndroidTV extends Homey.App {
         // this.homey.flow.getActionCard('open_google_assistant')
         //     .registerRunListener(this.onFlowActionOpenGoogleAssistant);
 
-        this.homey.flow.getActionCard('select_source')
-            .registerRunListener(this.onFlowActionSelectSource);
-
         this.homey.flow.getActionCard('press_key')
             .registerRunListener(this.onFlowActionPressKey)
             .registerArgumentAutocompleteListener('option', this.onFlowKeyAutocomplete.bind(this));
@@ -107,10 +104,6 @@ class AndroidTV extends Homey.App {
         return this.androidApps.filter(result => {
             return result.name.toLowerCase().includes(query.toLowerCase());
         });
-    }
-
-    async onFlowActionSelectSource({device, source}: { device: RemoteDevice, source: string }): Promise<void> {
-        return device.selectSource(source);
     }
 }
 

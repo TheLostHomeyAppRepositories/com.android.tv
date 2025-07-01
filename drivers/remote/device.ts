@@ -1,6 +1,6 @@
 import {Remote} from "../../remote";
 import {DeviceSettings, DeviceStore, SettingsInput} from "./types";
-import AndroidTVRemoteClient, {Digit, Input, Volume} from "./client";
+import AndroidTVRemoteClient, {Digit, Volume} from "./client";
 import RemoteMessage from "../../androidtv-remote/remote/RemoteMessage";
 import Homey, {Image} from "homey";
 import Chromecast, {MediaUpdate} from "../../chromecast/Chromecast";
@@ -18,7 +18,7 @@ class RemoteDevice extends Remote {
     'key_rewind',
     'key_fast_forward',
     // 'key_toggle_ambilight',
-    'key_source',
+    // 'key_source',
     // 'key_toggle_subtitles',
     // 'key_teletext',
     // 'key_viewmode',
@@ -280,8 +280,8 @@ class RemoteDevice extends Remote {
       return this.client?.sendKeyMediaFastForward();
         // else if (typeof capability.key_toggle_ambilight !== 'undefined') {
         //     return this.sendKey('AmbilightOnOff')
-    } else if (typeof capability.key_source !== 'undefined') {
-      return this.client?.sendKeySource();
+      // } else if (typeof capability.key_source !== 'undefined') {
+      //   return this.client?.sendKeySource();
       // } else if (typeof capability.key_toggle_subtitles !== 'undefined') {
       //     return this.sendKey('SubtitlesOnOff')
       // } else if (typeof capability.key_teletext !== 'undefined') {
@@ -356,6 +356,7 @@ class RemoteDevice extends Remote {
   fixCapabilities(): void {
     const oldCapabilities = [
       'volume',
+      "key_source",
     ];
 
     const newCapabilities = [
@@ -449,8 +450,6 @@ class RemoteDevice extends Remote {
       this.client?.sendKeyMediaRewind(direction);
     } else if (key === 'key_fast_forward') {
       this.client?.sendKeyMediaFastForward(direction);
-    } else if (key === 'key_source') {
-      this.client?.sendKeySource(direction);
     } else if (key === 'key_watch_tv') {
       this.client?.sendKeyTv(direction);
     } else if (key === 'key_confirm') {
@@ -507,30 +506,6 @@ class RemoteDevice extends Remote {
       appLink = 'market://launch?id=' + appLink;
     }
     this.client?.openApplication(appLink);
-  }
-
-  public async selectSource(source: string): Promise<void> {
-    if (source === 'HDMI1') {
-      this.client?.setInput(Input.HDMI1);
-    } else if (source === 'HDMI2') {
-      this.client?.setInput(Input.HDMI2);
-    } else if (source === 'HDMI3') {
-      this.client?.setInput(Input.HDMI3);
-    } else if (source === 'HDMI4') {
-      this.client?.setInput(Input.HDMI4);
-    } else if (source === 'VGA') {
-      this.client?.setInput(Input.VGA);
-    } else if (source === 'COMPONENT1') {
-      this.client?.setInput(Input.COMPONENT1);
-    } else if (source === 'COMPONENT2') {
-      this.client?.setInput(Input.COMPONENT2);
-    } else if (source === 'COMPOSITE1') {
-      this.client?.setInput(Input.COMPOSITE1);
-    } else if (source === 'COMPOSITE2') {
-      this.client?.setInput(Input.COMPOSITE2);
-    } else {
-      throw new Error(`Unknown source: ${source}`);
-    }
   }
 
   public async getKeys(): Promise<Array<{ key: string, name: string }>> {

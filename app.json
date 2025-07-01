@@ -385,124 +385,6 @@
           }
         ],
         "id": "press_key"
-      },
-      {
-        "title": {
-          "en": "Select a source",
-          "nl": "Selecteer een input",
-          "de": "Wähle eine Quelle",
-          "fr": "Sélectionnez une source",
-          "it": "Seleziona una sorgente",
-          "sv": "Välj en källa",
-          "no": "Velg en kilde",
-          "es": "Seleccione una fuente",
-          "da": "Vælg en kilde",
-          "pl": "Wybierz źródło"
-        },
-        "titleFormatted": {
-          "en": "Select source [[source]]",
-          "nl": "Selecteer input [[source]]",
-          "de": "Wähle Quelle [[source]]",
-          "fr": "Sélectionnez la source [[source]]",
-          "it": "Seleziona sorgente [[source]]",
-          "sv": "Välj källa [[source]]",
-          "no": "Velg kilde [[source]]",
-          "es": "Seleccione fuente [[source]]",
-          "da": "Vælg kilde [[source]]",
-          "pl": "Wybierz źródło [[source]]"
-        },
-        "hint": {
-          "en": "Some devices, such as the Google TV streamer, do not support this card.",
-          "nl": "Sommige apparaten, zoals de Google TV-streamer, ondersteunen deze kaart niet.",
-          "de": "Einige Geräte, wie beispielsweise der Google TV-Streamer, unterstützen diese Karte nicht.",
-          "fr": "Certains appareils, tels que le streamer Google TV, ne prennent pas en charge cette carte.",
-          "it": "Alcuni dispositivi, come lo streamer Google TV, non supportano questa scheda.",
-          "sv": "Vissa enheter, som Google TV-streamern, stöder inte det här kortet.",
-          "no": "Enkelte enheter, som for eksempel Google TV-streameren, støtter ikke dette kortet.",
-          "es": "Algunos dispositivos, como el transmisor Google TV, no admiten esta tarjeta.",
-          "da": "Nogle enheder, såsom Google TV-streameren, understøtter ikke dette kort.",
-          "pl": "Niektóre urządzenia, na przykład streamer Google TV, nie obsługują tej karty."
-        },
-        "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=remote"
-          },
-          {
-            "name": "source",
-            "type": "dropdown",
-            "title": {
-              "en": "Source",
-              "nl": "Input",
-              "de": "Quelle",
-              "fr": "Source",
-              "it": "Sorgente",
-              "sv": "Källa",
-              "no": "Kilde",
-              "es": "Fuente",
-              "da": "Kilde",
-              "pl": "Źródło"
-            },
-            "values": [
-              {
-                "id": "HDMI1",
-                "title": {
-                  "en": "HDMI 1"
-                }
-              },
-              {
-                "id": "HDMI2",
-                "title": {
-                  "en": "HDMI 2"
-                }
-              },
-              {
-                "id": "HDMI3",
-                "title": {
-                  "en": "HDMI 3"
-                }
-              },
-              {
-                "id": "HDMI4",
-                "title": {
-                  "en": "HDMI 4"
-                }
-              },
-              {
-                "id": "VGA",
-                "title": {
-                  "en": "VGA"
-                }
-              },
-              {
-                "id": "COMPONENT1",
-                "title": {
-                  "en": "Component 1"
-                }
-              },
-              {
-                "id": "COMPONENT2",
-                "title": {
-                  "en": "Component 2"
-                }
-              },
-              {
-                "id": "COMPOSITE1",
-                "title": {
-                  "en": "Composite 1"
-                }
-              },
-              {
-                "id": "COMPOSITE2",
-                "title": {
-                  "en": "Composite 2"
-                }
-              }
-            ]
-          }
-        ],
-        "id": "select_source"
       }
     ]
   },
@@ -665,7 +547,6 @@
         "key_watch_tv",
         "key_channel_up",
         "key_channel_down",
-        "key_source",
         "key_digit_0",
         "key_digit_1",
         "key_digit_2",
@@ -1215,26 +1096,6 @@
       "uiComponent": "button",
       "uiQuickAction": true,
       "icon": "assets/capabilities/rewind.svg"
-    },
-    "key_source": {
-      "type": "boolean",
-      "title": {
-        "en": "Source",
-        "nl": "Bron",
-        "de": "Quelle",
-        "fr": "Source",
-        "it": "Sorgente",
-        "sv": "Källa",
-        "no": "Kilde",
-        "es": "Fuente",
-        "da": "Kilde",
-        "pl": "Źródło"
-      },
-      "getable": false,
-      "setable": true,
-      "uiComponent": "button",
-      "uiQuickAction": true,
-      "icon": "assets/capabilities/source.svg"
     },
     "key_stop": {
       "type": "boolean",
