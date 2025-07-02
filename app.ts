@@ -3,8 +3,9 @@ import Homey, {FlowCard} from "homey";
 import RemoteDevice from "./drivers/remote/device";
 import {RemoteDirection} from "./androidtv-remote";
 import apps from "./androidtv-remote/remote/apps";
+import type {LoggerInterface} from './lib/LoggerInterface';
 
-class AndroidTV extends Homey.App {
+class AndroidTV extends Homey.App implements LoggerInterface{
     homeyLog = new Log({ homey: this.homey });
     androidApps: Array<{name: string, id: string}> = [];
 
@@ -17,7 +18,7 @@ class AndroidTV extends Homey.App {
 
     private async registerFlowCardListeners(): Promise<void> {
         this.homey.flow.getActionCard('open_link')
-            .registerRunListener(this.onFlowActionOpenLink);
+            .registerRunListener(this.onFlowActionOpenLink.bind(this));
         for (const item of Object.keys(apps)) {
             const name = apps[item] as unknown as string;
             if (name.includes('(system)')) {
@@ -27,18 +28,18 @@ class AndroidTV extends Homey.App {
         }
         this.androidApps = this.androidApps.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
         this.homey.flow.getActionCard('open_application')
-            .registerRunListener(this.onFlowActionOpenApplication)
+            .registerRunListener(this.onFlowActionOpenApplication.bind(this))
             .registerArgumentAutocompleteListener('app', this.onFlowAppAutocomplete.bind(this));
 
         // this.homey.flow.getActionCard('open_google_assistant')
         //     .registerRunListener(this.onFlowActionOpenGoogleAssistant);
 
         this.homey.flow.getActionCard('press_key')
-            .registerRunListener(this.onFlowActionPressKey)
+            .registerRunListener(this.onFlowActionPressKey.bind(this))
             .registerArgumentAutocompleteListener('option', this.onFlowKeyAutocomplete.bind(this));
 
         this.homey.flow.getActionCard('long_press_key')
-            .registerRunListener(this.onFlowActionLongPressKey)
+            .registerRunListener(this.onFlowActionLongPressKey.bind(this))
             .registerArgumentAutocompleteListener('option', this.onFlowKeyAutocomplete.bind(this));
 
         // this.homey.flow.getActionCard('send_key')
@@ -58,20 +59,20 @@ class AndroidTV extends Homey.App {
     }
 
     async onFlowActionOpenLink({device, app_link}: { device: RemoteDevice, app_link: string }): Promise<void> {
-        console.log('Open application link', app_link);
+        this.log('Open application link', app_link);
         try {
             return device.openApplicationOrLink(app_link);
         } catch (e) {
-            console.log(e);
+            this.error(e);
         }
     }
 
     async onFlowActionOpenApplication({device, app}: { device: RemoteDevice, app: { name: string, id: string } }): Promise<void> {
-        console.log('Open application', app);
+        this.log('Open application', app);
         try {
             return device.openApplicationOrLink(app.id);
         } catch (e) {
-            console.log(e);
+            this.error(e);
         }
     }
 
@@ -104,6 +105,14 @@ class AndroidTV extends Homey.App {
         return this.androidApps.filter(result => {
             return result.name.toLowerCase().includes(query.toLowerCase());
         });
+    }
+
+    debug(...args: unknown[]): void {
+      if (Homey.env.DEBUG !== '1') {
+        return;
+      }
+
+      this.log('[debug]', ...args);
     }
 }
 

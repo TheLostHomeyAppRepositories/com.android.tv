@@ -6,21 +6,22 @@ import EventEmitter from 'events';
 import type Homey from "homey/lib/Homey";
 
 export class AndroidRemote extends EventEmitter {
-    private host: string;
+    private readonly host: string;
     private cert: { key: string | undefined; cert: string | undefined };
-    private pairing_port: number;
-    private remote_port: number;
-    private service_name: string;
-    private timeout: number;
-    private manufacturer: string;
-    private model: string;
-    private debug: boolean;
-    private homey: Homey;
+    private readonly pairing_port: number;
+    private readonly remote_port: number;
+    private readonly service_name: string;
+    private readonly timeout: number;
+    private readonly manufacturer: string;
+    private readonly model: string;
+    private readonly homey: Homey;
 
     private pairingManager: PairingManager | undefined;
     private remoteManager: RemoteManager | undefined;
 
-    constructor(host: string, options: {
+    constructor(
+      host: string,
+      options: {
         pairing_port?: number;
         remote_port?: number;
         service_name?: string;
@@ -28,9 +29,9 @@ export class AndroidRemote extends EventEmitter {
         timeout?: number,
         manufacturer?: string,
         model?: string,
-        debug?: boolean,
-    },
-                homey: Homey) {
+      },
+      homey: Homey
+    ) {
         super();
         this.host = host;
         this.cert = {
@@ -43,7 +44,6 @@ export class AndroidRemote extends EventEmitter {
         this.timeout = options.timeout ?? 1000;
         this.manufacturer = options.manufacturer ?? 'unknown';
         this.model = options.model ?? 'unknown';
-        this.debug = options.debug ?? false;
         this.homey = homey;
     }
 
@@ -61,14 +61,13 @@ export class AndroidRemote extends EventEmitter {
             this.pairingManager = new PairingManager(this.host, this.pairing_port, this.cert, this.service_name, this.manufacturer, this.model);
             this.pairingManager.on('secret', () => this.emit('secret'));
 
-            this.pairingManager.on('log', (...args) => this.emit('log', args));
-            this.pairingManager.on('log.debug', (...args) => this.emit('log.debug', args));
-            this.pairingManager.on('log.info', (...args) => this.emit('log.info', args));
-            this.pairingManager.on('log.error', (...args) => this.emit('log.error', args));
+            for (const logLevel of ['log', 'log.debug', 'log.info', 'log.error']) {
+              this.pairingManager.on(logLevel, (...args) => this.emit(logLevel, `[Pairing:${this.host}]`, ...args));
+            }
 
             const paired = await this.pairingManager.start()
                 .catch((error) => {
-                    console.error(error);
+                    this.emit('log.error', error);
                 });
 
             if (!paired) {
@@ -76,7 +75,7 @@ export class AndroidRemote extends EventEmitter {
             }
         }
 
-        this.remoteManager = new RemoteManager(this.host, this.remote_port, this.cert, this.homey, this.timeout, this.manufacturer, this.model, this.debug);
+        this.remoteManager = new RemoteManager(this.host, this.remote_port, this.cert, this.homey, this.timeout, this.manufacturer, this.model);
 
         this.remoteManager.on('powered', (powered) => this.emit('powered', powered));
 
@@ -90,15 +89,14 @@ export class AndroidRemote extends EventEmitter {
 
         this.remoteManager.on('unpaired', () => this.emit('unpaired'));
 
-        this.remoteManager.on('log', (...args) => this.emit('log', args));
-        this.remoteManager.on('log.debug', (...args) => this.emit('log.debug', args));
-        this.remoteManager.on('log.info', (...args) => this.emit('log.info', args));
-        this.remoteManager.on('log.error', (...args) => this.emit('log.error', args));
+        for (const logLevel of ['log', 'log.debug', 'log.info', 'log.error']) {
+          this.remoteManager.on(logLevel, (...args) => this.emit(logLevel, `[Manager:${this.host}]`, ...args));
+        }
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        return await this.remoteManager.start().catch((error) => {
-            console.error(error);
+        return await this.remoteManager.start().catch(error => {
+            this.emit('log.error', error);
         });
     }
 

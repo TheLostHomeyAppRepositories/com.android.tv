@@ -1,7 +1,7 @@
-import {AndroidRemoteCertificate, AndroidRemoteOptions} from "./types";
-
-import {AndroidRemote, RemoteDirection, RemoteKeyCode} from "../../androidtv-remote";
-import type Homey from "homey/lib/Homey";
+import type Homey from 'homey/lib/Homey';
+import {AndroidRemote, RemoteDirection, RemoteKeyCode} from '../../androidtv-remote';
+import type {LoggerInterface} from '../../lib/LoggerInterface';
+import {AndroidRemoteCertificate, AndroidRemoteOptions} from './types';
 
 export enum Input {
   HDMI1,
@@ -55,35 +55,31 @@ export default class AndroidTVRemoteClient {
   private readonly remote_port: number;
   private readonly client_name: string;
   private readonly cert: AndroidRemoteCertificate;
-  private readonly debug: boolean;
 
   constructor(
+      logger: LoggerInterface,
+      homey: Homey,
       host: string,
       cert: AndroidRemoteCertificate = {key: undefined, cert: undefined},
-      homey: Homey,
       client_name: string = 'androidtv-remote',
       pairing_port: number = 6467,
       remote_port: number = 6466,
-      debug: boolean = false
   ) {
     this.host = host;
     this.client_name = client_name;
     this.pairing_port = pairing_port;
     this.remote_port = remote_port;
     this.cert = cert;
-    this.debug = debug;
 
     this.client = new AndroidRemote(this.host, this.getOptions(), homey);
     this.client.on('error', error => {
-      console.log('REMOTE CLIENT ERROR', error);
+      logger.error('REMOTE CLIENT ERROR', error);
     });
 
-    if (debug) {
-      this.client.on('log', (...args) => console.log('log', ...args));
-      this.client.on('log.debug', (...args) => console.log('debug', ...args));
-      this.client.on('log.info', (...args) => console.log('info', ...args));
-      this.client.on('log.error', (...args) => console.log('error', ...args));
-    }
+    this.client.on('log', (...args) => logger.log('[RC]', ...args));
+    this.client.on('log.debug', (...args) => logger.log('[RC]', ...args));
+    this.client.on('log.info', (...args) => logger.log('[RC]', ...args));
+    this.client.on('log.error', (...args) => logger.error('[RC]', ...args));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,7 +106,6 @@ export default class AndroidTVRemoteClient {
       service_name: this.client_name,
       cert: this.cert,
       timeout: 1000 * 60,
-      debug: this.debug
     };
   }
 

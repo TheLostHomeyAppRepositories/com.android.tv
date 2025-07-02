@@ -1,33 +1,31 @@
+import EventEmitter from 'events';
 import protobufjs from 'protobufjs';
 import * as path from 'path';
 import RemoteMessage from './RemoteMessage';
 
 const directory = __dirname;
 
-class RemoteMessageManager {
+class RemoteMessageManager extends EventEmitter {
     private root: protobufjs.Root;
     private RemoteMessage: protobufjs.Type;
     public RemoteKeyCode: { [key: string]: number };
     public RemoteDirection: { [key: string]: number };
     private readonly manufacturer: string | undefined;
     private readonly model: string | undefined;
-    private readonly debug: boolean;
 
-    constructor(manufacturer: string | undefined = undefined, model: string | undefined = undefined, debug: boolean = false) {
+    constructor(manufacturer: string | undefined = undefined, model: string | undefined = undefined) {
+        super();
         this.root = protobufjs.loadSync(path.join(directory, 'remotemessage.proto'));
         this.RemoteMessage = this.root.lookupType('remote.RemoteMessage');
         this.RemoteKeyCode = this.root.lookupEnum('remote.RemoteKeyCode').values;
         this.RemoteDirection = this.root.lookupEnum('remote.RemoteDirection').values;
-        this.debug = debug;
         this.manufacturer = manufacturer;
         this.model = model;
     }
 
     create(payload: Record<string, unknown>): Uint8Array {
         if (!payload.remotePingResponse) {
-            if (this.debug) {
-                console.debug('Create Remote ' + JSON.stringify(payload));
-            }
+            this.emit('log.debug', 'Create remote', JSON.stringify(payload));
         }
 
         const errMsg = this.RemoteMessage.verify(payload);
@@ -39,9 +37,7 @@ class RemoteMessageManager {
         const array = this.RemoteMessage.encodeDelimited(message).finish();
 
         if (!payload.remotePingResponse) {
-            if (this.debug) {
-                console.debug('Sending ' + JSON.stringify(message.toJSON()));
-            }
+          this.emit('log.debug', 'Sending', JSON.stringify(message.toJSON()));
         }
 
         return array;

@@ -17,10 +17,18 @@ class RemoteManager extends EventEmitter {
     private destroyed: boolean = false;
     private homey: Homey;
 
-    constructor(host: string, port: number, certs: {
+    constructor(
+      host: string,
+      port: number,
+      certs: {
         key: string | undefined;
         cert: string | undefined
-    }, homey: Homey, timeout: number = 1000, manufacturer: string = 'unknown', model: string = 'unknown', debug: boolean = false) {
+      },
+      homey: Homey,
+      timeout: number = 1000,
+      manufacturer: string = 'unknown',
+      model: string = 'unknown',
+    ) {
         super();
         this.host = host;
         this.port = port;
@@ -28,7 +36,8 @@ class RemoteManager extends EventEmitter {
         this.chunks = Buffer.from([]);
         this.error = null;
         this.timeout = timeout;
-        this.remoteMessageManager = new RemoteMessageManager(manufacturer, model, debug);
+        this.remoteMessageManager = new RemoteMessageManager(manufacturer, model);
+        this.remoteMessageManager.on('log.debug', (...args) => this.emit('log.debug', '[RemoteMessageHandler]', ...args));
         this.homey = homey;
     }
 
@@ -57,7 +66,7 @@ class RemoteManager extends EventEmitter {
             this.client.setTimeout(1000 * 10);
 
             this.client.on('secureConnect', () => {
-                this.emit('log.debug', this.host + ' Remote secureConnect');
+                this.emit('log.debug', 'Remote secureConnect');
                 resolve();
             });
 
@@ -73,8 +82,7 @@ class RemoteManager extends EventEmitter {
                         const message = this.remoteMessageManager.parse(this.chunks);
 
                         if (!message.remotePingRequest) {
-                            //this.emit('log.debug', this.host + " Receive : " + Array.from(this.chunks));
-                            this.emit('log.debug', this.host + ' Receive : ' + JSON.stringify(message));
+                            this.emit('log.debug', 'Receive', JSON.stringify(message));
                         }
 
                         if (message.remoteConfigure) {
@@ -88,15 +96,15 @@ class RemoteManager extends EventEmitter {
                           const appId = message.remoteImeKeyInject.appInfo.appPackage;
                           this.emit('current_app', apps[appId] ?? appId);
                         } else if (message.remoteImeBatchEdit) {
-                            this.emit('log.debug', 'Receive IME BATCH EDIT' + message.remoteImeBatchEdit);
+                          // No action
                         } else if (message.remoteImeShowRequest) {
-                            this.emit('log.debug', 'Receive IME SHOW REQUEST' + message.remoteImeShowRequest);
+                          // No action
                         } else if (message.remoteVoiceBegin) {
-                            //this.emit('log.debug', "Receive VOICE BEGIN" + message.remoteVoiceBegin);
+                          // No action
                         } else if (message.remoteVoicePayload) {
-                            //this.emit('log.debug', "Receive VOICE PAYLOAD" + message.remoteVoicePayload);
+                          // No action
                         } else if (message.remoteVoiceEnd) {
-                            //this.emit('log.debug', "Receive VOICE END" + message.remoteVoiceEnd);
+                          // No action
                         } else if (message.remoteStart) {
                             this.emit('powered', message.remoteStart.started);
                         } else if (message.remoteSetVolumeLevel) {
@@ -105,9 +113,8 @@ class RemoteManager extends EventEmitter {
                                 maximum: message.remoteSetVolumeLevel.volumeMax,
                                 muted: message.remoteSetVolumeLevel.volumeMuted,
                             });
-                            //this.emit('log.debug', "Receive SET VOLUME LEVEL" + message.remoteSetVolumeLevel.toJSON().toString());
                         } else if (message.remoteSetPreferredAudioDevice) {
-                            //this.emit('log.debug', "Receive SET PREFERRED AUDIO DEVICE" + message.remoteSetPreferredAudioDevice);
+                          // No action
                         } else if (message.remoteError) {
                             if (message.remoteError?.message?.remoteConfigure) {
                                 this.emit('unpaired', message.remoteError);
@@ -132,7 +139,7 @@ class RemoteManager extends EventEmitter {
                     return;
                 }
                 this.emit('close', {hasError: hasError, error: this.error});
-                this.emit(hasError ? 'log.error' : 'log.info', this.host + ' Remote Connection closed' + (hasError ? ' with error' + JSON.stringify(this.error) : ''));
+                this.emit(hasError ? 'log.error' : 'log.info', 'Remote Connection closed' + (hasError ? ' with error' + JSON.stringify(this.error) : ''));
                 const emitError = (error: unknown): boolean => this.emit('log.error', error);
 
                 // We restart. If it has turned off, an error will prevent further restarts.
@@ -146,7 +153,7 @@ class RemoteManager extends EventEmitter {
                 if (this.destroyed) {
                   return;
                 }
-                this.emit('log.error', this.host, error);
+                this.emit('log.error', error);
                 this.error = error;
             });
         });

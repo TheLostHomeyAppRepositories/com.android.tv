@@ -5,11 +5,12 @@ import Homey, {
   DiscoveryResultSSDP,
   Driver
 } from "homey";
+import type {LoggerInterface} from '../../lib/LoggerInterface';
 import AndroidTVRemoteClient from "./client";
 import {Device as DeviceType, DeviceData, DeviceSettings} from "./types";
 import PairSession from "homey/lib/PairSession";
 
-class RemoteDriver extends Driver {
+class RemoteDriver extends Driver implements LoggerInterface {
   async onPair(session: PairSession): Promise<void> {
     let devices: Array<DeviceType> = [];
     const existingDevices: Array<Device> = this.getDevices();
@@ -127,7 +128,7 @@ class RemoteDriver extends Driver {
       this.log('Show view', view);
 
       if (view === 'start_repair') {
-        console.log('START PAIRING');
+        this.log('START PAIRING');
 
         pairingClient.on('secret', () => {
           this.log('Pairing client started, show authenticate view');
@@ -171,13 +172,13 @@ class RemoteDriver extends Driver {
 
   private getPairingClientByDevice(device: DeviceType): AndroidTVRemoteClient {
     return new AndroidTVRemoteClient(
+      this,
+      this.homey,
       device.settings.ip,
       device.store.cert,
-      this.homey,
       'androidtv-remote',
       6467,
       6466,
-      Homey.env.DEBUG === '1',
     );
   }
 
@@ -225,6 +226,14 @@ class RemoteDriver extends Driver {
         })
         .filter(device => device !== null)
         .map(discoveryResult => discoveryResult as DeviceType);
+  }
+
+  debug(...args: unknown[]): void {
+    if (Homey.env.DEBUG !== '1') {
+      return;
+    }
+
+    this.log('[debug]', ...args);
   }
 }
 

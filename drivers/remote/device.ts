@@ -1,3 +1,4 @@
+import type {LoggerInterface} from '../../lib/LoggerInterface';
 import {Remote} from "../../remote";
 import {DeviceSettings, DeviceStore, SettingsInput} from "./types";
 import AndroidTVRemoteClient, {Digit, Volume} from "./client";
@@ -6,7 +7,7 @@ import Homey, {Image} from "homey";
 import Chromecast, {MediaUpdate} from "../../chromecast/Chromecast";
 import fetch from "node-fetch";
 
-class RemoteDevice extends Remote {
+class RemoteDevice extends Remote implements LoggerInterface {
   private client?: AndroidTVRemoteClient;
   private keyCapabilities: Array<string> = [
     'key_stop',
@@ -65,13 +66,13 @@ class RemoteDevice extends Remote {
       const settings: DeviceSettings = this.getSettings();
 
       this.client = new AndroidTVRemoteClient(
+          this,
+          this.homey,
           settings.ip,
           store.cert,
-          this.homey,
           'androidtv-remote',
           6467,
           6466,
-          Homey.env.DEBUG === '1',
       );
 
       this.client.on('error', async (error) => {
@@ -101,7 +102,6 @@ class RemoteDevice extends Remote {
       this.fixCapabilities();
     } catch (error) {
       this.error(error);
-      console.log(error);
     }
 
     this.albumArt = await this.homey.images.createImage();
@@ -175,8 +175,7 @@ class RemoteDevice extends Remote {
     this.client.on('powered', powered => this.setCapabilityValue('onoff', powered).catch(this.error));
 
     this.client.on('volume', async (volume: Volume) => {
-      this.log('volume', volume);
-      this.log("Volume : " + volume.level + '/' + volume.maximum + " | Muted : " + volume.muted);
+      this.debug('volume update', JSON.stringify(volume));
       await this.setStoreValue('max_volume', volume.maximum).catch(this.error);
       if (volume.maximum === undefined || volume.maximum === 0) {
         if (this.hasCapability('volume_set')) {
@@ -502,7 +501,8 @@ class RemoteDevice extends Remote {
   public async openApplicationOrLink(appLink: string): Promise<void> {
     try {
       new URL(appLink);
-    } catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      this.debug(`appLink ${appLink} is not an URL, converting to market://`, (e as TypeError).message);
       appLink = 'market://launch?id=' + appLink;
     }
     this.client?.openApplication(appLink);
@@ -623,6 +623,14 @@ class RemoteDevice extends Remote {
         name: this.homey.__(`key.digit_9`)
       }
     ];
+  }
+
+  debug(...args: unknown[]): void {
+    if (Homey.env.DEBUG !== '1') {
+      return;
+    }
+
+    this.log('[debug]', ...args);
   }
 }
 
