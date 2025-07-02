@@ -7,4 +7,3 @@ Par exemple:
 Les commandes de volume peuvent ne pas fonctionner.
 La pochette et les informations de l'album ne sont pas toujours mises à jour.
 L'application YouTube nécessite une ou deux pressions sur une touche pour arrêter une vidéo, selon que l'interface est affichée ou masquée.
-La carte de flux «Sélectionner la source» peut ne pas fonctionner ou afficher des sources absentes de votre appareil.

@@ -531,10 +531,6 @@ class RemoteDevice extends Remote {
         name: this.homey.__(`key.fast_forward`)
       },
       {
-        key: 'key_source',
-        name: this.homey.__(`key.source`)
-      },
-      {
         key: 'key_watch_tv',
         name: this.homey.__(`key.watch_tv`)
       },

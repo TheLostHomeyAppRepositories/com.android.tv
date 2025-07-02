@@ -7,4 +7,3 @@ For example:
 Volume controls might not work
 Album Art and Album Info is not always updated
 The Youtube app will need one or two keypresses to stop a video, depending on whether the interface is shown or hidden
-The flow card "Select source" might not work or show sources your device does not have
