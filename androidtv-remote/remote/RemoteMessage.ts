@@ -332,7 +332,7 @@ interface RemoteAdjustVolumeLevel {
 
 interface RemoteSetVolumeLevel {
     unknown1: number;
-    unknown2: number;
+    volumeLevelSet: number;
     playerModel: string;
     unknown4: number;
     unknown5: number;
