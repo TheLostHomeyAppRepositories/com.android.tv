@@ -1,10 +1,10 @@
-import EventEmitter from "events";
-import Client from "./client";
+import EventEmitter from 'events';
+import Client from './client';
 
 type ChannelEvents = {
-  close: [],
-  message: [data: unknown, sourceId: string, destinationId: string]
-}
+  close: [];
+  message: [data: unknown, sourceId: string, destinationId: string];
+};
 
 class Channel extends EventEmitter<ChannelEvents> {
   private readonly bus: Client;
@@ -22,11 +22,11 @@ class Channel extends EventEmitter<ChannelEvents> {
 
   public send(data: object): void {
     this.bus.send(
-        this.namespace,
-        JSON.stringify({
-          ...data,
-          requestId: this.bus.requestId++
-        })
+      this.namespace,
+      JSON.stringify({
+        ...data,
+        requestId: this.bus.requestId++,
+      }),
     );
   }
 
@@ -35,7 +35,7 @@ class Channel extends EventEmitter<ChannelEvents> {
   }
 
   private onmessage = (namespace: string, data: string | Uint8Array, sourceId: string, destinationId: string): void => {
-    if(namespace !== this.namespace) {
+    if (namespace !== this.namespace) {
       return;
     }
     this.emit('message', JSON.parse(data as string), sourceId, destinationId);

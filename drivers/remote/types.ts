@@ -7,7 +7,7 @@ export interface AndroidRemoteOptions {
   pairing_port: number;
   remote_port: number;
   service_name: string;
-  cert: AndroidRemoteCertificate,
+  cert: AndroidRemoteCertificate;
   timeout: number | undefined;
 }
 
@@ -16,12 +16,12 @@ export interface DeviceData {
 }
 
 export interface DeviceStore {
-  cert: AndroidRemoteCertificate,
+  cert: AndroidRemoteCertificate;
 }
 
 export interface SettingsInput {
-  newSettings: NewSettings
-  changedKeys: Array<string>
+  newSettings: NewSettings;
+  changedKeys: Array<string>;
 }
 
 export interface NewSettings {

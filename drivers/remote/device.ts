@@ -1,11 +1,11 @@
-import type {LoggerInterface} from '../../lib/LoggerInterface';
-import {Remote} from "../../remote";
-import {DeviceSettings, DeviceStore, SettingsInput} from "./types";
-import AndroidTVRemoteClient, {Digit, Volume} from "./client";
-import RemoteMessage from "../../androidtv-remote/remote/RemoteMessage";
-import Homey, {Image} from "homey";
-import Chromecast, {MediaUpdate} from "../../chromecast/Chromecast";
-import fetch from "node-fetch";
+import type { LoggerInterface } from '../../lib/LoggerInterface';
+import { Remote } from '../../remote';
+import { DeviceSettings, DeviceStore, SettingsInput } from './types';
+import AndroidTVRemoteClient, { Digit, Volume } from './client';
+import RemoteMessage from '../../androidtv-remote/remote/RemoteMessage';
+import Homey, { Image } from 'homey';
+import Chromecast, { MediaUpdate } from '../../chromecast/Chromecast';
+import fetch from 'node-fetch';
 
 class RemoteDevice extends Remote implements LoggerInterface {
   private client?: AndroidTVRemoteClient;
@@ -66,30 +66,30 @@ class RemoteDevice extends Remote implements LoggerInterface {
       const settings: DeviceSettings = this.getSettings();
 
       this.client = new AndroidTVRemoteClient(
-          this,
-          this.homey,
-          settings.ip,
-          store.cert,
-          'androidtv-remote',
-          6467,
-          6466,
+        this,
+        this.homey,
+        settings.ip,
+        store.cert,
+        'androidtv-remote',
+        6467,
+        6466,
       );
 
-      this.client.on('error', async (error) => {
+      this.client.on('error', async error => {
         this.log('client.on(error)', error);
       });
 
       await this.client.start();
 
       this.client.on('ready', () => {
-        this.log("Client has been initialized");
+        this.log('Client has been initialized');
         this.setAvailable().catch(this.error);
       });
-      this.client.on('close', ({hasError, error}) => {
+      this.client.on('close', ({ hasError, error }) => {
         if (hasError) {
-          this.log("Client has been closed with error", error);
+          this.log('Client has been closed with error', error);
         } else {
-          this.log("Client has been closed");
+          this.log('Client has been closed');
         }
         this.setUnavailable().catch(this.error);
       });
@@ -109,26 +109,26 @@ class RemoteDevice extends Remote implements LoggerInterface {
   }
 
   async initializeChromecastClient(): Promise<void> {
-    const debug = (...args: unknown[]): void => this.log("[Chromecast]", ...args);
-    const error = (...args: unknown[]): void => this.error("[Chromecast]", ...args);
+    const debug = (...args: unknown[]): void => this.log('[Chromecast]', ...args);
+    const error = (...args: unknown[]): void => this.error('[Chromecast]', ...args);
     const updateMedia = (update: MediaUpdate): Promise<void> => this.updateChromecastMedia(update);
     const settings: DeviceSettings = this.getSettings();
-    this.chromecast = new Chromecast(settings.ip, updateMedia, debug, error, Homey.env.DEBUG === "1", this.homey);
+    this.chromecast = new Chromecast(settings.ip, updateMedia, debug, error, Homey.env.DEBUG === '1', this.homey);
     await this.chromecast.initialize();
   }
 
   async updateChromecastMedia(update: MediaUpdate): Promise<void> {
     if (update.title !== undefined) {
-      await this.setCapabilityValue("speaker_track", update.title).catch(this.error);
+      await this.setCapabilityValue('speaker_track', update.title).catch(this.error);
     }
     if (update.subtitle !== undefined) {
       await this.setCapabilityValue('speaker_artist', update.subtitle).catch(this.error);
     }
     if (update.album !== undefined) {
-      await this.setCapabilityValue("speaker_album", update.album).catch(this.error);
+      await this.setCapabilityValue('speaker_album', update.album).catch(this.error);
     }
     if (update.playing !== undefined) {
-      await this.setCapabilityValue("speaker_playing", update.playing).catch(this.error);
+      await this.setCapabilityValue('speaker_playing', update.playing).catch(this.error);
     }
     if (update.image !== undefined) {
       await this.setAlbumArt(update.image).catch(this.error);
@@ -190,15 +190,20 @@ class RemoteDevice extends Remote implements LoggerInterface {
       await this.setCapabilityValue('volume_mute', volume.muted).catch(this.error);
       await this.setCapabilityValue('volume_set', volume.level / volume.maximum).catch(this.error);
       if (this.hasCapability('measure_volume')) {
-        await this.setCapabilityValue('measure_volume', Math.round(volume.level / (volume.maximum / 100))).catch(this.error);
+        await this.setCapabilityValue('measure_volume', Math.round(volume.level / (volume.maximum / 100))).catch(
+          this.error,
+        );
       }
     });
 
     this.client.on('current_app', current_app => {
       this.setCapabilityValue('current_application', current_app).catch(this.error);
-      this.homey.flow.getDeviceTriggerCard('application_opened').trigger(this, {
-        app: current_app,
-      }).catch(this.error);
+      this.homey.flow
+        .getDeviceTriggerCard('application_opened')
+        .trigger(this, {
+          app: current_app,
+        })
+        .catch(this.error);
     });
 
     this.client.on('unpaired', (error: RemoteMessage | undefined) => {
@@ -212,9 +217,13 @@ class RemoteDevice extends Remote implements LoggerInterface {
   }
 
   private async registerCapabilityListeners(): Promise<void> {
-    this.registerMultipleCapabilityListener(this.keyCapabilities, async (capabilityValues: Record<string, unknown>) => {
-      return this.onCapabilitiesKeySet(capabilityValues);
-    }, this.CAPABILITIES_SET_DEBOUNCE);
+    this.registerMultipleCapabilityListener(
+      this.keyCapabilities,
+      async (capabilityValues: Record<string, unknown>) => {
+        return this.onCapabilitiesKeySet(capabilityValues);
+      },
+      this.CAPABILITIES_SET_DEBOUNCE,
+    );
 
     this.registerCapabilityListener('onoff', value => {
       return this.onCapabilityOnOffSet(value);
@@ -242,7 +251,7 @@ class RemoteDevice extends Remote implements LoggerInterface {
       return this.client?.mute();
     });
 
-    this.registerCapabilityListener('speaker_playing', (value) => {
+    this.registerCapabilityListener('speaker_playing', value => {
       if (value) {
         this.client?.sendKeyMediaPlay();
       } else {
@@ -250,11 +259,11 @@ class RemoteDevice extends Remote implements LoggerInterface {
       }
     });
 
-    this.registerCapabilityListener("speaker_next", () => {
+    this.registerCapabilityListener('speaker_next', () => {
       this.client?.sendKeyMediaNext();
     });
 
-    this.registerCapabilityListener("speaker_prev", () => {
+    this.registerCapabilityListener('speaker_prev', () => {
       this.client?.sendKeyMediaPrevious();
     });
   }
@@ -277,8 +286,8 @@ class RemoteDevice extends Remote implements LoggerInterface {
       return this.client?.sendKeyMediaRewind();
     } else if (typeof capability.key_fast_forward !== 'undefined') {
       return this.client?.sendKeyMediaFastForward();
-        // else if (typeof capability.key_toggle_ambilight !== 'undefined') {
-        //     return this.sendKey('AmbilightOnOff')
+      // else if (typeof capability.key_toggle_ambilight !== 'undefined') {
+      //     return this.sendKey('AmbilightOnOff')
       // } else if (typeof capability.key_source !== 'undefined') {
       //   return this.client?.sendKeySource();
       // } else if (typeof capability.key_toggle_subtitles !== 'undefined') {
@@ -311,23 +320,23 @@ class RemoteDevice extends Remote implements LoggerInterface {
     } else if (typeof capability.key_cursor_down !== 'undefined') {
       return this.client?.sendKeyDpadDown();
     } else if (typeof capability.key_digit_0 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit0);
+      return this.client?.sendKeyDigit(Digit.Digit0);
     } else if (typeof capability.key_digit_1 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit1);
+      return this.client?.sendKeyDigit(Digit.Digit1);
     } else if (typeof capability.key_digit_2 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit2);
+      return this.client?.sendKeyDigit(Digit.Digit2);
     } else if (typeof capability.key_digit_3 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit3);
+      return this.client?.sendKeyDigit(Digit.Digit3);
     } else if (typeof capability.key_digit_4 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit4);
+      return this.client?.sendKeyDigit(Digit.Digit4);
     } else if (typeof capability.key_digit_5 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit5);
+      return this.client?.sendKeyDigit(Digit.Digit5);
     } else if (typeof capability.key_digit_6 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit6);
+      return this.client?.sendKeyDigit(Digit.Digit6);
     } else if (typeof capability.key_digit_7 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit7);
+      return this.client?.sendKeyDigit(Digit.Digit7);
     } else if (typeof capability.key_digit_8 !== 'undefined') {
-        return this.client?.sendKeyDigit(Digit.Digit8);
+      return this.client?.sendKeyDigit(Digit.Digit8);
     } else if (typeof capability.key_digit_9 !== 'undefined') {
       return this.client?.sendKeyDigit(Digit.Digit9);
       // else if (typeof capability.key_info !== 'undefined') {
@@ -353,38 +362,35 @@ class RemoteDevice extends Remote implements LoggerInterface {
   }
 
   fixCapabilities(): void {
-    const oldCapabilities = [
-      'volume',
-      "key_source",
-    ];
+    const oldCapabilities = ['volume', 'key_source'];
 
     const newCapabilities = [
-      "onoff",
-      "volume_up",
-      "volume_down",
-      "volume_mute",
-      "key_play",
-      "key_pause",
-      "key_stop",
-      "key_cursor_up",
-      "key_cursor_right",
-      "key_cursor_down",
-      "key_cursor_left",
-      "key_channel_up",
-      "key_channel_down",
-      "key_back",
-      "key_home",
-      "key_confirm",
-      "key_previous",
-      "key_next",
-      "key_watch_tv",
-      "speaker_playing",
-      "speaker_next",
-      "speaker_prev",
-      "speaker_track",
-      "speaker_artist",
-      "speaker_album",
-      "volume_set"
+      'onoff',
+      'volume_up',
+      'volume_down',
+      'volume_mute',
+      'key_play',
+      'key_pause',
+      'key_stop',
+      'key_cursor_up',
+      'key_cursor_right',
+      'key_cursor_down',
+      'key_cursor_left',
+      'key_channel_up',
+      'key_channel_down',
+      'key_back',
+      'key_home',
+      'key_confirm',
+      'key_previous',
+      'key_next',
+      'key_watch_tv',
+      'speaker_playing',
+      'speaker_next',
+      'speaker_prev',
+      'speaker_track',
+      'speaker_artist',
+      'speaker_album',
+      'volume_set',
     ];
 
     for (const i in oldCapabilities) {
@@ -392,10 +398,9 @@ class RemoteDevice extends Remote implements LoggerInterface {
 
       if (this.hasCapability(oldCapability)) {
         this.log('Removing old capability: ' + oldCapability);
-        this.removeCapability(oldCapability)
-            .catch(error => {
-              this.log(error);
-            });
+        this.removeCapability(oldCapability).catch(error => {
+          this.log(error);
+        });
       }
     }
 
@@ -404,10 +409,9 @@ class RemoteDevice extends Remote implements LoggerInterface {
 
       if (!this.hasCapability(newCapability)) {
         this.log('Adding new capability: ' + newCapability);
-        this.addCapability(newCapability)
-            .catch(error => {
-              this.log(error);
-            });
+        this.addCapability(newCapability).catch(error => {
+          this.log(error);
+        });
       }
     }
   }
@@ -420,8 +424,8 @@ class RemoteDevice extends Remote implements LoggerInterface {
     }
   }
 
-  async onSettings({changedKeys}: SettingsInput): Promise<void> {
-    if (changedKeys.includes("ip")) {
+  async onSettings({ changedKeys }: SettingsInput): Promise<void> {
+    if (changedKeys.includes('ip')) {
       await this.reloadClient(1);
     }
   }
@@ -475,25 +479,25 @@ class RemoteDevice extends Remote implements LoggerInterface {
       this.client?.sendKeyBack(direction);
     } else if (key === 'key_home') {
       this.client?.sendKeyHome(direction);
-    } else if(key === 'key_digit_0') {
+    } else if (key === 'key_digit_0') {
       this.client?.sendKeyDigit(Digit.Digit0, direction);
-    } else if(key === 'key_digit_1') {
+    } else if (key === 'key_digit_1') {
       this.client?.sendKeyDigit(Digit.Digit1, direction);
-    } else if(key === 'key_digit_2') {
+    } else if (key === 'key_digit_2') {
       this.client?.sendKeyDigit(Digit.Digit2, direction);
-    } else if(key === 'key_digit_3') {
+    } else if (key === 'key_digit_3') {
       this.client?.sendKeyDigit(Digit.Digit3, direction);
-    } else if(key === 'key_digit_4') {
+    } else if (key === 'key_digit_4') {
       this.client?.sendKeyDigit(Digit.Digit4, direction);
-    } else if(key === 'key_digit_5') {
+    } else if (key === 'key_digit_5') {
       this.client?.sendKeyDigit(Digit.Digit5, direction);
-    } else if(key === 'key_digit_6') {
+    } else if (key === 'key_digit_6') {
       this.client?.sendKeyDigit(Digit.Digit6, direction);
-    } else if(key === 'key_digit_7') {
+    } else if (key === 'key_digit_7') {
       this.client?.sendKeyDigit(Digit.Digit7, direction);
-    } else if(key === 'key_digit_8') {
+    } else if (key === 'key_digit_8') {
       this.client?.sendKeyDigit(Digit.Digit8, direction);
-    } else if(key === 'key_digit_9') {
+    } else if (key === 'key_digit_9') {
       this.client?.sendKeyDigit(Digit.Digit9, direction);
     }
   }
@@ -508,120 +512,120 @@ class RemoteDevice extends Remote implements LoggerInterface {
     this.client?.openApplication(appLink);
   }
 
-  public async getKeys(): Promise<Array<{ key: string, name: string }>> {
+  public async getKeys(): Promise<Array<{ key: string; name: string }>> {
     return [
       {
         key: 'key_stop',
-        name: this.homey.__(`key.stop`)
+        name: this.homey.__(`key.stop`),
       },
       {
         key: 'key_play',
-        name: this.homey.__(`key.play`)
+        name: this.homey.__(`key.play`),
       },
       {
         key: 'key_pause',
-        name: this.homey.__(`key.pause`)
+        name: this.homey.__(`key.pause`),
       },
       {
         key: 'key_rewind',
-        name: this.homey.__(`key.rewind`)
+        name: this.homey.__(`key.rewind`),
       },
       {
         key: 'key_fast_forward',
-        name: this.homey.__(`key.fast_forward`)
+        name: this.homey.__(`key.fast_forward`),
       },
       {
         key: 'key_watch_tv',
-        name: this.homey.__(`key.watch_tv`)
+        name: this.homey.__(`key.watch_tv`),
       },
       {
         key: 'key_confirm',
-        name: this.homey.__(`key.confirm`)
+        name: this.homey.__(`key.confirm`),
       },
       {
         key: 'key_previous',
-        name: this.homey.__(`key.previous`)
+        name: this.homey.__(`key.previous`),
       },
       {
         key: 'key_next',
-        name: this.homey.__(`key.next`)
+        name: this.homey.__(`key.next`),
       },
       {
         key: 'key_cursor_left',
-        name: this.homey.__(`key.cursor_left`)
+        name: this.homey.__(`key.cursor_left`),
       },
       {
         key: 'key_cursor_up',
-        name: this.homey.__(`key.cursor_up`)
+        name: this.homey.__(`key.cursor_up`),
       },
       {
         key: 'key_cursor_right',
-        name: this.homey.__(`key.cursor_right`)
+        name: this.homey.__(`key.cursor_right`),
       },
       {
         key: 'key_cursor_down',
-        name: this.homey.__(`key.cursor_down`)
+        name: this.homey.__(`key.cursor_down`),
       },
       {
         key: 'key_channel_up',
-        name: this.homey.__(`key.channel_up`)
+        name: this.homey.__(`key.channel_up`),
       },
       {
         key: 'key_channel_down',
-        name: this.homey.__(`key.channel_down`)
+        name: this.homey.__(`key.channel_down`),
       },
       {
         key: 'key_options',
-        name: this.homey.__(`key.options`)
+        name: this.homey.__(`key.options`),
       },
       {
         key: 'key_back',
-        name: this.homey.__(`key.back`)
+        name: this.homey.__(`key.back`),
       },
       {
         key: 'key_home',
-        name: this.homey.__(`key.home`)
+        name: this.homey.__(`key.home`),
       },
       {
         key: 'key_digit_0',
-        name: this.homey.__(`key.digit_0`)
+        name: this.homey.__(`key.digit_0`),
       },
       {
         key: 'key_digit_1',
-        name: this.homey.__(`key.digit_1`)
+        name: this.homey.__(`key.digit_1`),
       },
       {
         key: 'key_digit_2',
-        name: this.homey.__(`key.digit_2`)
+        name: this.homey.__(`key.digit_2`),
       },
       {
         key: 'key_digit_3',
-        name: this.homey.__(`key.digit_3`)
+        name: this.homey.__(`key.digit_3`),
       },
       {
         key: 'key_digit_4',
-        name: this.homey.__(`key.digit_4`)
+        name: this.homey.__(`key.digit_4`),
       },
       {
         key: 'key_digit_5',
-        name: this.homey.__(`key.digit_5`)
+        name: this.homey.__(`key.digit_5`),
       },
       {
         key: 'key_digit_6',
-        name: this.homey.__(`key.digit_6`)
+        name: this.homey.__(`key.digit_6`),
       },
       {
         key: 'key_digit_7',
-        name: this.homey.__(`key.digit_7`)
+        name: this.homey.__(`key.digit_7`),
       },
       {
         key: 'key_digit_8',
-        name: this.homey.__(`key.digit_8`)
+        name: this.homey.__(`key.digit_8`),
       },
       {
         key: 'key_digit_9',
-        name: this.homey.__(`key.digit_9`)
-      }
+        name: this.homey.__(`key.digit_9`),
+      },
     ];
   }
 

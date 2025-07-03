@@ -126,9 +126,7 @@
     "large": "{{driverAssetsPath}}/images/large.png",
     "small": "{{driverAssetsPath}}/images/small.png"
   },
-  "platforms": [
-    "local"
-  ],
+  "platforms": ["local"],
   "class": "tv",
   "discovery": "googlecast",
   "capabilities": [

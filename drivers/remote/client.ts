@@ -1,7 +1,7 @@
 import type Homey from 'homey/lib/Homey';
-import {AndroidRemote, RemoteDirection, RemoteKeyCode} from '../../androidtv-remote';
-import type {LoggerInterface} from '../../lib/LoggerInterface';
-import {AndroidRemoteCertificate, AndroidRemoteOptions} from './types';
+import { AndroidRemote, RemoteDirection, RemoteKeyCode } from '../../androidtv-remote';
+import type { LoggerInterface } from '../../lib/LoggerInterface';
+import { AndroidRemoteCertificate, AndroidRemoteOptions } from './types';
 
 export enum Input {
   HDMI1,
@@ -34,7 +34,7 @@ export enum Digit {
   Digit9,
 }
 
-const digitRemoteKeyCodeMap: { [Key in Digit]: number} = {
+const digitRemoteKeyCodeMap: { [Key in Digit]: number } = {
   [Digit.Digit0]: RemoteKeyCode.KEYCODE_0,
   [Digit.Digit1]: RemoteKeyCode.KEYCODE_1,
   [Digit.Digit2]: RemoteKeyCode.KEYCODE_2,
@@ -57,13 +57,13 @@ export default class AndroidTVRemoteClient {
   private readonly cert: AndroidRemoteCertificate;
 
   constructor(
-      logger: LoggerInterface,
-      homey: Homey,
-      host: string,
-      cert: AndroidRemoteCertificate = {key: undefined, cert: undefined},
-      client_name: string = 'androidtv-remote',
-      pairing_port: number = 6467,
-      remote_port: number = 6466,
+    logger: LoggerInterface,
+    homey: Homey,
+    host: string,
+    cert: AndroidRemoteCertificate = { key: undefined, cert: undefined },
+    client_name: string = 'androidtv-remote',
+    pairing_port: number = 6467,
+    remote_port: number = 6466,
   ) {
     this.host = host;
     this.client_name = client_name;
@@ -230,7 +230,7 @@ export default class AndroidTVRemoteClient {
   }
 
   public sendKeyDigit(digit: Digit, direction: number | null = null): void {
-    if(digit in digitRemoteKeyCodeMap) {
+    if (digit in digitRemoteKeyCodeMap) {
       this.client.sendKey(digitRemoteKeyCodeMap[digit], direction || RemoteDirection.SHORT);
     } else {
       throw new Error('Invalid digit');
@@ -248,5 +248,4 @@ export default class AndroidTVRemoteClient {
   public stop(): void {
     this.client.stop();
   }
-
 }

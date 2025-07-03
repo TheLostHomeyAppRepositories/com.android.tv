@@ -1,14 +1,8 @@
-import Homey, {
-  Device,
-  DiscoveryResultMAC,
-  DiscoveryResultMDNSSD,
-  DiscoveryResultSSDP,
-  Driver
-} from "homey";
-import type {LoggerInterface} from '../../lib/LoggerInterface';
-import AndroidTVRemoteClient from "./client";
-import {Device as DeviceType, DeviceData, DeviceSettings} from "./types";
-import PairSession from "homey/lib/PairSession";
+import Homey, { Device, DiscoveryResultMAC, DiscoveryResultMDNSSD, DiscoveryResultSSDP, Driver } from 'homey';
+import type { LoggerInterface } from '../../lib/LoggerInterface';
+import AndroidTVRemoteClient from './client';
+import { Device as DeviceType, DeviceData, DeviceSettings } from './types';
+import PairSession from 'homey/lib/PairSession';
 
 class RemoteDriver extends Driver implements LoggerInterface {
   async onPair(session: PairSession): Promise<void> {
@@ -30,9 +24,11 @@ class RemoteDriver extends Driver implements LoggerInterface {
 
           hasDiscoveredDevices = true;
 
-          return existingDevices.filter(existingDevice => {
-            return item.data.id === existingDevice.getData().id;
-          }).length === 0;
+          return (
+            existingDevices.filter(existingDevice => {
+              return item.data.id === existingDevice.getData().id;
+            }).length === 0
+          );
         });
 
         if (devices.length > 0) {
@@ -46,7 +42,7 @@ class RemoteDriver extends Driver implements LoggerInterface {
         }
       }
 
-      if (view === "authenticate") {
+      if (view === 'authenticate') {
         if (pairingDevice === null) {
           await session.showView('list_devices');
           this.error('Pairing device not set');
@@ -114,14 +110,14 @@ class RemoteDriver extends Driver implements LoggerInterface {
     const existingDevice = discoveredDevices.find(item => item.data.id === repairingDevice.getData().id);
     if (existingDevice) {
       // Update IP
-      await repairingDevice.setSettings({ip: existingDevice.settings.ip});
+      await repairingDevice.setSettings({ ip: existingDevice.settings.ip });
     }
 
     const pairingClient = this.getPairingClientByDevice({
       name: repairingDevice.getName(),
       data: repairingDevice.getData() as DeviceData,
       store: {},
-      settings: repairingDevice.getSettings() as DeviceSettings
+      settings: repairingDevice.getSettings() as DeviceSettings,
     } as DeviceType);
 
     session.setHandler('showView', async (view: string) => {
@@ -165,7 +161,7 @@ class RemoteDriver extends Driver implements LoggerInterface {
       return pairingResult;
     });
 
-    session.setHandler("disconnect", async () => {
+    session.setHandler('disconnect', async () => {
       // Cleanup
     });
   }
@@ -192,10 +188,10 @@ class RemoteDriver extends Driver implements LoggerInterface {
         cert: {
           key: undefined,
           cert: undefined,
-        }
+        },
       },
       settings: {
-        ip: discoveryResult.address
+        ip: discoveryResult.address,
       },
     };
   }
@@ -216,16 +212,16 @@ class RemoteDriver extends Driver implements LoggerInterface {
     const discoveryResults = this.getDiscoveryStrategy().getDiscoveryResults();
 
     return Object.values(discoveryResults)
-        .map(discoveryResult => {
-          if (discoveryResult instanceof DiscoveryResultSSDP || discoveryResult instanceof DiscoveryResultMAC) {
-            this.log('Incorrect discovery result type received.');
-            return null;
-          }
+      .map(discoveryResult => {
+        if (discoveryResult instanceof DiscoveryResultSSDP || discoveryResult instanceof DiscoveryResultMAC) {
+          this.log('Incorrect discovery result type received.');
+          return null;
+        }
 
-          return this.getDeviceByDiscoveryResult(discoveryResult);
-        })
-        .filter(device => device !== null)
-        .map(discoveryResult => discoveryResult as DeviceType);
+        return this.getDeviceByDiscoveryResult(discoveryResult);
+      })
+      .filter(device => device !== null)
+      .map(discoveryResult => discoveryResult as DeviceType);
   }
 
   debug(...args: unknown[]): void {
