@@ -93,6 +93,7 @@
       }
     ]
   },
+  "homeyCommunityTopicId": 131001,
   "support": "mailto:homey-android-tv@drenso.nl",
   "source": "https://github.com/drenso/homey-android-tv",
   "flow": {
