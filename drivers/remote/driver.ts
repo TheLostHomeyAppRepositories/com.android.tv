@@ -83,9 +83,9 @@ class RemoteDriver extends Driver implements LoggerInterface {
 
       if (pairingResult) {
         pairingDevice.store.cert = await pairingClient.getCertificate();
-        session.showView('add_device');
+        await session.showView('add_device');
       } else {
-        session.showView('discover');
+        await session.showView('discover');
       }
 
       return pairingResult;
@@ -128,7 +128,7 @@ class RemoteDriver extends Driver implements LoggerInterface {
 
         pairingClient.on('secret', () => {
           this.log('Pairing client started, show authenticate view');
-          session.showView('authenticate');
+          session.showView('authenticate').catch(this.error);
         });
 
         await pairingClient.start();
@@ -153,9 +153,9 @@ class RemoteDriver extends Driver implements LoggerInterface {
         await repairingDevice.onUninit();
         await repairingDevice.setStoreValue('cert', await pairingClient.getCertificate());
         await repairingDevice.onInit();
-        session.done();
+        await session.done();
       } else {
-        session.showView('authenticate');
+        await session.showView('authenticate');
       }
 
       return pairingResult;
