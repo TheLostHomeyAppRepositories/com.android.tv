@@ -79,8 +79,6 @@ class RemoteDevice extends Remote implements LoggerInterface {
         this.log('client.on(error)', error);
       });
 
-      await this.client.start();
-
       this.client.on('ready', () => {
         this.log('Client has been initialized');
         this.setAvailable().catch(this.error);
@@ -94,6 +92,10 @@ class RemoteDevice extends Remote implements LoggerInterface {
         this.setUnavailable().catch(this.error);
       });
 
+      // Start connecting in the background.
+      // The client reconnects on its own if something goes wrong.
+      this.client.start().catch(this.error);
+
       await this.registerClientListeners();
       this.log('Client listeners have been registered');
       await this.registerCapabilityListeners();
@@ -105,7 +107,8 @@ class RemoteDevice extends Remote implements LoggerInterface {
     }
 
     this.albumArt = await this.homey.images.createImage();
-    await this.initializeChromecastClient();
+    // Start connecting in the background.
+    this.initializeChromecastClient().catch(this.error);
   }
 
   async initializeChromecastClient(): Promise<void> {
